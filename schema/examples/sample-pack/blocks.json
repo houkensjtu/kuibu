@@ -1,0 +1,29 @@
+[
+  {
+    "id": "b0001",
+    "seq": 1,
+    "section_path": ["1", "1.1", "1.1.1"],
+    "section_title": "The Elements of Programming",
+    "content_md": "编程语言提供组合较简单的概念来构造较复杂概念的手段。每种强大的语言都有三种机制：基本表达式、组合手段、抽象手段。",
+    "est_seconds": 150,
+    "recap_md": "编程语言的三种基本机制：基本表达式、组合、抽象。"
+  },
+  {
+    "id": "b0002",
+    "seq": 2,
+    "section_path": ["1", "1.1", "1.1.1"],
+    "section_title": "The Elements of Programming",
+    "content_md": "组合式的求值遵循一个通用的过程：先递归求值各子表达式，再将运算符作用于运算对象。这是一种先求值再应用的规则。",
+    "est_seconds": 140,
+    "recap_md": "组合式求值：先递归求值子表达式，再应用运算符。"
+  },
+  {
+    "id": "b0003",
+    "seq": 3,
+    "section_path": ["1", "1.1", "1.1.2"],
+    "section_title": "Naming and the Environment",
+    "content_md": "define 是我们抽象手段中最简单的一种，它使我们能够用名字来指代计算对象。这样的名字-值配对关系存储在环境中。",
+    "est_seconds": 130,
+    "recap_md": "define 在环境中建立名字与值的绑定。"
+  }
+]

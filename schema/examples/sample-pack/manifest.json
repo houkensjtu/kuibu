@@ -1,0 +1,10 @@
+{
+  "schema_version": "0.1.0",
+  "book_id": "sicp",
+  "title": "Structure and Interpretation of Computer Programs",
+  "author": "Harold Abelson and Gerald Jay Sussman",
+  "license": "CC-BY-SA-4.0",
+  "source": "https://mitp-content-server.mit.edu/sicp/",
+  "generated_at": "2026-07-31T00:00:00Z",
+  "generator_version": "0.1.0"
+}

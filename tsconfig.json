@@ -12,5 +12,5 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["core/**/*.ts", "cli/**/*.ts"]
+  "include": ["core/**/*.ts", "cli/**/*.ts", "schema/**/*.ts"]
 }
