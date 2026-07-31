@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 import { randomUUID } from "node:crypto";
+import { createInterface } from "node:readline/promises";
 import { Command } from "commander";
 import { loadPack, PackLoadError } from "./loadPack.js";
 import { appendEvent, readEvents } from "./eventLog.js";
 import { reduceEvents } from "../core/reducer.js";
 import { packSession } from "../core/sessionPacker.js";
+import { buildQuestionQueue } from "../core/questionQueue.js";
+import { leitnerScheduler } from "../core/scheduler.js";
+import { checkinDate } from "../core/checkinDate.js";
 import { runReadingFlow } from "./readingFlow.js";
 import { showBlockInPagerOrFallback } from "./pager.js";
+import { runAnswerFlow } from "./answerFlow.js";
+import { askInTerminal } from "./answerPrompt.js";
 
 // 阶段一先用一个固定默认值；每日时长目标可调（M2.19）会把它换成可配置项。
 const DEFAULT_TARGET_SECONDS = 720;
@@ -48,22 +54,58 @@ program
       });
 
       if (todaysBlocks.length === 0) {
-        console.log("这本书已经读完啦。");
-        return;
+        console.log("这本书已经读完啦，今天只有复习题。");
+      } else {
+        await runReadingFlow(todaysBlocks, {
+          showBlock: showBlockInPagerOrFallback,
+          onBlockRead: (blockId, seconds) => {
+            appendEvent(options.log, {
+              id: randomUUID(),
+              ts: new Date().toISOString(),
+              type: "block_read",
+              block_id: blockId,
+              seconds,
+            });
+          },
+        });
       }
 
-      await runReadingFlow(todaysBlocks, {
-        showBlock: showBlockInPagerOrFallback,
-        onBlockRead: (blockId, seconds) => {
-          appendEvent(options.log, {
-            id: randomUUID(),
-            ts: new Date().toISOString(),
-            type: "block_read",
-            block_id: blockId,
-            seconds,
-          });
-        },
+      const dueItemIds = leitnerScheduler.due(
+        [...state.itemStates.values()],
+        checkinDate(new Date()),
+      );
+      const queue = buildQuestionQueue({
+        todayReadBlockIds: new Set(todaysBlocks.map((b) => b.id)),
+        items: pack.items,
+        wrongQuestionIdByItemId: state.wrongQuestionIdByItemId,
+        dueItemIds,
       });
+      const questionsById = new Map(pack.questions.map((q) => [q.id, q]));
+
+      const rl = createInterface({ input: process.stdin, output: process.stdout });
+      try {
+        await runAnswerFlow(queue, questionsById, {
+          ask: (question, shuffled) => askInTerminal(rl, question, shuffled),
+          onAnswered: (_entry, question, shuffled, _chosenIndex, correct) => {
+            if (correct) {
+              console.log("答对了！");
+            } else {
+              console.log(`答错了。正确答案：${shuffled.options[shuffled.answerIndex]}`);
+              console.log(question.explanation);
+            }
+
+            appendEvent(options.log, {
+              id: randomUUID(),
+              ts: new Date().toISOString(),
+              type: "answer",
+              question_id: question.id,
+              correct,
+            });
+          },
+        });
+      } finally {
+        rl.close();
+      }
     } catch (err) {
       if (err instanceof PackLoadError) {
         console.error(err.message);
