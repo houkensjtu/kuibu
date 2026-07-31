@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from datetime import date as _date, datetime
-from typing import Any, Literal, Union
+from typing import Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field, RootModel, conint, constr
 
@@ -62,7 +62,7 @@ class SettingsChange(BaseModel):
     ts: datetime
     type: Literal['settings_change']
     key: constr(min_length=1)
-    value: Any = Field(
+    value: Union[str, float, bool] = Field(
         ..., description='设置值，类型依 key 而定（如 daily_target_seconds 是 integer）'
     )
 

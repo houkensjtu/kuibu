@@ -72,7 +72,12 @@
         "type": { "const": "settings_change" },
         "key": { "type": "string", "minLength": 1 },
         "value": {
-          "description": "设置值，类型依 key 而定（如 daily_target_seconds 是 integer）"
+          "description": "设置值，类型依 key 而定（如 daily_target_seconds 是 integer）",
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" }
+          ]
         }
       }
     }

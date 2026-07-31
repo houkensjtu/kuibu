@@ -9,16 +9,20 @@
   "scripts": {
     "dev": "tsx cli/index.ts",
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "schema:check": "ajv compile -c ajv-formats -s schema/pack.schema.json -s schema/events.schema.json"
+    "schema:check": "ajv compile -c ajv-formats -s schema/pack.schema.json -s schema/events.schema.json",
+    "schema:gen-types": "json2ts schema/pack.schema.json schema/types/pack.d.ts && json2ts schema/events.schema.json schema/types/events.d.ts"
   },
   "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "commander": "^12.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
     "ajv-cli": "^5.0.0",
-    "ajv-formats": "^3.0.1",
+    "json-schema-to-typescript": "^15.0.3",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
