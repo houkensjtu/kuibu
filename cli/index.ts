@@ -2,7 +2,11 @@
 import { randomUUID } from "node:crypto";
 import { Command } from "commander";
 import { loadPack, PackLoadError } from "./loadPack.js";
-import { appendEvent } from "./eventLog.js";
+import { appendEvent, readEvents } from "./eventLog.js";
+import { reduceEvents } from "../core/reducer.js";
+import { packSession } from "../core/sessionPacker.js";
+import { runReadingFlow } from "./readingFlow.js";
+import { showBlockInPagerOrFallback } from "./pager.js";
 
 // 阶段一先用一个固定默认值；每日时长目标可调（M2.19）会把它换成可配置项。
 const DEFAULT_TARGET_SECONDS = 720;
@@ -19,11 +23,15 @@ program
   .description("开始/继续今天的阅读打卡")
   .option("--pack <dir>", "内容包目录", "schema/examples/sample-pack")
   .option("--log <path>", "事件日志文件路径", ".kuibu-events.jsonl")
-  .action((options: { pack: string; log: string }) => {
+  .action(async (options: { pack: string; log: string }) => {
     try {
       const pack = loadPack(options.pack);
       console.log(pack.manifest.title);
       console.log(`共 ${pack.blocks.length} 个 block`);
+
+      const questionItemMap = new Map(pack.questions.map((q) => [q.id, q.item_id]));
+      const priorEvents = readEvents(options.log);
+      const state = reduceEvents(priorEvents, questionItemMap);
 
       appendEvent(options.log, {
         id: randomUUID(),
@@ -31,6 +39,30 @@ program
         type: "session_start",
         book_id: pack.manifest.book_id,
         target_seconds: DEFAULT_TARGET_SECONDS,
+      });
+
+      const todaysBlocks = packSession({
+        blocks: pack.blocks,
+        readBlockIds: state.readBlockIds,
+        targetSeconds: DEFAULT_TARGET_SECONDS,
+      });
+
+      if (todaysBlocks.length === 0) {
+        console.log("这本书已经读完啦。");
+        return;
+      }
+
+      await runReadingFlow(todaysBlocks, {
+        showBlock: showBlockInPagerOrFallback,
+        onBlockRead: (blockId, seconds) => {
+          appendEvent(options.log, {
+            id: randomUUID(),
+            ts: new Date().toISOString(),
+            type: "block_read",
+            block_id: blockId,
+            seconds,
+          });
+        },
       });
     } catch (err) {
       if (err instanceof PackLoadError) {
@@ -42,4 +74,4 @@ program
     }
   });
 
-program.parse();
+await program.parseAsync();
