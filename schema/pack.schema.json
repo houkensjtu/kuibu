@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://kuibu.dev/schema/pack.schema.json",
+  "title": "ContentPack",
+  "description": "kuibu 内容包：manifest + blocks + items + questions 的组合视图",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest", "blocks", "items", "questions"],
+  "properties": {
+    "manifest": { "$ref": "#/definitions/manifest" },
+    "blocks": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/block" }
+    },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/knowledgeItem" }
+    },
+    "questions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/question" }
+    }
+  },
+  "definitions": {
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "book_id",
+        "title",
+        "author",
+        "license",
+        "source",
+        "generated_at",
+        "generator_version"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "description": "内容包遵循的 schema 版本，阅读器加载时据此校验"
+        },
+        "book_id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "author": { "type": "string" },
+        "license": { "type": "string" },
+        "source": { "type": "string" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "generator_version": { "type": "string" }
+      }
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "seq",
+        "section_path",
+        "section_title",
+        "content_md",
+        "est_seconds",
+        "recap_md"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "seq": { "type": "integer", "minimum": 1 },
+        "section_path": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "section_title": { "type": "string", "minLength": 1 },
+        "content_md": { "type": "string" },
+        "est_seconds": { "type": "integer", "minimum": 1 },
+        "recap_md": { "type": "string" }
+      }
+    },
+    "knowledgeItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "block_ids", "statement", "question_ids"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "block_ids": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "statement": { "type": "string", "minLength": 1 },
+        "question_ids": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      }
+    },
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "item_id",
+        "type",
+        "prompt",
+        "options",
+        "answer_index",
+        "explanation"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "item_id": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "enum": ["single_choice"] },
+        "prompt": { "type": "string", "minLength": 1 },
+        "options": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 2
+        },
+        "answer_index": { "type": "integer", "minimum": 0 },
+        "explanation": { "type": "string" }
+      }
+    }
+  }
+}

@@ -9,13 +9,16 @@
   "scripts": {
     "dev": "tsx cli/index.ts",
     "build": "tsc",
-    "test": "vitest run"
+    "test": "vitest run",
+    "schema:check": "ajv compile -c ajv-formats -s schema/pack.schema.json"
   },
   "dependencies": {
     "commander": "^12.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
+    "ajv-cli": "^5.0.0",
+    "ajv-formats": "^3.0.1",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
