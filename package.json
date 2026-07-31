@@ -10,7 +10,7 @@
     "dev": "tsx cli/index.ts",
     "build": "tsc",
     "test": "vitest run",
-    "schema:check": "ajv compile -c ajv-formats -s schema/pack.schema.json"
+    "schema:check": "ajv compile -c ajv-formats -s schema/pack.schema.json -s schema/events.schema.json"
   },
   "dependencies": {
     "commander": "^12.1.0"
