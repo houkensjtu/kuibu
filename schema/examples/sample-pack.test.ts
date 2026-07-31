@@ -22,10 +22,10 @@ function loadSamplePack() {
 describe("sample-pack fixture", () => {
   it("validates against pack.schema.json", () => {
     const result = validatePack(loadSamplePack());
-    expect(result.valid).toBe(true);
-    expect(result.data?.blocks).toHaveLength(3);
-    expect(result.data?.items).toHaveLength(2);
-    expect(result.data?.questions).toHaveLength(2);
+    if (!result.valid) throw new Error(result.errors.join("\n"));
+    expect(result.data.blocks).toHaveLength(3);
+    expect(result.data.items).toHaveLength(2);
+    expect(result.data.questions).toHaveLength(2);
   });
 
   it("rejects the fixture once a field is corrupted", () => {
@@ -34,7 +34,7 @@ describe("sample-pack fixture", () => {
     pack.blocks[0].est_seconds = "not-a-number";
 
     const result = validatePack(pack);
-    expect(result.valid).toBe(false);
-    expect(result.errors?.[0]).toMatch(/est_seconds/);
+    if (result.valid) throw new Error("expected validation to fail");
+    expect(result.errors[0]).toMatch(/est_seconds/);
   });
 });

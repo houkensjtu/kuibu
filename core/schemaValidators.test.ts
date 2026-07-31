@@ -49,8 +49,8 @@ function samplePack() {
 describe("validatePack", () => {
   it("accepts a well-formed pack", () => {
     const result = validatePack(samplePack());
-    expect(result.valid).toBe(true);
-    expect(result.data?.manifest.book_id).toBe("sicp");
+    if (!result.valid) throw new Error(result.errors.join("\n"));
+    expect(result.data.manifest.book_id).toBe("sicp");
   });
 
   it("rejects a pack with a wrong field type", () => {
@@ -58,8 +58,8 @@ describe("validatePack", () => {
     // @ts-expect-error deliberately breaking the schema for this test
     broken.blocks[0].seq = "one";
     const result = validatePack(broken);
-    expect(result.valid).toBe(false);
-    expect(result.errors?.[0]).toMatch(/seq/);
+    if (result.valid) throw new Error("expected validation to fail");
+    expect(result.errors[0]).toMatch(/seq/);
   });
 });
 

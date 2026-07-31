@@ -17,11 +17,9 @@ addFormats(ajv);
 const validatePackSchema = ajv.compile<ContentPack>(packSchema);
 const validateEventSchema = ajv.compile<Event>(eventsSchema);
 
-export interface ValidationResult<T> {
-  valid: boolean;
-  data?: T;
-  errors?: string[];
-}
+export type ValidationResult<T> =
+  | { valid: true; data: T }
+  | { valid: false; errors: string[] };
 
 function formatErrors(errors: typeof validatePackSchema.errors): string[] {
   return (errors ?? []).map(
