@@ -9,10 +9,13 @@ import { packSession } from "../core/sessionPacker.js";
 import { buildQuestionQueue } from "../core/questionQueue.js";
 import { leitnerScheduler } from "../core/scheduler.js";
 import { checkinDate } from "../core/checkinDate.js";
+import { isCheckinComplete } from "../core/checkinJudgment.js";
+import { buildHeatmap } from "../core/heatmap.js";
 import { runReadingFlow } from "./readingFlow.js";
 import { showBlockInPagerOrFallback } from "./pager.js";
 import { runAnswerFlow } from "./answerFlow.js";
 import { askInTerminal } from "./answerPrompt.js";
+import { renderHeatmap } from "./renderHeatmap.js";
 
 // 阶段一先用一个固定默认值；每日时长目标可调（M2.19）会把它换成可配置项。
 const DEFAULT_TARGET_SECONDS = 720;
@@ -53,12 +56,15 @@ program
         targetSeconds: DEFAULT_TARGET_SECONDS,
       });
 
+      let totalReadSecondsToday = 0;
+
       if (todaysBlocks.length === 0) {
         console.log("这本书已经读完啦，今天只有复习题。");
       } else {
         await runReadingFlow(todaysBlocks, {
           showBlock: showBlockInPagerOrFallback,
           onBlockRead: (blockId, seconds) => {
+            totalReadSecondsToday += seconds;
             appendEvent(options.log, {
               id: randomUUID(),
               ts: new Date().toISOString(),
@@ -81,12 +87,15 @@ program
         dueItemIds,
       });
       const questionsById = new Map(pack.questions.map((q) => [q.id, q]));
+      const answeredQuestionIds = new Set<string>();
 
       const rl = createInterface({ input: process.stdin, output: process.stdout });
       try {
         await runAnswerFlow(queue, questionsById, {
           ask: (question, shuffled) => askInTerminal(rl, question, shuffled),
           onAnswered: (_entry, question, shuffled, _chosenIndex, correct) => {
+            answeredQuestionIds.add(question.id);
+
             if (correct) {
               console.log("答对了！");
             } else {
@@ -106,6 +115,32 @@ program
       } finally {
         rl.close();
       }
+
+      const today = checkinDate(new Date());
+      const passed = isCheckinComplete({
+        totalReadSeconds: totalReadSecondsToday,
+        targetSeconds: DEFAULT_TARGET_SECONDS,
+        queue,
+        answeredQuestionIds,
+      });
+
+      const checkinDates = new Set(state.checkinDates);
+      if (passed) {
+        appendEvent(options.log, {
+          id: randomUUID(),
+          ts: new Date().toISOString(),
+          type: "checkin",
+          date: today,
+        });
+        checkinDates.add(today);
+        console.log(`打卡成功！今天读了 ${totalReadSecondsToday} 秒。`);
+      } else {
+        const remaining = Math.max(0, DEFAULT_TARGET_SECONDS - totalReadSecondsToday);
+        console.log(`还没打上卡：阅读时长还差 ${remaining} 秒。`);
+      }
+
+      console.log();
+      console.log(renderHeatmap(buildHeatmap(checkinDates, today)));
     } catch (err) {
       if (err instanceof PackLoadError) {
         console.error(err.message);

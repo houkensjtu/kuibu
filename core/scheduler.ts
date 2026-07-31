@@ -1,3 +1,5 @@
+import { shiftDateString } from "./checkinDate.js";
+
 export type Box = 0 | 1 | 2 | 3 | 4;
 
 /**
@@ -34,18 +36,8 @@ export interface Scheduler {
   ): ItemState;
 }
 
-function addDays(dateStr: string, days: number): string {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  const date = new Date(year, month - 1, day);
-  date.setDate(date.getDate() + days);
-  const yy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const dd = String(date.getDate()).padStart(2, "0");
-  return `${yy}-${mm}-${dd}`;
-}
-
 export function dueDateForBox(box: Box, fromDate: string): string {
-  return addDays(fromDate, BOX_INTERVAL_DAYS[box]);
+  return shiftDateString(fromDate, BOX_INTERVAL_DAYS[box]);
 }
 
 export const leitnerScheduler: Scheduler = {

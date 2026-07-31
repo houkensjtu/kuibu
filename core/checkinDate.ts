@@ -14,3 +14,14 @@ export function checkinDate(ts: Date, offsetHours = DEFAULT_OFFSET_HOURS): strin
   const day = String(shifted.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+/** 把一个 "YYYY-MM-DD" 日期字符串平移 deltaDays 天（可正可负），本地日历意义上的平移。 */
+export function shiftDateString(dateStr: string, deltaDays: number): string {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  date.setDate(date.getDate() + deltaDays);
+  const yy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  return `${yy}-${mm}-${dd}`;
+}
