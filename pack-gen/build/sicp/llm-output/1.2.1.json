@@ -1,0 +1,164 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 3,
+      "est_seconds": 200,
+      "recap_md": "Knowing the rules of programming (defining procedures) isn't yet the same as knowing how to program well - like a novice chess player, we need to learn to visualize the processes a procedure generates before we can predict its behavior; this section studies a few common 'shapes' those processes take, using deliberately simple procedures as illustrative test patterns rather than practical code."
+    },
+    {
+      "start_paragraph_index": 4,
+      "end_paragraph_index": 6,
+      "est_seconds": 160,
+      "recap_md": "The factorial function can be computed recursively by observing that n! equals n times (n-1)!, giving a procedure whose definition calls itself, with its behavior traceable via the substitution model."
+    },
+    {
+      "start_paragraph_index": 7,
+      "end_paragraph_index": 9,
+      "est_seconds": 150,
+      "recap_md": "An alternative approach to factorial maintains a running product and a counter that are simultaneously updated, step by step, from 1 up to n, rather than deferring any multiplication."
+    },
+    {
+      "start_paragraph_index": 10,
+      "end_paragraph_index": 13,
+      "est_seconds": 170,
+      "recap_md": "Recasting that running-product idea as a procedure (fact-iter) gives a second factorial implementation; despite carrying out the same multiplications in the same order and taking a number of steps proportional to n like the first version, tracing it with the substitution model reveals a different overall shape."
+    },
+    {
+      "start_paragraph_index": 14,
+      "end_paragraph_index": 15,
+      "est_seconds": 190,
+      "recap_md": "The first (recursive) process expands into a growing chain of deferred multiplications before contracting as they're carried out - a linear recursive process whose bookkeeping grows with n - while the second process instead just updates a fixed set of current variable values at each step with no growth or shrinkage - a linear iterative process."
+    },
+    {
+      "start_paragraph_index": 16,
+      "end_paragraph_index": 17,
+      "est_seconds": 190,
+      "recap_md": "An iterative process's state is fully captured by its program variables at any point, so computation could resume from just those values, whereas a recursive process carries extra hidden information about its position in the deferred-operations chain; crucially, 'recursive process' (how computation evolves) must not be confused with 'recursive procedure' (a definition that syntactically refers to itself) - fact-iter is written recursively but generates an iterative process."
+    },
+    {
+      "start_paragraph_index": 18,
+      "end_paragraph_index": 18,
+      "est_seconds": 150,
+      "recap_md": "Most conventional language implementations consume ever-growing memory for any recursive procedure call even when the underlying process is iterative, forcing those languages to rely on special looping constructs; a tail-recursive implementation like the Scheme one used here instead executes such iterative processes in constant space, making dedicated looping syntax merely convenient rather than necessary."
+    },
+    {
+      "start_paragraph_index": 19,
+      "end_paragraph_index": 21,
+      "est_seconds": 150,
+      "recap_md": "Exercise 1.9 presents two alternative definitions of integer addition built from inc and dec - one wrapping the recursive call in an outer inc, the other threading the accumulated result as an argument - and asks you to trace each with the substitution model to classify the resulting process as recursive or iterative."
+    },
+    {
+      "start_paragraph_index": 22,
+      "end_paragraph_index": 25,
+      "est_seconds": 170,
+      "recap_md": "Exercise 1.10 introduces Ackermann's function, defined by nested conditional cases including a self-referential case where A calls itself with an argument that is itself a call to A, and asks you to evaluate it for a few small input pairs."
+    },
+    {
+      "start_paragraph_index": 26,
+      "end_paragraph_index": 28,
+      "est_seconds": 140,
+      "recap_md": "Building on Ackermann's function, Exercise 1.10 further defines three procedures each fixing the first argument to A while varying the second, and asks you to find closed-form mathematical formulas for what each one computes."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "The factorial function can be computed either recursively (n! = n * (n-1)!), generating a chain of deferred multiplications, or iteratively via a running product and counter updated step by step - two different procedures that carry out the same sequence of multiplications to reach the same result.",
+      "block_indices": [1, 2, 3]
+    },
+    {
+      "statement": "A linear recursive process is characterized by a chain of deferred operations that first expands and then contracts as those operations are carried out; the amount of information the interpreter must maintain to track that chain grows linearly with the size of the input.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "A linear iterative process is one whose entire state at any point is summarized by a fixed number of state variables plus a fixed update rule (and an optional end test); it does not grow or shrink as the computation proceeds.",
+      "block_indices": [4, 5]
+    },
+    {
+      "statement": "The distinction between a recursive process and a recursive procedure is about evolution versus syntax: a procedure is 'recursive' if its definition refers to itself, but the process it generates can still be iterative (as with fact-iter) if its state is fully captured by a fixed set of variables rather than by growing hidden bookkeeping.",
+      "block_indices": [5]
+    },
+    {
+      "statement": "A tail-recursive implementation (such as Scheme's) can execute an iterative process in constant space even when that process is expressed via a recursive procedure call, unlike most conventional language implementations, which consume memory proportional to the number of recursive calls regardless of whether the underlying process is iterative.",
+      "block_indices": [6]
+    },
+    {
+      "statement": "Applying the process/procedure distinction to Exercise 1.9's two recursive definitions of addition: the version that wraps the recursive call in an outer `inc` defers that increment, building a chain of deferred operations and so generating a linear recursive process, while the version that threads the accumulated sum forward as an argument keeps all needed information in its arguments at every step, generating a linear iterative process instead.",
+      "block_indices": [7]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "What is the key difference between the two factorial implementations described in this section?",
+      "options": [
+        "One computes n! by recursively multiplying n by (n-1)!, while the other computes it by iteratively updating a running product and counter from 1 up to n",
+        "One uses addition instead of multiplication to compute the factorial",
+        "One only produces correct results for even values of n, while the other works for all n",
+        "One relies on a built-in Scheme factorial primitive, while the other does not"
+      ],
+      "answer_index": 0,
+      "explanation": "The section presents exactly these two strategies for the same problem: a recursive formulation based on n! = n * (n-1)!, and an iterative formulation that maintains a running product and counter updated step by step - both correct, both taking steps proportional to n, but organized differently."
+    },
+    {
+      "item_index": 1,
+      "prompt": "What does it mean for a process to be 'linear recursive'?",
+      "options": [
+        "It builds up a chain of deferred operations that expands and then contracts, and the bookkeeping needed to track that chain grows proportionally to the input size",
+        "It is any process implemented using a procedure that calls itself, regardless of how much information the interpreter must track",
+        "It calls itself exactly once for every line of source code in its definition",
+        "It runs in constant memory no matter how large the input is"
+      ],
+      "answer_index": 0,
+      "explanation": "Linear recursion refers to the process's shape, not merely the procedure's syntax: it grows by deferring operations (like the pending multiplications in computing n!) and then shrinks as they're performed, with the deferred-operation bookkeeping growing linearly with n."
+    },
+    {
+      "item_index": 2,
+      "prompt": "What characterizes a linear iterative process?",
+      "options": [
+        "Its entire state at any point is captured by a fixed number of state variables plus a fixed update rule, so it neither grows nor shrinks as the computation proceeds",
+        "It is any process whose defining procedure contains a looping construct such as `for` or `while`",
+        "It never calls a procedure more than once during the entire computation",
+        "It requires the interpreter to track an ever-growing chain of pending operations, just like a recursive process does"
+      ],
+      "answer_index": 0,
+      "explanation": "The defining trait of an iterative process is that a fixed set of state variables (like product, counter, and max-count) plus a fixed update rule fully describe where the computation stands at every step - there is nothing hidden to grow over time."
+    },
+    {
+      "item_index": 3,
+      "prompt": "The procedure `fact-iter` calls itself within its own definition, yet the text describes the process it generates as iterative. How can both be true?",
+      "options": [
+        "'Recursive' versus 'iterative' applied to a procedure describes syntax (whether the definition refers to itself), while applied to a process it describes how the computation evolves; fact-iter's process is iterative because its complete state fits in a fixed set of state variables, even though its definition is syntactically recursive",
+        "The text is being inconsistent - any procedure whose definition calls itself must generate a recursive process",
+        "fact-iter is silently rewritten by the interpreter into a non-recursive procedure before it is executed",
+        "It's only called iterative because its parameters happen to be named `product` and `counter`"
+      ],
+      "answer_index": 0,
+      "explanation": "This is precisely the distinction the text draws: 'recursive procedure' is a syntactic property (self-reference in the definition), while 'recursive/iterative process' describes the shape of computation. fact-iter is syntactically recursive but its process is iterative because the interpreter only ever needs to track its three state variables."
+    },
+    {
+      "item_index": 4,
+      "prompt": "Why does the text call Scheme's implementation 'tail-recursive'?",
+      "options": [
+        "Because it can execute an iterative process expressed via a recursive procedure call in constant space, unlike typical implementations of languages such as Ada, Pascal, or C, which consume memory that grows with the number of recursive calls even for iterative processes",
+        "Because it only permits recursive calls to appear at the very end (tail) of a source file",
+        "Because every recursive procedure is automatically rewritten into a `while` loop before it runs",
+        "Because it caps recursive procedures at a fixed maximum call depth called the 'tail'"
+      ],
+      "answer_index": 0,
+      "explanation": "Tail-recursive here means the implementation recognizes when a recursive procedure call describes an iterative process and executes it in constant space, so special-purpose looping constructs become syntactic convenience rather than a necessity - unlike languages whose recursive calls always cost growing memory."
+    },
+    {
+      "item_index": 5,
+      "prompt": "Exercise 1.9 gives two recursive definitions of addition using `inc` and `dec`. What distinguishes the process generated by `(define (+ a b) (if (= a 0) b (inc (+ (dec a) b))))` from the process generated by `(define (+ a b) (if (= a 0) b (+ (dec a) (inc b))))`?",
+      "options": [
+        "The first defers an `inc` to be applied after each recursive call returns, building a chain of deferred operations (a recursive process), while the second carries the running sum forward as an argument at every step, needing no deferred operations (an iterative process)",
+        "The first generates an iterative process and the second generates a recursive process",
+        "Both generate exactly the same kind of process, since they compute the same mathematical sum",
+        "The first only works when a and b are equal, while the second works for any a and b"
+      ],
+      "answer_index": 0,
+      "explanation": "In the first definition, each recursive call defers an outer `inc` until the recursive call returns, producing a growing chain of deferred increments just like the factorial's deferred multiplications - a recursive process. In the second, `b` already holds the up-to-date partial sum at every step, so there is nothing left to defer - an iterative process, exactly analogous to fact-iter."
+    }
+  ]
+}

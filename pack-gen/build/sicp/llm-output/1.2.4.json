@@ -1,0 +1,126 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 1,
+      "est_seconds": 130,
+      "recap_md": "Exponentiation b^n is first defined via the naive recursive relation b^n = b · b^(n-1), b^0 = 1, translated directly into a recursive `expt` procedure."
+    },
+    {
+      "start_paragraph_index": 2,
+      "end_paragraph_index": 3,
+      "est_seconds": 140,
+      "recap_md": "That recursive `expt` process takes Θ(n) steps and Θ(n) space; recasting it as an iterative process (like the earlier factorial example), using a counter and a running product, keeps the Θ(n) step count but drops space to Θ(1)."
+    },
+    {
+      "start_paragraph_index": 4,
+      "end_paragraph_index": 5,
+      "est_seconds": 160,
+      "recap_md": "Successive squaring - computing b^8 with three squarings instead of seven multiplications, then generalizing the rule to any n by squaring when the exponent is even and peeling off one factor when it's odd - suggests a faster method than either previous version."
+    },
+    {
+      "start_paragraph_index": 6,
+      "end_paragraph_index": 8,
+      "est_seconds": 170,
+      "recap_md": "That successive-squaring rule becomes the `fast-expt` procedure: square the recursive result on even exponents, multiply by one more `b` on odd exponents, using a `remainder`-based `even?` test."
+    },
+    {
+      "start_paragraph_index": 9,
+      "end_paragraph_index": 10,
+      "est_seconds": 170,
+      "recap_md": "`fast-expt`'s process grows only Θ(log n) in both steps and space, since squaring b^n to reach b^(2n) costs just one more multiplication, so the number of multiplications needed grows with log₂n rather than with n itself; an iterative version with the same log-step growth is possible too, though less straightforward to write."
+    },
+    {
+      "start_paragraph_index": 11,
+      "end_paragraph_index": 11,
+      "est_seconds": 150,
+      "recap_md": "Exercise 1.16 asks for an iterative (not recursive) version of successive squaring, by keeping an extra state variable whose product with the current b^n stays invariant across steps."
+    },
+    {
+      "start_paragraph_index": 12,
+      "end_paragraph_index": 14,
+      "est_seconds": 170,
+      "recap_md": "Exercise 1.17 draws the analogy to multiplication-by-repeated-addition - a linear `*` procedure is given - and asks for a logarithmic-step version built from `double` and `halve` instead of ordinary addition."
+    },
+    {
+      "start_paragraph_index": 15,
+      "end_paragraph_index": 15,
+      "est_seconds": 90,
+      "recap_md": "Exercise 1.18 asks to combine the iterative successive-squaring technique with the double/halve trick into a logarithmic-step iterative multiplication procedure."
+    },
+    {
+      "start_paragraph_index": 16,
+      "end_paragraph_index": 17,
+      "est_seconds": 200,
+      "recap_md": "Exercise 1.19 extends the same successive-squaring idea to computing Fibonacci numbers in logarithmic time, by working out how to square the state-transformation T_pq itself."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Computing b^n via the direct recursive definition b^n = b · b^(n-1) (the `expt` procedure) produces a linear recursive process: Θ(n) steps and Θ(n) space, because each pending multiplication has to wait for the recursive call beneath it to return.",
+      "block_indices": [0]
+    },
+    {
+      "statement": "Reformulating exponentiation as an iterative process (`expt-iter`, carrying a counter and a running product) keeps the same Θ(n) number of steps but reduces space to Θ(1), since there's no growing chain of deferred operations - directly analogous to the linear-recursive-vs-linear-iterative factorial comparison.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "Successive squaring - using b^n = (b^(n/2))^2 when n is even, and b^n = b · b^(n-1) when n is odd - lets `fast-expt` compute b^n in only Θ(log n) steps and Θ(log n) space, because each extra multiplication allowed roughly doubles the exponent that can be reached.",
+      "block_indices": [2, 3, 4]
+    },
+    {
+      "statement": "The successive-squaring trick illustrates a general principle: recognizing exploitable structure in a problem can turn an apparently linear-growth computation into one with logarithmic growth - the same idea reapplies to iterative exponentiation (Exercise 1.16), multiplication via doubling and halving (Exercises 1.17-1.18), and even computing Fibonacci numbers by squaring a state transformation (Exercise 1.19).",
+      "block_indices": [4, 5, 6, 7, 8]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "The recursive `expt` procedure computes b^n using b^n = b · b^(n-1). What are its time and space complexity?",
+      "options": [
+        "Θ(n) steps and Θ(n) space",
+        "Θ(n) steps and Θ(1) space",
+        "Θ(log n) steps and Θ(log n) space",
+        "Θ(n) steps and Θ(n²) space"
+      ],
+      "answer_index": 0,
+      "explanation": "Each call to `expt` must wait for `(expt b (- n 1))` to return before it can multiply by `b`, so there is a chain of n deferred multiplications outstanding at the deepest point of the recursion - that chain costs both Θ(n) steps to unwind and Θ(n) space to hold, exactly like the linear recursive `factorial` process."
+    },
+    {
+      "item_index": 1,
+      "prompt": "How does `expt-iter`'s process compare to the recursive `expt` process in order of growth?",
+      "options": [
+        "Same Θ(n) number of steps, but Θ(1) space instead of Θ(n)",
+        "Fewer steps, Θ(log n), but the same Θ(n) space",
+        "Both steps and space drop to Θ(1)",
+        "Both steps and space stay Θ(n) - iteration gives no benefit here"
+      ],
+      "answer_index": 0,
+      "explanation": "`expt-iter` carries the running product and a counter as explicit state instead of leaving multiplications pending on the call stack, so no growing chain of deferred operations ever exists - that's what drops space to Θ(1). It still performs one multiplication per decrement of the counter, so the step count is still linear in n."
+    },
+    {
+      "item_index": 2,
+      "prompt": "Why does `fast-expt` need only about log₂n multiplications to compute b^n, instead of about n?",
+      "options": [
+        "Squaring b^(n/2) to get b^n means each extra multiplication roughly doubles the size of exponent reachable, so the number of multiplications needed grows like log₂n rather than n",
+        "Because the interpreter automatically caches every intermediate power of b so repeated exponents cost nothing",
+        "Because `even?` discards half of all possible input values as invalid before any computation happens",
+        "Because odd exponents are silently rounded down to the nearest even exponent before multiplying"
+      ],
+      "answer_index": 0,
+      "explanation": "Each squaring step doubles the exponent handled for the cost of one multiplication, so reaching exponent n takes about log₂n doublings/multiplications rather than n individual multiplications - that's the reasoning behind fast-expt's Θ(log n) growth."
+    },
+    {
+      "item_index": 3,
+      "prompt": "Beyond making exponentiation faster, what general lesson about algorithm design does successive squaring illustrate?",
+      "options": [
+        "Recognizing exploitable structure in a problem (like halving the exponent) can turn a computation that looks like it needs linear growth into one with logarithmic growth",
+        "Iterative processes are always asymptotically faster than recursive ones regardless of the algorithm used",
+        "Any problem expressible as repeated multiplication can be solved in constant time on a fast enough computer",
+        "Logarithmic-growth algorithms only exist for numeric exponentiation and don't generalize to other repeated operations"
+      ],
+      "answer_index": 0,
+      "explanation": "The chapter reuses the exact same halving/doubling structure to speed up multiplication (Exercises 1.17-1.18) and even Fibonacci computation (Exercise 1.19) - the point is not something special about exponents, but a general technique: exploiting a problem's structure to skip most of the work that a naive linear approach would do."
+    }
+  ]
+}

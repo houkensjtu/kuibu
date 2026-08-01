@@ -1,0 +1,164 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 5,
+      "est_seconds": 180,
+      "recap_md": "The `cube` example shows why naming a procedure lets you express the abstract *concept* of cubing rather than just individual products; procedures that accept or return other procedures are called higher-order procedures, this section's real subject."
+    },
+    {
+      "start_paragraph_index": 6,
+      "end_paragraph_index": 11,
+      "est_seconds": 200,
+      "recap_md": "Three separately-written procedures - summing integers, summing cubes, and summing a series that converges toward π/8 - are shown side by side, each recursively summing some term over a range from `a` to `b`."
+    },
+    {
+      "start_paragraph_index": 12,
+      "end_paragraph_index": 16,
+      "est_seconds": 190,
+      "recap_md": "Noticing that all three summing procedures differ only in the term-function and the next-value function, the text draws the parallel to mathematical sigma notation and turns those two 'slots' into formal parameters, arriving at a single general `sum` procedure."
+    },
+    {
+      "start_paragraph_index": 17,
+      "end_paragraph_index": 20,
+      "est_seconds": 140,
+      "recap_md": "`sum` is called just like any procedure - passing it `cube` and an incrementing helper `inc` reproduces `sum-cubes`, and evaluating it over 1 through 10 gives 3025."
+    },
+    {
+      "start_paragraph_index": 21,
+      "end_paragraph_index": 24,
+      "est_seconds": 130,
+      "recap_md": "An `identity` procedure (returning its argument unchanged) lets `sum` reproduce `sum-integers` too, and summing 1 through 10 this way gives 55."
+    },
+    {
+      "start_paragraph_index": 25,
+      "end_paragraph_index": 28,
+      "est_seconds": 150,
+      "recap_md": "`pi-sum` is likewise rebuilt on top of `sum`, using its own small internal `pi-term`/`pi-next` helpers, and multiplying its result by 8 yields a (slowly converging) numeric approximation of π."
+    },
+    {
+      "start_paragraph_index": 29,
+      "end_paragraph_index": 31,
+      "est_seconds": 190,
+      "recap_md": "Having a general `sum` lets you build further abstractions on top of it, like an `integral` procedure that numerically approximates a definite integral by summing narrow rectangle strips - tested against `cube` between 0 and 1, whose exact integral is 1/4."
+    },
+    {
+      "start_paragraph_index": 32,
+      "end_paragraph_index": 34,
+      "est_seconds": 180,
+      "recap_md": "Exercise 1.29 asks for a more accurate Simpson's-Rule integrator built the same way, while Exercise 1.30 asks you to rewrite `sum` so it generates an iterative process instead of a linear recursion."
+    },
+    {
+      "start_paragraph_index": 35,
+      "end_paragraph_index": 38,
+      "est_seconds": 190,
+      "recap_md": "Exercise 1.31 asks for a `product` higher-order procedure analogous to `sum` (useful for `factorial` and a π approximation), and Exercise 1.32 asks you to generalize both `sum` and `product` further into a single `accumulate` procedure parameterized by a combining function and a base value."
+    },
+    {
+      "start_paragraph_index": 39,
+      "end_paragraph_index": 40,
+      "est_seconds": 150,
+      "recap_md": "Exercise 1.33 extends `accumulate` once more into `filtered-accumulate`, adding a predicate that filters which terms get combined, and asks you to use it to express both 'sum of squares of primes in a range' and 'product of integers less than n relatively prime to n.'"
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Procedures that accept other procedures as arguments, or return procedures as values, are called higher-order procedures; they let a language capture common programming patterns as explicit, nameable, reusable abstractions rather than leaving them implicit in repeated code.",
+      "block_indices": [0, 8]
+    },
+    {
+      "statement": "sum-integers, sum-cubes, and pi-sum are three superficially different procedures that are actually the same pattern in disguise: each recursively sums a term across a range, differing only in which function computes the term from `a` and which function computes the next `a`.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "That shared pattern is an instance of the mathematical concept of summation of a series (sigma notation); recognizing it as a named abstraction - rather than three unrelated procedures - is what motivates turning the template's slots into explicit formal parameters.",
+      "block_indices": [2]
+    },
+    {
+      "statement": "Turning the template into a general `sum` procedure with `term` and `next` as parameters means sum-cubes, sum-integers, and pi-sum can all be rebuilt as simple calls to `sum`, passing in just the right term/next procedures instead of duplicating the recursive summing logic each time.",
+      "block_indices": [3, 4, 5]
+    },
+    {
+      "statement": "Once `sum` exists as a building block, it can support still higher abstractions built on top of it, such as approximating a definite integral by summing many small rectangle-strip evaluations of a function - showing how higher-order procedures compose into increasingly powerful abstractions.",
+      "block_indices": [6]
+    },
+    {
+      "statement": "`sum` is just the simplest case of a broader family of higher-order combining abstractions: `product` generalizes it to multiplication, `accumulate` generalizes both `sum` and `product` under one combining function and base value, and `filtered-accumulate` generalizes further by only combining terms that pass a filter predicate.",
+      "block_indices": [8, 9]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "According to the text, what makes a procedure 'higher-order'?",
+      "options": [
+        "It takes another procedure as an argument, or returns a procedure as its value",
+        "It calls itself recursively at least twice per invocation",
+        "It is defined using `define` instead of `lambda`",
+        "It operates on lists instead of numbers"
+      ],
+      "answer_index": 0,
+      "explanation": "The text defines higher-order procedures exactly this way: procedures that manipulate procedures, either by accepting them as arguments or by returning them as values. Recursion style, the defining form used, and the data type operated on are all unrelated to this definition."
+    },
+    {
+      "item_index": 1,
+      "prompt": "What do sum-integers, sum-cubes, and pi-sum actually have in common, according to the text?",
+      "options": [
+        "They are all identical except for the procedure name, the term-computing function, and the next-value function",
+        "They all use the same fixed step size of 1 between successive values of a",
+        "They all only work correctly when a and b are equal",
+        "They all return the same numeric result regardless of a and b"
+      ],
+      "answer_index": 0,
+      "explanation": "The text states they differ only in name, the function used to compute each term, and the function used to get the next a. This rules out a fixed step of 1 (pi-sum steps by 4), any requirement that a equal b, and identical results (they sum different quantities)."
+    },
+    {
+      "item_index": 2,
+      "prompt": "Why does the text bring up mathematical sigma (summation) notation right after noticing the shared template among sum-integers, sum-cubes, and pi-sum?",
+      "options": [
+        "To show that mathematicians had already recognized 'summation of a series' as a reusable abstraction, and to motivate doing the same thing in code by turning the template's slots into formal parameters",
+        "To argue that Scheme's arithmetic is less powerful than standard mathematical notation and needs sigma notation added to it",
+        "To prove that pi-sum's result is mathematically exact rather than an approximation",
+        "To show that sigma notation removes the need for a lower or upper bound in the summation"
+      ],
+      "answer_index": 0,
+      "explanation": "The text draws a direct parallel: sigma notation lets mathematicians reason about summation itself, independent of any particular series, and this is offered as evidence that the same abstraction - parameterized by term and next - is worth capturing as a procedure."
+    },
+    {
+      "item_index": 3,
+      "prompt": "After defining the general `sum` procedure with `term` and `next` as parameters, how are `sum-cubes`, `sum-integers`, and `pi-sum` redefined?",
+      "options": [
+        "As thin wrappers that call `sum` with the appropriate term/next procedures (like cube/inc, identity/inc, or pi-term/pi-next) filled in",
+        "They are left unchanged, since `sum` is only meant to replace pi-sum",
+        "They are redefined to call each other instead of calling `sum`",
+        "They are rewritten so `sum` is passed as their term argument"
+      ],
+      "answer_index": 0,
+      "explanation": "The text redefines sum-cubes as (sum cube a inc b), sum-integers as (sum identity a inc b), and pi-sum using its own internal pi-term/pi-next helpers passed to sum - in every case the original procedure becomes a small wrapper that just supplies term and next."
+    },
+    {
+      "item_index": 4,
+      "prompt": "What does the `integral` procedure illustrate about `sum`, according to the text?",
+      "options": [
+        "That once you have a general summing abstraction, you can build further abstractions on top of it, like numerically approximating a definite integral by summing small rectangle-strip evaluations of a function",
+        "That `sum` can only be used for series that converge to a rational number, unlike pi-sum",
+        "That `integral` must reimplement its own recursive summation logic separately from `sum`, since integration is fundamentally different from summation",
+        "That `sum` cannot handle non-integer step sizes such as `dx`"
+      ],
+      "answer_index": 0,
+      "explanation": "`integral` is defined directly in terms of `sum`, passing f as the term and an add-dx helper as next, with a fractional step dx - demonstrating both that sum handles non-integer steps fine and that it serves as a building block for a genuinely new abstraction (numerical integration)."
+    },
+    {
+      "item_index": 5,
+      "prompt": "How do `product`, `accumulate`, and `filtered-accumulate` (introduced in the exercises) relate to `sum`?",
+      "options": [
+        "They are progressively more general higher-order abstractions: `product` generalizes the combining operation from addition to multiplication, `accumulate` further parameterizes the combiner and base value themselves, and `filtered-accumulate` adds a predicate to select which terms get combined at all",
+        "They are unrelated alternatives to `sum` meant to replace it entirely once defined",
+        "They only work on lists of numbers, whereas `sum` only works on ranges of integers",
+        "They remove the need for a `term` procedure, operating directly on raw numbers instead"
+      ],
+      "answer_index": 0,
+      "explanation": "The exercises build an explicit generalization chain: product mirrors sum's structure but multiplies; accumulate replaces the hardcoded + and 0 with a combiner procedure and null-value; filtered-accumulate adds a filter predicate on top of accumulate so only terms satisfying it are combined."
+    }
+  ]
+}

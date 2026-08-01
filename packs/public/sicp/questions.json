@@ -376,5 +376,747 @@
     ],
     "answer_index": 0,
     "explanation": "The text's motivation is namespace hygiene: only sqrt itself matters to sqrt's callers, while good-enough?/improve/sqrt-iter are implementation clutter that could collide with someone else's same-named procedures - block structure (nested definitions) hides them inside sqrt instead of leaving them at top level."
+  },
+  {
+    "id": "q0028",
+    "item_id": "k0028",
+    "type": "single_choice",
+    "prompt": "What is the key difference between the two factorial implementations described in this section?",
+    "options": [
+      "One computes n! by recursively multiplying n by (n-1)!, while the other computes it by iteratively updating a running product and counter from 1 up to n",
+      "One uses addition instead of multiplication to compute the factorial",
+      "One only produces correct results for even values of n, while the other works for all n",
+      "One relies on a built-in Scheme factorial primitive, while the other does not"
+    ],
+    "answer_index": 0,
+    "explanation": "The section presents exactly these two strategies for the same problem: a recursive formulation based on n! = n * (n-1)!, and an iterative formulation that maintains a running product and counter updated step by step - both correct, both taking steps proportional to n, but organized differently."
+  },
+  {
+    "id": "q0029",
+    "item_id": "k0029",
+    "type": "single_choice",
+    "prompt": "What does it mean for a process to be 'linear recursive'?",
+    "options": [
+      "It builds up a chain of deferred operations that expands and then contracts, and the bookkeeping needed to track that chain grows proportionally to the input size",
+      "It is any process implemented using a procedure that calls itself, regardless of how much information the interpreter must track",
+      "It calls itself exactly once for every line of source code in its definition",
+      "It runs in constant memory no matter how large the input is"
+    ],
+    "answer_index": 0,
+    "explanation": "Linear recursion refers to the process's shape, not merely the procedure's syntax: it grows by deferring operations (like the pending multiplications in computing n!) and then shrinks as they're performed, with the deferred-operation bookkeeping growing linearly with n."
+  },
+  {
+    "id": "q0030",
+    "item_id": "k0030",
+    "type": "single_choice",
+    "prompt": "What characterizes a linear iterative process?",
+    "options": [
+      "Its entire state at any point is captured by a fixed number of state variables plus a fixed update rule, so it neither grows nor shrinks as the computation proceeds",
+      "It is any process whose defining procedure contains a looping construct such as `for` or `while`",
+      "It never calls a procedure more than once during the entire computation",
+      "It requires the interpreter to track an ever-growing chain of pending operations, just like a recursive process does"
+    ],
+    "answer_index": 0,
+    "explanation": "The defining trait of an iterative process is that a fixed set of state variables (like product, counter, and max-count) plus a fixed update rule fully describe where the computation stands at every step - there is nothing hidden to grow over time."
+  },
+  {
+    "id": "q0031",
+    "item_id": "k0031",
+    "type": "single_choice",
+    "prompt": "The procedure `fact-iter` calls itself within its own definition, yet the text describes the process it generates as iterative. How can both be true?",
+    "options": [
+      "'Recursive' versus 'iterative' applied to a procedure describes syntax (whether the definition refers to itself), while applied to a process it describes how the computation evolves; fact-iter's process is iterative because its complete state fits in a fixed set of state variables, even though its definition is syntactically recursive",
+      "The text is being inconsistent - any procedure whose definition calls itself must generate a recursive process",
+      "fact-iter is silently rewritten by the interpreter into a non-recursive procedure before it is executed",
+      "It's only called iterative because its parameters happen to be named `product` and `counter`"
+    ],
+    "answer_index": 0,
+    "explanation": "This is precisely the distinction the text draws: 'recursive procedure' is a syntactic property (self-reference in the definition), while 'recursive/iterative process' describes the shape of computation. fact-iter is syntactically recursive but its process is iterative because the interpreter only ever needs to track its three state variables."
+  },
+  {
+    "id": "q0032",
+    "item_id": "k0032",
+    "type": "single_choice",
+    "prompt": "Why does the text call Scheme's implementation 'tail-recursive'?",
+    "options": [
+      "Because it can execute an iterative process expressed via a recursive procedure call in constant space, unlike typical implementations of languages such as Ada, Pascal, or C, which consume memory that grows with the number of recursive calls even for iterative processes",
+      "Because it only permits recursive calls to appear at the very end (tail) of a source file",
+      "Because every recursive procedure is automatically rewritten into a `while` loop before it runs",
+      "Because it caps recursive procedures at a fixed maximum call depth called the 'tail'"
+    ],
+    "answer_index": 0,
+    "explanation": "Tail-recursive here means the implementation recognizes when a recursive procedure call describes an iterative process and executes it in constant space, so special-purpose looping constructs become syntactic convenience rather than a necessity - unlike languages whose recursive calls always cost growing memory."
+  },
+  {
+    "id": "q0033",
+    "item_id": "k0033",
+    "type": "single_choice",
+    "prompt": "Exercise 1.9 gives two recursive definitions of addition using `inc` and `dec`. What distinguishes the process generated by `(define (+ a b) (if (= a 0) b (inc (+ (dec a) b))))` from the process generated by `(define (+ a b) (if (= a 0) b (+ (dec a) (inc b))))`?",
+    "options": [
+      "The first defers an `inc` to be applied after each recursive call returns, building a chain of deferred operations (a recursive process), while the second carries the running sum forward as an argument at every step, needing no deferred operations (an iterative process)",
+      "The first generates an iterative process and the second generates a recursive process",
+      "Both generate exactly the same kind of process, since they compute the same mathematical sum",
+      "The first only works when a and b are equal, while the second works for any a and b"
+    ],
+    "answer_index": 0,
+    "explanation": "In the first definition, each recursive call defers an outer `inc` until the recursive call returns, producing a growing chain of deferred increments just like the factorial's deferred multiplications - a recursive process. In the second, `b` already holds the up-to-date partial sum at every step, so there is nothing left to defer - an iterative process, exactly analogous to fact-iter."
+  },
+  {
+    "id": "q0034",
+    "item_id": "k0034",
+    "type": "single_choice",
+    "prompt": "Why does the process generated by evaluating (fib 5) with the direct recursive definition trace out a tree shape rather than a straight line of calls?",
+    "options": [
+      "Because each invocation of fib (except the base cases n=0 and n=1) makes two recursive calls, so the tree of calls branches into two at every level",
+      "Because Scheme automatically parallelizes recursive calls into separate branches for performance",
+      "Because fib recomputes (fib 0) and (fib 1) only once each, and the tree is just a visual artifact of caching those results",
+      "Because the cond special form forces every clause's branch to be evaluated regardless of which one actually matches"
+    ],
+    "answer_index": 0,
+    "explanation": "fib calls itself twice per non-base invocation (once for n-1 and once for n-2), and this branching-in-two repeats at every level of the recursion, which is exactly what produces the tree-shaped evolved process."
+  },
+  {
+    "id": "q0035",
+    "item_id": "k0035",
+    "type": "single_choice",
+    "prompt": "What is the actual growth-rate tradeoff of the naive tree-recursive fib procedure, compared to the linear iterative fib-iter version?",
+    "options": [
+      "The tree-recursive version needs a number of steps that grows exponentially with n but only linear space (proportional to tree depth); the iterative version needs only linear steps and constant space",
+      "Both versions need the same number of steps, but the tree-recursive version uses less memory because it never keeps prior results around",
+      "The tree-recursive version needs linear steps but exponential space, since it must store every subtree it ever computes",
+      "The tree-recursive version is actually faster in practice, because modern Scheme compilers automatically eliminate its redundant subtree computations"
+    ],
+    "answer_index": 0,
+    "explanation": "The number of steps for the tree-recursive process is proportional to the number of nodes in the tree, which grows exponentially (roughly like Fib(n) itself); the space needed is only proportional to the tree's maximum depth, i.e. linear in n - unlike the iterative version's linear steps and constant space."
+  },
+  {
+    "id": "q0036",
+    "item_id": "k0036",
+    "type": "single_choice",
+    "prompt": "According to the reduction rule given for count-change, the number of ways to change amount a using n kinds of coins equals what?",
+    "options": [
+      "The number of ways to change a using all but the first kind of coin, plus the number of ways to change (a - d) using all n kinds of coins, where d is the first kind's denomination",
+      "The number of ways to change a using only the first kind of coin, plus the number of ways to change a using only the remaining n-1 kinds",
+      "The number of ways to change a using n-1 kinds of coins, multiplied by the number of coin kinds available",
+      "The number of ways to change a/n using each single kind of coin, summed over all n kinds"
+    ],
+    "answer_index": 0,
+    "explanation": "The relation splits all ways of making change into two disjoint groups: those that never use the first kind of coin (leaving n-1 kinds to change the same amount a), and those that use at least one of the first kind of coin (which reduces to changing the smaller amount a-d with all n kinds still available)."
+  },
+  {
+    "id": "q0037",
+    "item_id": "k0037",
+    "type": "single_choice",
+    "prompt": "What does the text conclude, using the fib and count-change examples, about the relationship between how easy a process is to derive and how efficient it turns out to be?",
+    "options": [
+      "A tree-recursive formulation can be far easier to come up with and understand than an efficient iterative equivalent, even though it may be much less efficient - devising the linear fib-iter took extra cleverness, and no comparably simple efficient algorithm for count-change was obvious either",
+      "Tree-recursive processes are always both easier to derive and more efficient than any iterative alternative, so iteration is only useful for simple numerical loops",
+      "Any tree-recursive procedure can be mechanically turned into an equally efficient iterative one just by reordering its cond clauses",
+      "Ease of derivation and runtime efficiency are unrelated properties that the text says have no connection to each other in general"
+    ],
+    "answer_index": 0,
+    "explanation": "The direct fib procedure is presented as little more than a transcription of the mathematical definition, while arriving at fib-iter required noticing a less obvious reformulation with extra state variables; similarly, no comparably simple efficient count-change algorithm is given, illustrating that easy-to-derive and efficient are not the same thing."
+  },
+  {
+    "id": "q0038",
+    "item_id": "k0038",
+    "type": "single_choice",
+    "prompt": "According to the text's definition, what does it mean to say R(n) = Θ(f(n))?",
+    "options": [
+      "There exist positive constants k1 and k2, independent of n, such that k1·f(n) ≤ R(n) ≤ k2·f(n) for all sufficiently large n",
+      "R(n) is exactly equal to f(n) for every value of n",
+      "R(n) grows strictly faster than f(n) for large n, with no upper bound relating them",
+      "f(n) is the average of R(n) taken over all possible inputs of size n"
+    ],
+    "answer_index": 0,
+    "explanation": "Θ(f(n)) is a sandwich bound, not an exact equality: it says R(n) stays between two constant multiples of f(n) once n is large enough, which is exactly why it's called a 'gross' or coarse measure rather than a precise formula."
+  },
+  {
+    "id": "q0039",
+    "item_id": "k0038",
+    "type": "single_choice",
+    "prompt": "The text notes that a process requiring n² steps, one requiring 1000n² steps, and one requiring 3n²+10n+17 steps are all Θ(n²). What does this illustrate about order-of-growth notation?",
+    "options": [
+      "Θ notation deliberately ignores constant multiplicative factors and lower-order terms, so it gives only a crude, coarse-grained comparison of how resource use scales, not the exact running time",
+      "Θ notation is only valid when the constant factor in front of the dominant term equals exactly 1",
+      "Any two processes with the same order of growth must take exactly the same number of steps for every input size",
+      "Order-of-growth analysis proves that all three processes perform identically in practice"
+    ],
+    "answer_index": 0,
+    "explanation": "Since k1 and k2 can be any positive constants, the definition of Θ absorbs constant factors (like the 1000) and lower-order terms (like the 10n+17); that's precisely why it's a crude measure - useful for seeing how resource use scales with n, but blind to constant-factor or lower-order differences."
+  },
+  {
+    "id": "q0040",
+    "item_id": "k0039",
+    "type": "single_choice",
+    "prompt": "How do the linear recursive and linear iterative implementations of factorial compare in order of growth?",
+    "options": [
+      "Both require Θ(n) steps, but the recursive version requires Θ(n) space while the iterative version requires only Θ(1) space",
+      "The recursive version requires Θ(n) steps and Θ(1) space, while the iterative version requires Θ(n) steps and Θ(n) space",
+      "Both versions require Θ(n) steps and Θ(n) space, since both must count up to n one way or another",
+      "The iterative version requires only Θ(log n) steps because it avoids the overhead of recursive calls"
+    ],
+    "answer_index": 0,
+    "explanation": "The recursive process must keep a growing chain of deferred multiplications alive until the base case returns, so its space grows with n; the iterative process instead carries its state in a fixed set of variables that get updated in place, so its space stays constant even though it still takes Θ(n) steps to reach n."
+  },
+  {
+    "id": "q0041",
+    "item_id": "k0039",
+    "type": "single_choice",
+    "prompt": "Why does the tree-recursive Fibonacci process require only Θ(n) space, even though it takes an exponential Θ(φ^n) number of steps?",
+    "options": [
+      "Because the amount of state that must be kept track of at any moment is set by the depth of the recursion tree - the length of the longest single chain of deferred operations - which grows only linearly with n, even though the tree as a whole has exponentially many nodes",
+      "Because the interpreter automatically discards finished branches of the recursion tree, keeping total memory bounded by a constant",
+      "Because Θ(φ^n) steps and Θ(n) space are just two different notations for the same underlying quantity",
+      "Because the tree-recursive process memoizes repeated subproblems internally, so each Fibonacci value is only computed once"
+    ],
+    "answer_index": 0,
+    "explanation": "Space usage tracks how deep the recursion goes at any single moment, not how many nodes the whole tree has; since the deepest path down the Fibonacci recursion tree only has n levels, space stays Θ(n) even while the total number of steps taken across the whole tree grows exponentially as Θ(φ^n)."
+  },
+  {
+    "id": "q0042",
+    "item_id": "k0040",
+    "type": "single_choice",
+    "prompt": "The recursive `expt` procedure computes b^n using b^n = b · b^(n-1). What are its time and space complexity?",
+    "options": [
+      "Θ(n) steps and Θ(n) space",
+      "Θ(n) steps and Θ(1) space",
+      "Θ(log n) steps and Θ(log n) space",
+      "Θ(n) steps and Θ(n²) space"
+    ],
+    "answer_index": 0,
+    "explanation": "Each call to `expt` must wait for `(expt b (- n 1))` to return before it can multiply by `b`, so there is a chain of n deferred multiplications outstanding at the deepest point of the recursion - that chain costs both Θ(n) steps to unwind and Θ(n) space to hold, exactly like the linear recursive `factorial` process."
+  },
+  {
+    "id": "q0043",
+    "item_id": "k0041",
+    "type": "single_choice",
+    "prompt": "How does `expt-iter`'s process compare to the recursive `expt` process in order of growth?",
+    "options": [
+      "Same Θ(n) number of steps, but Θ(1) space instead of Θ(n)",
+      "Fewer steps, Θ(log n), but the same Θ(n) space",
+      "Both steps and space drop to Θ(1)",
+      "Both steps and space stay Θ(n) - iteration gives no benefit here"
+    ],
+    "answer_index": 0,
+    "explanation": "`expt-iter` carries the running product and a counter as explicit state instead of leaving multiplications pending on the call stack, so no growing chain of deferred operations ever exists - that's what drops space to Θ(1). It still performs one multiplication per decrement of the counter, so the step count is still linear in n."
+  },
+  {
+    "id": "q0044",
+    "item_id": "k0042",
+    "type": "single_choice",
+    "prompt": "Why does `fast-expt` need only about log₂n multiplications to compute b^n, instead of about n?",
+    "options": [
+      "Squaring b^(n/2) to get b^n means each extra multiplication roughly doubles the size of exponent reachable, so the number of multiplications needed grows like log₂n rather than n",
+      "Because the interpreter automatically caches every intermediate power of b so repeated exponents cost nothing",
+      "Because `even?` discards half of all possible input values as invalid before any computation happens",
+      "Because odd exponents are silently rounded down to the nearest even exponent before multiplying"
+    ],
+    "answer_index": 0,
+    "explanation": "Each squaring step doubles the exponent handled for the cost of one multiplication, so reaching exponent n takes about log₂n doublings/multiplications rather than n individual multiplications - that's the reasoning behind fast-expt's Θ(log n) growth."
+  },
+  {
+    "id": "q0045",
+    "item_id": "k0043",
+    "type": "single_choice",
+    "prompt": "Beyond making exponentiation faster, what general lesson about algorithm design does successive squaring illustrate?",
+    "options": [
+      "Recognizing exploitable structure in a problem (like halving the exponent) can turn a computation that looks like it needs linear growth into one with logarithmic growth",
+      "Iterative processes are always asymptotically faster than recursive ones regardless of the algorithm used",
+      "Any problem expressible as repeated multiplication can be solved in constant time on a fast enough computer",
+      "Logarithmic-growth algorithms only exist for numeric exponentiation and don't generalize to other repeated operations"
+    ],
+    "answer_index": 0,
+    "explanation": "The chapter reuses the exact same halving/doubling structure to speed up multiplication (Exercises 1.17-1.18) and even Fibonacci computation (Exercise 1.19) - the point is not something special about exponents, but a general technique: exploiting a problem's structure to skip most of the work that a naive linear approach would do."
+  },
+  {
+    "id": "q0046",
+    "item_id": "k0044",
+    "type": "single_choice",
+    "prompt": "Why does Euclid's Algorithm reduce the problem of computing GCD(a, b) to computing GCD(b, r), where r is the remainder of a divided by b?",
+    "options": [
+      "Because any common divisor of a and b is also a common divisor of b and r, and vice versa, so the pair (a,b) and the pair (b,r) always have exactly the same GCD",
+      "Because r is always smaller than the GCD of a and b, so replacing a with r gives a safe upper bound on the answer",
+      "Because dividing a by b is guaranteed to produce a prime remainder, which must itself divide the GCD",
+      "Because a and r always share exactly one common factor, namely the GCD, while a and b may share several"
+    ],
+    "answer_index": 0,
+    "explanation": "The reduction is valid because the set of common divisors of a and b is identical to the set of common divisors of b and r - it isn't about bounding the answer or special properties of r, it's that the two pairs are interchangeable for the purpose of finding the GCD."
+  },
+  {
+    "id": "q0047",
+    "item_id": "k0045",
+    "type": "single_choice",
+    "prompt": "The `gcd` procedure `(define (gcd a b) (if (= b 0) a (gcd b (remainder a b))))` calls itself recursively in its own definition. What kind of process does running it actually generate?",
+    "options": [
+      "An iterative process: each call just tests b, computes a remainder, and calls gcd again, with no pending operations left waiting for the recursive call to return",
+      "A recursive process, since the procedure's body contains a call to gcd inside itself",
+      "A tree-recursive process, since each call can branch into two further recursive calls",
+      "An iterative process, but only because Scheme treats two-argument procedures as a special case"
+    ],
+    "answer_index": 0,
+    "explanation": "Whether a process is recursive or iterative depends on its shape at run time, not on whether the source code contains a recursive call. Here each call to gcd is the last thing that happens - there's no arithmetic left to do with its result - so the process is iterative even though the definition is self-referential."
+  },
+  {
+    "id": "q0048",
+    "item_id": "k0046",
+    "type": "single_choice",
+    "prompt": "According to Lamé's theorem, if Euclid's Algorithm takes k steps to compute a GCD, what does that tell us about the smaller of the two original numbers, and what does it imply about the algorithm's order of growth?",
+    "options": [
+      "The smaller number must be at least as large as the kth Fibonacci number; since Fibonacci numbers grow exponentially in k, the number of steps k grows only as Θ(log n) in the smaller input n",
+      "The smaller number must be exactly equal to the kth Fibonacci number, which makes the algorithm's order of growth Θ(n)",
+      "The larger number must be smaller than the kth Fibonacci number, which implies the algorithm runs in Θ(n²) time",
+      "The theorem only describes what happens once b reaches 0, so it says nothing about the algorithm's order of growth"
+    ],
+    "answer_index": 0,
+    "explanation": "Lamé's theorem gives n ≥ Fib(k), and since Fib(k) grows roughly like φ^k, solving for k gives k growing as the logarithm (base φ) of n - that is exactly the Θ(log n) order of growth for the number of steps."
+  },
+  {
+    "id": "q0049",
+    "item_id": "k0047",
+    "type": "single_choice",
+    "prompt": "In Exercise 1.20's normal-order trace of `(gcd 206 40)`, why does normal-order evaluation end up performing more `remainder` operations than applicative-order evaluation, even though both eventually produce the same answer?",
+    "options": [
+      "Normal order substitutes argument expressions unevaluated and only forces them when actually needed (e.g., inside `=` or the final result), so the same `remainder` expression can be re-expanded and recomputed several times instead of being reduced to a value once",
+      "Normal order and applicative order actually perform exactly the same number of remainder operations, since both must reach the same final value",
+      "Normal order performs more operations because it evaluates `remainder` before checking whether `b` is 0, while applicative order checks first and skips the computation",
+      "Normal order performs more operations because it recomputes the `gcd` call itself twice as many times as applicative order does"
+    ],
+    "answer_index": 0,
+    "explanation": "Under normal-order evaluation, an argument expression is passed along unevaluated and only reduced when its value is actually demanded; because `remainder a b` reappears nested inside later, deferred expressions, forcing it repeatedly recomputes the same remainder many times, unlike applicative order, which evaluates each argument to a value exactly once before the call proceeds."
+  },
+  {
+    "id": "q0050",
+    "item_id": "k0048",
+    "type": "single_choice",
+    "prompt": "In `find-divisor`, why does the terminating test check `(> (square test-divisor) n)` rather than `(> test-divisor n)`?",
+    "options": [
+      "Because if n has no divisor less than or equal to √n, it can have no divisor at all up to n, so the search can safely stop at √n instead of n, cutting the work from Θ(n) to Θ(√n)",
+      "Because squaring test-divisor is required to avoid an infinite loop inside Scheme's `cond`",
+      "Because Scheme's `cond` cannot express a direct comparison between two un-squared numbers",
+      "Because n is always a perfect square, so squaring test-divisor is the only meaningful way to compare it"
+    ],
+    "answer_index": 0,
+    "explanation": "Any non-prime n must have a divisor no larger than √n, so if none is found among test-divisors up to √n, n must be prime. Squaring test-divisor and comparing to n is exactly the same as comparing test-divisor to √n, which is what shrinks the search space from n down to √n."
+  },
+  {
+    "id": "q0051",
+    "item_id": "k0049",
+    "type": "single_choice",
+    "prompt": "Exercise 1.22's `timed-prime-test` is meant to empirically check the Θ(√n) prediction for `prime?`. Suppose measured runtimes for primes near 10,000 don't come out cleanly around √10 times those near 1,000. What's the best interpretation?",
+    "options": [
+      "Order of growth describes asymptotic step-count scaling, not a guarantee about exact measured time, so constant factors and system overhead can make real timings deviate from the predicted ratio without the growth analysis itself being wrong",
+      "The Θ(√n) analysis must be mistaken, and the algorithm's real order of growth is something else entirely",
+      "The `runtime` primitive is unreliable and cannot be used to measure any algorithm's performance",
+      "Since the two measured times don't match exactly, the implementation cannot actually be running the algorithm described in the text"
+    ],
+    "answer_index": 0,
+    "explanation": "Order of growth is an asymptotic, rough measure of how step count scales with n; it says nothing about the exact constant of proportionality or about machine-level overhead, so real measured times can deviate from the predicted ratio even when the underlying algorithm truly is Θ(√n)."
+  },
+  {
+    "id": "q0052",
+    "item_id": "k0050",
+    "type": "single_choice",
+    "prompt": "According to Fermat's Little Theorem as stated in this section, if n is prime and a is any positive integer less than n, which relation must hold?",
+    "options": [
+      "a raised to the n-th power is congruent to a modulo n",
+      "a raised to the (n-1)-th power is congruent to 1 modulo n",
+      "a raised to the n-th power is congruent to n modulo a",
+      "n raised to the a-th power is congruent to a modulo n"
+    ],
+    "answer_index": 0,
+    "explanation": "The theorem as introduced here is: a^n is congruent to a modulo n. (The exponent n-1 with result 1 is a different, equivalent-looking form used later for Miller-Rabin - it's easy to mix the two up, but this section's statement uses exponent n and result a.)"
+  },
+  {
+    "id": "q0053",
+    "item_id": "k0051",
+    "type": "single_choice",
+    "prompt": "Why does `expmod` compute a^n mod m in Θ(log n) steps instead of Θ(n)?",
+    "options": [
+      "It uses successive squaring: whenever the exponent is even, it makes one recursive call on half the exponent and squares that single result, so the exponent roughly halves at each step",
+      "Because `remainder` is a constant-time primitive, so the size of the exponent has no effect on the number of steps at all",
+      "Because Scheme provides a special hardware instruction for modular exponentiation that `expmod` invokes directly",
+      "Because it recurses by multiplying by `base` exactly once for every even value the exponent passes through"
+    ],
+    "answer_index": 0,
+    "explanation": "Just like `fast-expt` in 1.2.4, halving the exponent at each even step means the number of recursive calls is proportional to log2(exponent), giving Θ(log n) growth instead of the Θ(n) growth of a straightforward repeated-multiplication approach."
+  },
+  {
+    "id": "q0054",
+    "item_id": "k0051",
+    "type": "single_choice",
+    "prompt": "What does `fast-prime?` (called with n and a trial count `times`) actually return, and why?",
+    "options": [
+      "True only if `fermat-test` succeeds on every one of the `times` independent random trials - a single failed trial is enough to make it return false",
+      "True if `fermat-test` succeeds on at least half of the `times` trials",
+      "True automatically whenever `times` is greater than zero, regardless of any trial's outcome",
+      "The numeric average of the `times` individual test results, rounded to true or false"
+    ],
+    "answer_index": 0,
+    "explanation": "`fast-prime?` recurses only as long as `fermat-test` keeps succeeding, and returns false the moment a single trial fails, or true once all `times` trials have passed - matching the Fermat test's asymmetry where any single failure is decisive but successes only accumulate confidence."
+  },
+  {
+    "id": "q0055",
+    "item_id": "k0052",
+    "type": "single_choice",
+    "prompt": "Why is the Fermat test described as differing 'in character' from most familiar algorithms studied so far in the book?",
+    "options": [
+      "Because failing the test proves n is not prime, but passing it - even repeatedly - is never a logical guarantee that n is prime, only very strong evidence, unlike deterministic algorithms whose answers are always exactly correct",
+      "Because the Fermat test is the first algorithm in the book that uses recursion",
+      "Because the Fermat test cannot be implemented without an external physical source of true randomness",
+      "Because unlike other algorithms in the book, the Fermat test's running time cannot be analyzed using order-of-growth notation"
+    ],
+    "answer_index": 0,
+    "explanation": "The text's point is the asymmetry between disproof and confirmation: a failed trial is certain proof of non-primality, but passing many trials is still not an absolute guarantee, because rare Carmichael numbers satisfy the congruence for every base. (The Fermat test's own running time is perfectly well described by Θ(log n), so that isn't what makes it different.)"
+  },
+  {
+    "id": "q0056",
+    "item_id": "k0053",
+    "type": "single_choice",
+    "prompt": "What is the key advantage of 'unfoolable' variants of the Fermat test (such as Miller-Rabin), compared with the plain Fermat test?",
+    "options": [
+      "For these variants, one can prove that for any composite n the special condition fails for at least half of all possible choices of a, so more trials strictly and provably drive the error probability toward zero - a guarantee the plain Fermat test lacks because of numbers like the Carmichael numbers that fool it on every base",
+      "These variants eliminate randomness entirely, deterministically checking every possible value of a",
+      "These variants only work correctly for numbers below some fixed size limit, unlike the plain Fermat test",
+      "These variants run in Θ(n) time, trading away the plain Fermat test's Θ(log n) speed in exchange for reliability"
+    ],
+    "answer_index": 0,
+    "explanation": "The text states that for these variants one can prove the condition fails for most a whenever n is composite, so each additional random trial provably increases confidence; the plain Fermat test has no such guarantee because rare numbers exist that satisfy its congruence for every base."
+  },
+  {
+    "id": "q0057",
+    "item_id": "k0053",
+    "type": "single_choice",
+    "prompt": "Louis rewrites `expmod`'s even-exponent case to compute `(* (expmod base (/ exp 2) m) (expmod base (/ exp 2) m))` instead of `(square (expmod base (/ exp 2) m))`. Why does this turn the Θ(log n) process into a Θ(n) process?",
+    "options": [
+      "Because `expmod` is now invoked twice on the identical sub-problem instead of once, so the recursive call count doubles at every level of recursion, and repeated doubling across log n levels is equivalent to a linear number of calls in n",
+      "Because `*` is an inherently slower primitive than `square` and takes proportionally longer to run as the numbers grow large",
+      "Because `remainder` now has to be computed twice per step, tripling the step count while leaving the overall order of growth unchanged",
+      "Because Scheme's interpreter is unable to apply successive squaring to any expression written with `*` instead of `square`"
+    ],
+    "answer_index": 0,
+    "explanation": "`square` evaluates its argument expression once and reuses the resulting value, but writing the multiplication as two separate `(expmod ...)` calls duplicates the entire sub-computation each time - so instead of one call per halving of the exponent, the call count doubles at every level, turning a Θ(log n) recursion into one whose total call count grows linearly in n."
+  },
+  {
+    "id": "q0058",
+    "item_id": "k0054",
+    "type": "single_choice",
+    "prompt": "According to the text, what makes a procedure 'higher-order'?",
+    "options": [
+      "It takes another procedure as an argument, or returns a procedure as its value",
+      "It calls itself recursively at least twice per invocation",
+      "It is defined using `define` instead of `lambda`",
+      "It operates on lists instead of numbers"
+    ],
+    "answer_index": 0,
+    "explanation": "The text defines higher-order procedures exactly this way: procedures that manipulate procedures, either by accepting them as arguments or by returning them as values. Recursion style, the defining form used, and the data type operated on are all unrelated to this definition."
+  },
+  {
+    "id": "q0059",
+    "item_id": "k0055",
+    "type": "single_choice",
+    "prompt": "What do sum-integers, sum-cubes, and pi-sum actually have in common, according to the text?",
+    "options": [
+      "They are all identical except for the procedure name, the term-computing function, and the next-value function",
+      "They all use the same fixed step size of 1 between successive values of a",
+      "They all only work correctly when a and b are equal",
+      "They all return the same numeric result regardless of a and b"
+    ],
+    "answer_index": 0,
+    "explanation": "The text states they differ only in name, the function used to compute each term, and the function used to get the next a. This rules out a fixed step of 1 (pi-sum steps by 4), any requirement that a equal b, and identical results (they sum different quantities)."
+  },
+  {
+    "id": "q0060",
+    "item_id": "k0056",
+    "type": "single_choice",
+    "prompt": "Why does the text bring up mathematical sigma (summation) notation right after noticing the shared template among sum-integers, sum-cubes, and pi-sum?",
+    "options": [
+      "To show that mathematicians had already recognized 'summation of a series' as a reusable abstraction, and to motivate doing the same thing in code by turning the template's slots into formal parameters",
+      "To argue that Scheme's arithmetic is less powerful than standard mathematical notation and needs sigma notation added to it",
+      "To prove that pi-sum's result is mathematically exact rather than an approximation",
+      "To show that sigma notation removes the need for a lower or upper bound in the summation"
+    ],
+    "answer_index": 0,
+    "explanation": "The text draws a direct parallel: sigma notation lets mathematicians reason about summation itself, independent of any particular series, and this is offered as evidence that the same abstraction - parameterized by term and next - is worth capturing as a procedure."
+  },
+  {
+    "id": "q0061",
+    "item_id": "k0057",
+    "type": "single_choice",
+    "prompt": "After defining the general `sum` procedure with `term` and `next` as parameters, how are `sum-cubes`, `sum-integers`, and `pi-sum` redefined?",
+    "options": [
+      "As thin wrappers that call `sum` with the appropriate term/next procedures (like cube/inc, identity/inc, or pi-term/pi-next) filled in",
+      "They are left unchanged, since `sum` is only meant to replace pi-sum",
+      "They are redefined to call each other instead of calling `sum`",
+      "They are rewritten so `sum` is passed as their term argument"
+    ],
+    "answer_index": 0,
+    "explanation": "The text redefines sum-cubes as (sum cube a inc b), sum-integers as (sum identity a inc b), and pi-sum using its own internal pi-term/pi-next helpers passed to sum - in every case the original procedure becomes a small wrapper that just supplies term and next."
+  },
+  {
+    "id": "q0062",
+    "item_id": "k0058",
+    "type": "single_choice",
+    "prompt": "What does the `integral` procedure illustrate about `sum`, according to the text?",
+    "options": [
+      "That once you have a general summing abstraction, you can build further abstractions on top of it, like numerically approximating a definite integral by summing small rectangle-strip evaluations of a function",
+      "That `sum` can only be used for series that converge to a rational number, unlike pi-sum",
+      "That `integral` must reimplement its own recursive summation logic separately from `sum`, since integration is fundamentally different from summation",
+      "That `sum` cannot handle non-integer step sizes such as `dx`"
+    ],
+    "answer_index": 0,
+    "explanation": "`integral` is defined directly in terms of `sum`, passing f as the term and an add-dx helper as next, with a fractional step dx - demonstrating both that sum handles non-integer steps fine and that it serves as a building block for a genuinely new abstraction (numerical integration)."
+  },
+  {
+    "id": "q0063",
+    "item_id": "k0059",
+    "type": "single_choice",
+    "prompt": "How do `product`, `accumulate`, and `filtered-accumulate` (introduced in the exercises) relate to `sum`?",
+    "options": [
+      "They are progressively more general higher-order abstractions: `product` generalizes the combining operation from addition to multiplication, `accumulate` further parameterizes the combiner and base value themselves, and `filtered-accumulate` adds a predicate to select which terms get combined at all",
+      "They are unrelated alternatives to `sum` meant to replace it entirely once defined",
+      "They only work on lists of numbers, whereas `sum` only works on ranges of integers",
+      "They remove the need for a `term` procedure, operating directly on raw numbers instead"
+    ],
+    "answer_index": 0,
+    "explanation": "The exercises build an explicit generalization chain: product mirrors sum's structure but multiplies; accumulate replaces the hardcoded + and 0 with a combiner procedure and null-value; filtered-accumulate adds a filter predicate on top of accumulate so only terms satisfying it are combined."
+  },
+  {
+    "id": "q0064",
+    "item_id": "k0060",
+    "type": "single_choice",
+    "prompt": "In the `pi-sum` example, why is `(lambda (x) (+ x 4))` used instead of separately defining a named procedure like `pi-next`?",
+    "options": [
+      "Because `lambda` creates a procedure that can be used directly as an argument, without the awkwardness of defining and naming a procedure that's only needed once",
+      "Because named procedures cannot be passed as arguments to other procedures like `sum`",
+      "Because `lambda` expressions run faster than procedures created with `define`",
+      "Because `pi-next` would need to take two arguments instead of one"
+    ],
+    "answer_index": 0,
+    "explanation": "The motivation is convenience: needing `pi-next` and `pi-term` only as arguments to `sum` makes defining them separately feel like unnecessary clutter; `lambda` lets you write the procedure inline where it's needed instead."
+  },
+  {
+    "id": "q0065",
+    "item_id": "k0061",
+    "type": "single_choice",
+    "prompt": "What is the relationship between `(define (plus4 x) (+ x 4))` and `(define plus4 (lambda (x) (+ x 4)))`?",
+    "options": [
+      "They are equivalent - the first is just shorthand for defining `plus4` as the name bound to the procedure produced by the `lambda` expression",
+      "They are different procedures because the first takes one argument and the second takes zero arguments",
+      "The first creates a global procedure while the second creates a local one",
+      "The second form is only valid inside internal (nested) definitions, not at top level"
+    ],
+    "answer_index": 0,
+    "explanation": "`lambda` constructs procedures exactly the way `define` does, except without giving them a name; defining a named procedure with `define` is equivalent to binding that name to the corresponding `lambda` expression's value."
+  },
+  {
+    "id": "q0066",
+    "item_id": "k0062",
+    "type": "single_choice",
+    "prompt": "What does `((lambda (x y z) (+ x y (square z))) 1 2 3)` do?",
+    "options": [
+      "It immediately applies the anonymous procedure created by the `lambda` expression to the arguments 1, 2, and 3, evaluating to 12",
+      "It causes an error, because `lambda` expressions must first be bound to a name with `define` before they can be applied",
+      "It defines a new procedure named `lambda` that takes three arguments",
+      "It only evaluates the `lambda` expression itself, returning an unnamed procedure, without applying it to 1, 2, 3"
+    ],
+    "answer_index": 0,
+    "explanation": "A `lambda` expression's value is a procedure, so - like any expression whose value is a procedure - it can appear directly as the operator of a combination; here it's applied on the spot to 1, 2, and 3, giving 1+2+9=12."
+  },
+  {
+    "id": "q0067",
+    "item_id": "k0063",
+    "type": "single_choice",
+    "prompt": "Why is a `let` expression like `(let ((a (+ 1 (* x y))) (b (- 1 y))) (+ (* x (square a)) (* y b) (* a b)))` not a new fundamental mechanism the interpreter needs?",
+    "options": [
+      "Because it's interpreted as syntactic sugar for an immediately-applied `lambda` expression, `((lambda (a b) ...) (+ 1 (* x y)) (- 1 y))`, using mechanisms the interpreter already has",
+      "Because `let` expressions are only allowed to appear inside function bodies, never at the top level",
+      "Because `let` is handled by a special hardware instruction that `lambda` expressions don't use",
+      "Because every `let` expression must bind exactly two variables, matching a fixed built-in pattern"
+    ],
+    "answer_index": 0,
+    "explanation": "`let` expands directly into a `lambda` application: the let-bound variables become the lambda's formal parameters and the value expressions become the arguments it's applied to - so no new interpreter mechanism is needed beyond `lambda` and combination."
+  },
+  {
+    "id": "q0068",
+    "item_id": "k0064",
+    "type": "single_choice",
+    "prompt": "If the value of `x` is 5, what is the value of `(+ (let ((x 3)) (+ x (* x 10))) x)`?",
+    "options": [
+      "38 - because the `x` inside the `let` body is the local binding (3), giving 33, while the `x` passed to the outer `+` is unaffected and remains 5",
+      "55 - because the let's local `x` overwrites the outer `x` for the rest of the expression too",
+      "66 - because both occurrences of `x` refer to the local binding of 3",
+      "It's an error - because `x` is defined twice in the same expression"
+    ],
+    "answer_index": 0,
+    "explanation": "Because `let` expands into a `lambda` application, the local `x` is scoped only to the let's body; it evaluates to 3+30=33 there, but the outer `x` used as the second argument to the outermost `+` is completely unaffected and still 5, giving 33+5=38."
+  },
+  {
+    "id": "q0069",
+    "item_id": "k0065",
+    "type": "single_choice",
+    "prompt": "According to the stated style preference, when should you use `let` versus an internal (nested) `define`?",
+    "options": [
+      "Use `let` to bind local variables, and reserve internal `define` for defining auxiliary procedures inside another procedure",
+      "Always prefer internal `define` over `let`, since `let` is only syntactic sugar and therefore slower",
+      "Use `let` only for procedures and internal `define` only for variables",
+      "There's no real difference, so the choice should be made randomly for each program"
+    ],
+    "answer_index": 0,
+    "explanation": "There is an explicit stylistic preference: use `let` for situations like binding local variables (e.g., `a` and `b`), and reserve internal `define` for defining internal procedures."
+  },
+  {
+    "id": "q0070",
+    "item_id": "k0066",
+    "type": "single_choice",
+    "prompt": "What is the key idea that both the half-interval method and fixed-point search illustrate about higher-order procedures?",
+    "options": [
+      "They let you express a general method of computation - like root-finding or iterative approximation - as a procedure that takes an arbitrary function as an argument, so the same code works for many different functions",
+      "They let you avoid writing recursive procedures by using built-in Scheme loop constructs instead",
+      "They automatically choose the most efficient numerical algorithm for whatever function is passed in",
+      "They eliminate the need for a tolerance or stopping criterion, since higher-order procedures compute exact fixed points and roots"
+    ],
+    "answer_index": 0,
+    "explanation": "Both `search`/`half-interval-method` and `fixed-point` are written once, taking a function f as a parameter, and can be reused for sin, a cubic polynomial, cosine, or any other function - that's exactly the point of expressing a general method as a procedure independent of the particular function involved, not a claim about avoiding recursion, guaranteeing efficiency, or getting exact answers."
+  },
+  {
+    "id": "q0071",
+    "item_id": "k0067",
+    "type": "single_choice",
+    "prompt": "According to the half-interval method, what must be true of two points a and b before you can use them to bisect toward a root of a continuous function f?",
+    "options": [
+      "f(a) and f(b) must have opposite signs, since that guarantees a zero of f lies somewhere between a and b",
+      "f(a) and f(b) must both be positive, so that the midpoint is guaranteed to lie above the x-axis",
+      "a and b must already be within the error tolerance of the true root",
+      "f must be differentiable at both a and b so its derivative can be checked"
+    ],
+    "answer_index": 0,
+    "explanation": "The method relies on the fact that a continuous function with a negative value at one endpoint and a positive value at the other must cross zero somewhere in between; `half-interval-method` even checks the signs first and signals an error if they aren't opposite, precisely because that condition is what makes bisection valid - differentiability and pre-existing closeness to the root are not required."
+  },
+  {
+    "id": "q0072",
+    "item_id": "k0068",
+    "type": "single_choice",
+    "prompt": "How does the `fixed-point` procedure search for an x such that f(x) = x?",
+    "options": [
+      "It starts from an initial guess and repeatedly applies f to the current value, stopping when two successive values differ by less than a small tolerance",
+      "It solves the equation f(x) - x = 0 symbolically using algebraic manipulation",
+      "It tries every value in a fixed numeric range and returns whichever one makes f(x) closest to x",
+      "It computes the derivative of f and applies Newton's method to converge on the fixed point"
+    ],
+    "answer_index": 0,
+    "explanation": "`fixed-point`'s `try` helper repeatedly computes `(f guess)` and recurses with that as the new guess, terminating via `close-enough?` once consecutive values are within `tolerance` - a purely iterative numerical process, not symbolic algebra, exhaustive search, or a derivative-based method."
+  },
+  {
+    "id": "q0073",
+    "item_id": "k0069",
+    "type": "single_choice",
+    "prompt": "Why does computing square roots as a fixed point of y -> x/y fail to converge, and how does average damping fix it?",
+    "options": [
+      "The naive iteration oscillates forever between two values, because applying y -> x/y twice returns to the original guess; averaging each guess with x/y before continuing damps this oscillation so the iteration converges",
+      "The naive iteration diverges to infinity because x/y grows without bound as the guesses proceed; averaging is needed to keep the guesses from overflowing",
+      "The naive iteration converges but very slowly; averaging is purely a speed optimization with no effect on whether it converges at all",
+      "The naive iteration fails because y -> x/y is not valid Scheme syntax; averaging rewrites it into a form the interpreter can evaluate"
+    ],
+    "answer_index": 0,
+    "explanation": "Starting from y1, the next guess is y2 = x/y1, and the guess after that is x/y2 = x/(x/y1) = y1 again, so the process oscillates between y1 and y2 without ever settling; replacing x/y with the average of y and x/y as the next guess breaks this back-and-forth and lets the sequence converge, which is exactly what average damping means here - it is not about overflow, speed alone, or invalid syntax."
+  },
+  {
+    "id": "q0074",
+    "item_id": "k0070",
+    "type": "single_choice",
+    "prompt": "What does `(average-damp f)` return, given a procedure `f`?",
+    "options": [
+      "A new procedure that, when applied to x, returns the average of x and (f x)",
+      "A new procedure that returns the average of two successive outputs of f",
+      "The average of f applied to every number from 1 up to x",
+      "A number equal to the average of f's minimum and maximum output values"
+    ],
+    "answer_index": 0,
+    "explanation": "average-damp packages exactly this transform - a lambda over x that computes the average of x and (f x) - converting f into a 'damped' version of itself, which is what tames fixed-point iterations that would otherwise oscillate."
+  },
+  {
+    "id": "q0075",
+    "item_id": "k0071",
+    "type": "single_choice",
+    "prompt": "Why can `cube-root` be written by making only a small change to the fixed-point/average-damp formulation of `sqrt`?",
+    "options": [
+      "Because the cube root of x is a fixed point of y -> x/y^2, just as the square root of x is a fixed point of y -> x/y, so only the inner transform function needs to change",
+      "Because `cube-root` and `sqrt` are actually the exact same procedure once average damping is applied",
+      "Because `fixed-point` automatically detects whether a cube root or square root is wanted from the initial guess",
+      "Because average damping only works for square roots, so `cube-root` needs an entirely different algorithm built from scratch"
+    ],
+    "answer_index": 0,
+    "explanation": "Both are instances of the same idea - find a fixed point of an average-damped transform - differing only in which function of y is damped (x/y vs x/y^2), which is exactly the reusable structure the text is showcasing."
+  },
+  {
+    "id": "q0076",
+    "item_id": "k0072",
+    "type": "single_choice",
+    "prompt": "How does the `deriv` procedure approximate the derivative of a function `g` at a point `x`?",
+    "options": [
+      "By computing (g(x+dx) - g(x)) / dx for a small constant dx",
+      "By symbolically differentiating the body of g using algebraic rules",
+      "By calling g twice at x and dividing the two results",
+      "By repeatedly averaging g(x) with itself until it stabilizes"
+    ],
+    "answer_index": 0,
+    "explanation": "deriv implements the standard finite-difference approximation to a derivative - the change in g's output over a tiny step dx in its input - rather than any kind of symbolic differentiation."
+  },
+  {
+    "id": "q0077",
+    "item_id": "k0073",
+    "type": "single_choice",
+    "prompt": "How does `newtons-method` use `fixed-point` to find a zero of a function `g`?",
+    "options": [
+      "It calls `fixed-point` on `newton-transform` applied to g, i.e. on the function x -> x - g(x)/Dg(x), since a fixed point of that transform is a zero of g",
+      "It calls `fixed-point` directly on g itself, since any fixed point of g is automatically a zero of g",
+      "It repeatedly averages g(x) with x until the average stops changing",
+      "It calls `deriv` on g and then treats the derivative's own zero as the answer"
+    ],
+    "answer_index": 0,
+    "explanation": "The chain is: newton-transform builds x -> x - g(x)/Dg(x) using deriv; newtons-method just runs fixed-point on that transformed function, since finding where the transform stabilizes is mathematically the same as finding where g is zero."
+  },
+  {
+    "id": "q0078",
+    "item_id": "k0074",
+    "type": "single_choice",
+    "prompt": "What do the two `sqrt` procedures built from `fixed-point-of-transform` (one passing `average-damp`, one passing `newton-transform`) have in common?",
+    "options": [
+      "Both call the same general procedure, `fixed-point-of-transform`, differing only in which transform procedure they pass alongside the function and initial guess",
+      "Both compute the derivative of x -> x^2 - y explicitly before searching for a fixed point",
+      "Both are restricted to work only for square roots and cannot be reused for any other computation",
+      "Both bypass `fixed-point` entirely and use a closed-form formula instead"
+    ],
+    "answer_index": 0,
+    "explanation": "fixed-point-of-transform factors out the shared shape - take a function g, transform it, find a fixed point of the result - so the two sqrt definitions are just two instantiations of that one general procedure with different transform arguments (average-damp vs newton-transform)."
+  },
+  {
+    "id": "q0079",
+    "item_id": "k0075",
+    "type": "single_choice",
+    "prompt": "What is the key point the text makes about procedures like `average-damp`, `deriv`, and `fixed-point-of-transform`?",
+    "options": [
+      "They let a programmer name and manipulate whole general methods of computation, not just ordinary numeric values, extending the reach of procedural abstraction",
+      "They exist only to make code shorter, with no effect on what can be expressed",
+      "They are special forms built into the interpreter rather than ordinary procedures",
+      "They only work correctly in Scheme and can't be expressed in other higher-order-capable languages"
+    ],
+    "answer_index": 0,
+    "explanation": "The text's closing point is that these higher-order procedures let general methods (like 'average damp this' or 'take the derivative of this') become explicit, nameable, manipulable elements of the language - not just a way to save keystrokes."
+  },
+  {
+    "id": "q0080",
+    "item_id": "k0076",
+    "type": "single_choice",
+    "prompt": "According to the text, which of these is one of the 'rights and privileges' of a first-class element in a programming language?",
+    "options": [
+      "It may be returned as the result of a procedure",
+      "It must always be a numeric value, never a procedure",
+      "It cannot be stored inside a data structure, only used directly",
+      "It can only be passed as an argument, never named by a variable"
+    ],
+    "answer_index": 0,
+    "explanation": "The text lists four rights of first-class elements: being named by variables, passed as arguments, returned as results, and included in data structures; being returnable as a procedure's result is exactly one of these, and Lisp grants procedures all four."
   }
 ]

@@ -1,0 +1,126 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 1,
+      "est_seconds": 150,
+      "recap_md": "Higher-order procedures let you express general methods of computation - like finding zeros of a function - independent of which particular function is involved; the half-interval method locates a root by repeatedly bisecting an interval whose endpoints have opposite-signed function values."
+    },
+    {
+      "start_paragraph_index": 2,
+      "end_paragraph_index": 3,
+      "est_seconds": 160,
+      "recap_md": "The `search` procedure implements half-interval bisection: it computes the midpoint, and if the interval isn't yet small enough, recurses into whichever half still brackets the sign change, otherwise returns the midpoint as the root."
+    },
+    {
+      "start_paragraph_index": 4,
+      "end_paragraph_index": 7,
+      "est_seconds": 200,
+      "recap_md": "`close-enough?` checks whether the bracketing interval is below a threshold; since `search` misbehaves if given endpoints without a sign change, `half-interval-method` first figures out which endpoint is negative and which is positive (or signals an error if neither) before calling `search`."
+    },
+    {
+      "start_paragraph_index": 8,
+      "end_paragraph_index": 11,
+      "est_seconds": 140,
+      "recap_md": "Two examples apply `half-interval-method`: approximating pi as a root of sin x between 2 and 4, and approximating a root of a cubic polynomial between 1 and 2."
+    },
+    {
+      "start_paragraph_index": 12,
+      "end_paragraph_index": 13,
+      "est_seconds": 170,
+      "recap_md": "A fixed point of a function f is an x where f(x) = x; the `fixed-point` procedure finds one by repeatedly applying f to a guess until two successive values are within a tolerance of each other."
+    },
+    {
+      "start_paragraph_index": 14,
+      "end_paragraph_index": 17,
+      "est_seconds": 140,
+      "recap_md": "Two examples apply `fixed-point`: approximating the fixed point of cosine starting from 1, and solving y = sin y + cos y."
+    },
+    {
+      "start_paragraph_index": 18,
+      "end_paragraph_index": 20,
+      "est_seconds": 170,
+      "recap_md": "The fixed-point method resembles the guess-improving process used for square roots, so square roots can be reformulated as finding a fixed point of y -> x/y; but this naive reformulation fails to converge, oscillating forever between two guesses."
+    },
+    {
+      "start_paragraph_index": 21,
+      "end_paragraph_index": 24,
+      "est_seconds": 180,
+      "recap_md": "Averaging each new guess with the previous one - average damping, i.e. finding a fixed point of y -> the average of y and x/y instead of x/y directly - stops the oscillation and makes the square-root fixed-point search converge, reproducing the same sequence of approximations as the original procedure."
+    },
+    {
+      "start_paragraph_index": 25,
+      "end_paragraph_index": 30,
+      "est_seconds": 220,
+      "recap_md": "The exercises extend these ideas: showing the golden ratio is a fixed point of a simple transformation, tracing fixed-point convergence with and without average damping, defining a general procedure for evaluating finite continued fractions, and applying it to approximate e and the tangent function."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Higher-order procedures let you express a general method of computation - such as root-finding or iterative approximation - as a single procedure parameterized by an arbitrary function, so the same code works unchanged for many different specific functions.",
+      "block_indices": [0, 1, 4]
+    },
+    {
+      "statement": "The half-interval method finds a root of a continuous function f by starting from two points a and b where f(a) and f(b) have opposite signs (guaranteeing a zero lies between them), then repeatedly bisecting the interval and keeping whichever half still brackets a sign change, until the interval is smaller than a given tolerance.",
+      "block_indices": [0, 1, 2, 3]
+    },
+    {
+      "statement": "A number x is a fixed point of a function f if f(x) = x; the `fixed-point` procedure searches for one by starting from an initial guess and repeatedly applying f to the current value, stopping once two successive values differ by less than a small tolerance.",
+      "block_indices": [4, 5]
+    },
+    {
+      "statement": "Reformulating square-root computation as a fixed-point search for y -> x/y does not converge because it oscillates between two guesses; averaging each guess with the previous one before continuing (average damping) - i.e. searching for a fixed point of y -> the average of y and x/y - damps the oscillation and makes the search converge.",
+      "block_indices": [6, 7]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "What is the key idea that both the half-interval method and fixed-point search illustrate about higher-order procedures?",
+      "options": [
+        "They let you express a general method of computation - like root-finding or iterative approximation - as a procedure that takes an arbitrary function as an argument, so the same code works for many different functions",
+        "They let you avoid writing recursive procedures by using built-in Scheme loop constructs instead",
+        "They automatically choose the most efficient numerical algorithm for whatever function is passed in",
+        "They eliminate the need for a tolerance or stopping criterion, since higher-order procedures compute exact fixed points and roots"
+      ],
+      "answer_index": 0,
+      "explanation": "Both `search`/`half-interval-method` and `fixed-point` are written once, taking a function f as a parameter, and can be reused for sin, a cubic polynomial, cosine, or any other function - that's exactly the point of expressing a general method as a procedure independent of the particular function involved, not a claim about avoiding recursion, guaranteeing efficiency, or getting exact answers."
+    },
+    {
+      "item_index": 1,
+      "prompt": "According to the half-interval method, what must be true of two points a and b before you can use them to bisect toward a root of a continuous function f?",
+      "options": [
+        "f(a) and f(b) must have opposite signs, since that guarantees a zero of f lies somewhere between a and b",
+        "f(a) and f(b) must both be positive, so that the midpoint is guaranteed to lie above the x-axis",
+        "a and b must already be within the error tolerance of the true root",
+        "f must be differentiable at both a and b so its derivative can be checked"
+      ],
+      "answer_index": 0,
+      "explanation": "The method relies on the fact that a continuous function with a negative value at one endpoint and a positive value at the other must cross zero somewhere in between; `half-interval-method` even checks the signs first and signals an error if they aren't opposite, precisely because that condition is what makes bisection valid - differentiability and pre-existing closeness to the root are not required."
+    },
+    {
+      "item_index": 2,
+      "prompt": "How does the `fixed-point` procedure search for an x such that f(x) = x?",
+      "options": [
+        "It starts from an initial guess and repeatedly applies f to the current value, stopping when two successive values differ by less than a small tolerance",
+        "It solves the equation f(x) - x = 0 symbolically using algebraic manipulation",
+        "It tries every value in a fixed numeric range and returns whichever one makes f(x) closest to x",
+        "It computes the derivative of f and applies Newton's method to converge on the fixed point"
+      ],
+      "answer_index": 0,
+      "explanation": "`fixed-point`'s `try` helper repeatedly computes `(f guess)` and recurses with that as the new guess, terminating via `close-enough?` once consecutive values are within `tolerance` - a purely iterative numerical process, not symbolic algebra, exhaustive search, or a derivative-based method."
+    },
+    {
+      "item_index": 3,
+      "prompt": "Why does computing square roots as a fixed point of y -> x/y fail to converge, and how does average damping fix it?",
+      "options": [
+        "The naive iteration oscillates forever between two values, because applying y -> x/y twice returns to the original guess; averaging each guess with x/y before continuing damps this oscillation so the iteration converges",
+        "The naive iteration diverges to infinity because x/y grows without bound as the guesses proceed; averaging is needed to keep the guesses from overflowing",
+        "The naive iteration converges but very slowly; averaging is purely a speed optimization with no effect on whether it converges at all",
+        "The naive iteration fails because y -> x/y is not valid Scheme syntax; averaging rewrites it into a form the interpreter can evaluate"
+      ],
+      "answer_index": 0,
+      "explanation": "Starting from y1, the next guess is y2 = x/y1, and the guess after that is x/y2 = x/(x/y1) = y1 again, so the process oscillates between y1 and y2 without ever settling; replacing x/y with the average of y and x/y as the next guess breaks this back-and-forth and lets the sequence converge, which is exactly what average damping means here - it is not about overflow, speed alone, or invalid syntax."
+    }
+  ]
+}

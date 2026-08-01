@@ -1,0 +1,102 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 2,
+      "est_seconds": 170,
+      "recap_md": "Computing GCDs will matter for reducing rational numbers to lowest terms in Chapter 2; rather than factoring both numbers, there's a much faster algorithm based on the fact that the common divisors of a and b are exactly the common divisors of b and the remainder r of a divided by b."
+    },
+    {
+      "start_paragraph_index": 3,
+      "end_paragraph_index": 5,
+      "est_seconds": 160,
+      "recap_md": "Repeatedly replacing a pair with (b, remainder) shrinks the numbers until the second one hits zero, at which point the other number is the answer - this is Euclid's Algorithm, illustrated by reducing GCD(206,40) down to GCD(2,0)."
+    },
+    {
+      "start_paragraph_index": 6,
+      "end_paragraph_index": 8,
+      "est_seconds": 150,
+      "recap_md": "Euclid's Algorithm translates directly into a short recursive `gcd` procedure using `if` and `remainder`; despite the recursive call, it generates an iterative process whose step count grows only logarithmically in the size of the inputs."
+    },
+    {
+      "start_paragraph_index": 9,
+      "end_paragraph_index": 11,
+      "est_seconds": 180,
+      "recap_md": "Lamé's theorem ties that logarithmic step count to the Fibonacci numbers: if Euclid's Algorithm takes k steps, the smaller input must be at least the kth Fibonacci number, which lets you derive Θ(log n) as the algorithm's order of growth."
+    },
+    {
+      "start_paragraph_index": 12,
+      "end_paragraph_index": 12,
+      "est_seconds": 160,
+      "recap_md": "Exercise 1.20 asks you to trace `(gcd 206 40)` by hand under normal-order versus applicative-order evaluation and count how many times `remainder` actually gets computed under each strategy."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Euclid's Algorithm rests on the fact that the common divisors of a and b are exactly the common divisors of b and r (the remainder of a divided by b), so GCD(a,b) = GCD(b,r); repeating this reduction on smaller and smaller pairs eventually reaches a pair whose second element is 0, and the other element of that pair is the GCD.",
+      "block_indices": [0, 1]
+    },
+    {
+      "statement": "Euclid's Algorithm translates directly into the Scheme procedure `(define (gcd a b) (if (= b 0) a (gcd b (remainder a b))))`. Even though it is written as a recursive call to itself, it generates an iterative process (no deferred operations pile up around the recursive call), and the number of steps it takes grows as the logarithm of the inputs.",
+      "block_indices": [2]
+    },
+    {
+      "statement": "Lamé's theorem connects Euclid's Algorithm to the Fibonacci numbers: if the algorithm takes k steps, the smaller of the two original numbers must be at least Fib(k). Since Fibonacci numbers grow exponentially (roughly φ^k), the number of steps k must grow only logarithmically in n - giving Euclid's Algorithm an order of growth of Θ(log n), a case where an iterative process still has logarithmic rather than linear growth.",
+      "block_indices": [3]
+    },
+    {
+      "statement": "Exercise 1.20 shows that the process an algorithm actually generates depends on the evaluation rule: under normal-order evaluation, argument expressions are substituted unevaluated and only forced when needed, so a `remainder` sub-expression can be re-expanded and recomputed many times over, making normal-order evaluation of `(gcd 206 40)` perform far more `remainder` operations than applicative-order evaluation, which reduces each argument to a value once before proceeding.",
+      "block_indices": [4]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "Why does Euclid's Algorithm reduce the problem of computing GCD(a, b) to computing GCD(b, r), where r is the remainder of a divided by b?",
+      "options": [
+        "Because any common divisor of a and b is also a common divisor of b and r, and vice versa, so the pair (a,b) and the pair (b,r) always have exactly the same GCD",
+        "Because r is always smaller than the GCD of a and b, so replacing a with r gives a safe upper bound on the answer",
+        "Because dividing a by b is guaranteed to produce a prime remainder, which must itself divide the GCD",
+        "Because a and r always share exactly one common factor, namely the GCD, while a and b may share several"
+      ],
+      "answer_index": 0,
+      "explanation": "The reduction is valid because the set of common divisors of a and b is identical to the set of common divisors of b and r - it isn't about bounding the answer or special properties of r, it's that the two pairs are interchangeable for the purpose of finding the GCD."
+    },
+    {
+      "item_index": 1,
+      "prompt": "The `gcd` procedure `(define (gcd a b) (if (= b 0) a (gcd b (remainder a b))))` calls itself recursively in its own definition. What kind of process does running it actually generate?",
+      "options": [
+        "An iterative process: each call just tests b, computes a remainder, and calls gcd again, with no pending operations left waiting for the recursive call to return",
+        "A recursive process, since the procedure's body contains a call to gcd inside itself",
+        "A tree-recursive process, since each call can branch into two further recursive calls",
+        "An iterative process, but only because Scheme treats two-argument procedures as a special case"
+      ],
+      "answer_index": 0,
+      "explanation": "Whether a process is recursive or iterative depends on its shape at run time, not on whether the source code contains a recursive call. Here each call to gcd is the last thing that happens - there's no arithmetic left to do with its result - so the process is iterative even though the definition is self-referential."
+    },
+    {
+      "item_index": 2,
+      "prompt": "According to Lamé's theorem, if Euclid's Algorithm takes k steps to compute a GCD, what does that tell us about the smaller of the two original numbers, and what does it imply about the algorithm's order of growth?",
+      "options": [
+        "The smaller number must be at least as large as the kth Fibonacci number; since Fibonacci numbers grow exponentially in k, the number of steps k grows only as Θ(log n) in the smaller input n",
+        "The smaller number must be exactly equal to the kth Fibonacci number, which makes the algorithm's order of growth Θ(n)",
+        "The larger number must be smaller than the kth Fibonacci number, which implies the algorithm runs in Θ(n²) time",
+        "The theorem only describes what happens once b reaches 0, so it says nothing about the algorithm's order of growth"
+      ],
+      "answer_index": 0,
+      "explanation": "Lamé's theorem gives n ≥ Fib(k), and since Fib(k) grows roughly like φ^k, solving for k gives k growing as the logarithm (base φ) of n - that is exactly the Θ(log n) order of growth for the number of steps."
+    },
+    {
+      "item_index": 3,
+      "prompt": "In Exercise 1.20's normal-order trace of `(gcd 206 40)`, why does normal-order evaluation end up performing more `remainder` operations than applicative-order evaluation, even though both eventually produce the same answer?",
+      "options": [
+        "Normal order substitutes argument expressions unevaluated and only forces them when actually needed (e.g., inside `=` or the final result), so the same `remainder` expression can be re-expanded and recomputed several times instead of being reduced to a value once",
+        "Normal order and applicative order actually perform exactly the same number of remainder operations, since both must reach the same final value",
+        "Normal order performs more operations because it evaluates `remainder` before checking whether `b` is 0, while applicative order checks first and skips the computation",
+        "Normal order performs more operations because it recomputes the `gcd` call itself twice as many times as applicative order does"
+      ],
+      "answer_index": 0,
+      "explanation": "Under normal-order evaluation, an argument expression is passed along unevaluated and only reduced when its value is actually demanded; because `remainder a b` reappears nested inside later, deferred expressions, forcing it repeatedly recomputes the same remainder many times, unlike applicative order, which evaluates each argument to a value exactly once before the call proceeds."
+    }
+  ]
+}

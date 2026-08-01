@@ -1,0 +1,164 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 3,
+      "est_seconds": 150,
+      "recap_md": "`lambda` lets you write down \"the procedure that does X\" directly, without first defining a named procedure just to use it once."
+    },
+    {
+      "start_paragraph_index": 4,
+      "end_paragraph_index": 7,
+      "est_seconds": 160,
+      "recap_md": "Using `lambda`, `pi-sum` and `integral` can supply their term/next procedures directly as anonymous `lambda` expressions instead of separately-defined helpers like `pi-next` or `add-dx`."
+    },
+    {
+      "start_paragraph_index": 8,
+      "end_paragraph_index": 13,
+      "est_seconds": 190,
+      "recap_md": "`lambda` creates procedures the same way `define` does but leaves them nameless; in fact defining a named procedure is just shorthand for binding a name to a `lambda` expression."
+    },
+    {
+      "start_paragraph_index": 14,
+      "end_paragraph_index": 18,
+      "est_seconds": 170,
+      "recap_md": "A `lambda` expression reads as \"the procedure of these arguments that computes this body\", and like any expression whose value is a procedure, it can be applied immediately as the operator of a combination."
+    },
+    {
+      "start_paragraph_index": 19,
+      "end_paragraph_index": 22,
+      "est_seconds": 190,
+      "recap_md": "`lambda` has a second use: introducing local variables (like intermediate quantities `a` and `b`) via an anonymous procedure, instead of the earlier trick of defining an auxiliary named helper procedure."
+    },
+    {
+      "start_paragraph_index": 23,
+      "end_paragraph_index": 26,
+      "est_seconds": 170,
+      "recap_md": "The special form `let` packages up that lambda-application-for-local-variables pattern more conveniently, with a general form binding a list of variable-expression pairs before evaluating a body."
+    },
+    {
+      "start_paragraph_index": 27,
+      "end_paragraph_index": 31,
+      "est_seconds": 200,
+      "recap_md": "A `let` expression is just syntactic sugar: it's interpreted as an immediately-applied `lambda` whose parameters are the let-bound variables and whose arguments are their value expressions, requiring no new interpreter mechanism."
+    },
+    {
+      "start_paragraph_index": 32,
+      "end_paragraph_index": 33,
+      "est_seconds": 180,
+      "recap_md": "Because `let` is `lambda` in disguise, a let-bound variable's scope is only the let's body - it lets you bind names as locally as possible, and the value expressions themselves are evaluated outside the let, using any outer variable of the same name."
+    },
+    {
+      "start_paragraph_index": 34,
+      "end_paragraph_index": 36,
+      "est_seconds": 150,
+      "recap_md": "Internal defines can sometimes mimic what `let` does, but the preferred style is to reserve internal `define` for auxiliary procedures and use `let` for local variable bindings."
+    },
+    {
+      "start_paragraph_index": 37,
+      "end_paragraph_index": 41,
+      "est_seconds": 160,
+      "recap_md": "Exercise 1.34 asks what happens when the interpreter is asked to evaluate `(f f)`, given `(define (f g) (g 2))`."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "`lambda` creates an anonymous procedure directly, without needing to define and name a separate procedure - useful when a one-off procedure is only needed as an argument to a higher-order procedure like `sum`.",
+      "block_indices": [0, 1]
+    },
+    {
+      "statement": "A `lambda` expression constructs a procedure in exactly the same way a `define` does; in fact, defining a named procedure with `define` is really just syntactic sugar for binding a name to the procedure produced by an equivalent `lambda` expression.",
+      "block_indices": [2]
+    },
+    {
+      "statement": "Because a `lambda` expression's value is itself a procedure, it can be used directly as the operator of a combination, immediately applying it to some arguments, without ever binding it to a name first.",
+      "block_indices": [3]
+    },
+    {
+      "statement": "`let` is used to create local variables and intermediate quantities inside a procedure body; it is not a fundamental new mechanism but syntactic sugar for immediately applying a `lambda` expression (whose parameters are the let-bound variables) to the corresponding value expressions.",
+      "block_indices": [4, 5, 6]
+    },
+    {
+      "statement": "Because `let` expands into an immediately-applied `lambda`, the scope of a variable bound by `let` is only the body of that `let` - it does not affect, and is not affected by, any outer binding of the same name; the value expressions for the let's bindings are themselves evaluated outside the `let`, using the outer meaning of any same-named variable.",
+      "block_indices": [6, 7]
+    },
+    {
+      "statement": "Style preference: use `let` to introduce local variables, and reserve internal (nested) `define` for defining auxiliary procedures inside another procedure.",
+      "block_indices": [8]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "In the `pi-sum` example, why is `(lambda (x) (+ x 4))` used instead of separately defining a named procedure like `pi-next`?",
+      "options": [
+        "Because `lambda` creates a procedure that can be used directly as an argument, without the awkwardness of defining and naming a procedure that's only needed once",
+        "Because named procedures cannot be passed as arguments to other procedures like `sum`",
+        "Because `lambda` expressions run faster than procedures created with `define`",
+        "Because `pi-next` would need to take two arguments instead of one"
+      ],
+      "answer_index": 0,
+      "explanation": "The motivation is convenience: needing `pi-next` and `pi-term` only as arguments to `sum` makes defining them separately feel like unnecessary clutter; `lambda` lets you write the procedure inline where it's needed instead."
+    },
+    {
+      "item_index": 1,
+      "prompt": "What is the relationship between `(define (plus4 x) (+ x 4))` and `(define plus4 (lambda (x) (+ x 4)))`?",
+      "options": [
+        "They are equivalent - the first is just shorthand for defining `plus4` as the name bound to the procedure produced by the `lambda` expression",
+        "They are different procedures because the first takes one argument and the second takes zero arguments",
+        "The first creates a global procedure while the second creates a local one",
+        "The second form is only valid inside internal (nested) definitions, not at top level"
+      ],
+      "answer_index": 0,
+      "explanation": "`lambda` constructs procedures exactly the way `define` does, except without giving them a name; defining a named procedure with `define` is equivalent to binding that name to the corresponding `lambda` expression's value."
+    },
+    {
+      "item_index": 2,
+      "prompt": "What does `((lambda (x y z) (+ x y (square z))) 1 2 3)` do?",
+      "options": [
+        "It immediately applies the anonymous procedure created by the `lambda` expression to the arguments 1, 2, and 3, evaluating to 12",
+        "It causes an error, because `lambda` expressions must first be bound to a name with `define` before they can be applied",
+        "It defines a new procedure named `lambda` that takes three arguments",
+        "It only evaluates the `lambda` expression itself, returning an unnamed procedure, without applying it to 1, 2, 3"
+      ],
+      "answer_index": 0,
+      "explanation": "A `lambda` expression's value is a procedure, so - like any expression whose value is a procedure - it can appear directly as the operator of a combination; here it's applied on the spot to 1, 2, and 3, giving 1+2+9=12."
+    },
+    {
+      "item_index": 3,
+      "prompt": "Why is a `let` expression like `(let ((a (+ 1 (* x y))) (b (- 1 y))) (+ (* x (square a)) (* y b) (* a b)))` not a new fundamental mechanism the interpreter needs?",
+      "options": [
+        "Because it's interpreted as syntactic sugar for an immediately-applied `lambda` expression, `((lambda (a b) ...) (+ 1 (* x y)) (- 1 y))`, using mechanisms the interpreter already has",
+        "Because `let` expressions are only allowed to appear inside function bodies, never at the top level",
+        "Because `let` is handled by a special hardware instruction that `lambda` expressions don't use",
+        "Because every `let` expression must bind exactly two variables, matching a fixed built-in pattern"
+      ],
+      "answer_index": 0,
+      "explanation": "`let` expands directly into a `lambda` application: the let-bound variables become the lambda's formal parameters and the value expressions become the arguments it's applied to - so no new interpreter mechanism is needed beyond `lambda` and combination."
+    },
+    {
+      "item_index": 4,
+      "prompt": "If the value of `x` is 5, what is the value of `(+ (let ((x 3)) (+ x (* x 10))) x)`?",
+      "options": [
+        "38 - because the `x` inside the `let` body is the local binding (3), giving 33, while the `x` passed to the outer `+` is unaffected and remains 5",
+        "55 - because the let's local `x` overwrites the outer `x` for the rest of the expression too",
+        "66 - because both occurrences of `x` refer to the local binding of 3",
+        "It's an error - because `x` is defined twice in the same expression"
+      ],
+      "answer_index": 0,
+      "explanation": "Because `let` expands into a `lambda` application, the local `x` is scoped only to the let's body; it evaluates to 3+30=33 there, but the outer `x` used as the second argument to the outermost `+` is completely unaffected and still 5, giving 33+5=38."
+    },
+    {
+      "item_index": 5,
+      "prompt": "According to the stated style preference, when should you use `let` versus an internal (nested) `define`?",
+      "options": [
+        "Use `let` to bind local variables, and reserve internal `define` for defining auxiliary procedures inside another procedure",
+        "Always prefer internal `define` over `let`, since `let` is only syntactic sugar and therefore slower",
+        "Use `let` only for procedures and internal `define` only for variables",
+        "There's no real difference, so the choice should be made randomly for each program"
+      ],
+      "answer_index": 0,
+      "explanation": "There is an explicit stylistic preference: use `let` for situations like binding local variables (e.g., `a` and `b`), and reserve internal `define` for defining internal procedures."
+    }
+  ]
+}

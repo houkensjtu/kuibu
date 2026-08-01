@@ -1,0 +1,198 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 2,
+      "est_seconds": 130,
+      "recap_md": "Passing procedures as arguments already added expressive power; returning procedures as values adds even more - motivated by revisiting the fixed-point square-root idea and generalizing average damping into its own reusable procedure."
+    },
+    {
+      "start_paragraph_index": 3,
+      "end_paragraph_index": 5,
+      "est_seconds": 170,
+      "recap_md": "`average-damp` takes a procedure `f` and returns a new procedure that, applied to `x`, gives the average of `x` and `(f x)` - applying it to `square` at 10 averages 10 and 100 to get 55."
+    },
+    {
+      "start_paragraph_index": 6,
+      "end_paragraph_index": 9,
+      "est_seconds": 190,
+      "recap_md": "`sqrt` is rewritten using `fixed-point` plus `average-damp` applied to `y -> x/y`, making fixed-point search, damping, and the transform all explicit - and the same pattern immediately generalizes to `cube-root` by damping `y -> x/y^2` instead."
+    },
+    {
+      "start_paragraph_index": 10,
+      "end_paragraph_index": 11,
+      "est_seconds": 150,
+      "recap_md": "Square roots were already a special case of Newton's method: a zero of a differentiable function g is a fixed point of x - g(x)/Dg(x), and this fixed-point search converges rapidly given a good initial guess."
+    },
+    {
+      "start_paragraph_index": 12,
+      "end_paragraph_index": 15,
+      "est_seconds": 180,
+      "recap_md": "Derivative is introduced as another function-to-function transform, and `deriv` approximates it via a small increment `dx` (defined here as 0.00001) rather than symbolic differentiation."
+    },
+    {
+      "start_paragraph_index": 16,
+      "end_paragraph_index": 17,
+      "est_seconds": 140,
+      "recap_md": "Like `average-damp`, `deriv` takes a procedure and returns a procedure; applying it to `cube` approximates the derivative of x^3 at 5, landing very close to the exact value 75."
+    },
+    {
+      "start_paragraph_index": 18,
+      "end_paragraph_index": 20,
+      "est_seconds": 180,
+      "recap_md": "`newton-transform` packages the Newton's-method formula using `deriv`, and `newtons-method` is simply `fixed-point` applied to that transform, starting from a supplied guess."
+    },
+    {
+      "start_paragraph_index": 21,
+      "end_paragraph_index": 22,
+      "est_seconds": 120,
+      "recap_md": "Applying `newtons-method` to y^2 - x with an initial guess of 1 gives yet a third way of defining `sqrt`."
+    },
+    {
+      "start_paragraph_index": 23,
+      "end_paragraph_index": 25,
+      "est_seconds": 170,
+      "recap_md": "Both routes to `sqrt` share the same shape - start from a function, transform it, then find a fixed point - so that shape is factored out into a general `fixed-point-of-transform` procedure taking a function, a transform, and a guess."
+    },
+    {
+      "start_paragraph_index": 26,
+      "end_paragraph_index": 29,
+      "est_seconds": 190,
+      "recap_md": "The two earlier `sqrt` formulations become two calls to the same `fixed-point-of-transform` procedure, one passing `average-damp` and one passing `newton-transform`."
+    },
+    {
+      "start_paragraph_index": 30,
+      "end_paragraph_index": 34,
+      "est_seconds": 200,
+      "recap_md": "Compound procedures already let us name general methods explicitly; higher-order procedures let us manipulate those methods further, which connects to first-class status - the freedom to be named, passed, returned, and stored - that Lisp grants procedures fully, unlike many other languages."
+    },
+    {
+      "start_paragraph_index": 35,
+      "end_paragraph_index": 41,
+      "est_seconds": 200,
+      "recap_md": "Exercises invite defining `cubic` for use with `newtons-method`, `double` for applying a procedure twice, and `compose` for composing two one-argument functions."
+    },
+    {
+      "start_paragraph_index": 42,
+      "end_paragraph_index": 47,
+      "est_seconds": 190,
+      "recap_md": "Remaining exercises cover `repeated` (applying a function n times), smoothing a function via averaging nearby outputs, experimenting with how many average-damps an n-th-root fixed-point search needs, and `iterative-improve` as the general guess-and-improve pattern."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "`average-damp` is a higher-order procedure: given a procedure `f`, it returns a new procedure that, applied to `x`, produces the average of `x` and `(f x)` - a reusable transform for taming fixed-point iterations that would otherwise oscillate or fail to converge.",
+      "block_indices": [1, 2]
+    },
+    {
+      "statement": "`sqrt` and `cube-root` can both be derived as fixed-point searches of an average-damped transform, differing only in which function of y is being damped (y -> x/y for square root, y -> x/y^2 for cube root) - making the shared structure explicit and reusable.",
+      "block_indices": [2, 9]
+    },
+    {
+      "statement": "`deriv` approximates the derivative of a function g at a point by computing (g(x+dx) - g(x))/dx for a small constant dx; like `average-damp`, it takes a procedure as argument and returns a procedure as its value.",
+      "block_indices": [4, 5]
+    },
+    {
+      "statement": "Newton's method finds a zero of g by treating it as a fixed-point search of the transform x -> x - g(x)/Dg(x); `newton-transform` builds this transform using `deriv`, and `newtons-method` is just `fixed-point` applied to that transform - yielding a third formulation of `sqrt`.",
+      "block_indices": [3, 6, 7]
+    },
+    {
+      "statement": "Since both the average-damping route and the Newton's-method route to `sqrt` share the same shape (transform a function, then find its fixed point), that shape is abstracted into `fixed-point-of-transform`, so the two `sqrt` definitions become two instantiations of one general procedure differing only in the transform argument passed.",
+      "block_indices": [8, 9]
+    },
+    {
+      "statement": "Higher-order procedures like `average-damp`, `deriv`, and `fixed-point-of-transform` let a programmer name and manipulate entire general methods of computation as explicit elements of the language, not just parameterize over ordinary numeric values.",
+      "block_indices": [10]
+    },
+    {
+      "statement": "An element has first-class status if it may be named by variables, passed as an argument, returned as a result, and included in data structures; Lisp grants procedures full first-class status, unlike many other common programming languages, which greatly increases expressive power at some implementation cost.",
+      "block_indices": [10]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "What does `(average-damp f)` return, given a procedure `f`?",
+      "options": [
+        "A new procedure that, when applied to x, returns the average of x and (f x)",
+        "A new procedure that returns the average of two successive outputs of f",
+        "The average of f applied to every number from 1 up to x",
+        "A number equal to the average of f's minimum and maximum output values"
+      ],
+      "answer_index": 0,
+      "explanation": "average-damp packages exactly this transform - a lambda over x that computes the average of x and (f x) - converting f into a 'damped' version of itself, which is what tames fixed-point iterations that would otherwise oscillate."
+    },
+    {
+      "item_index": 1,
+      "prompt": "Why can `cube-root` be written by making only a small change to the fixed-point/average-damp formulation of `sqrt`?",
+      "options": [
+        "Because the cube root of x is a fixed point of y -> x/y^2, just as the square root of x is a fixed point of y -> x/y, so only the inner transform function needs to change",
+        "Because `cube-root` and `sqrt` are actually the exact same procedure once average damping is applied",
+        "Because `fixed-point` automatically detects whether a cube root or square root is wanted from the initial guess",
+        "Because average damping only works for square roots, so `cube-root` needs an entirely different algorithm built from scratch"
+      ],
+      "answer_index": 0,
+      "explanation": "Both are instances of the same idea - find a fixed point of an average-damped transform - differing only in which function of y is damped (x/y vs x/y^2), which is exactly the reusable structure the text is showcasing."
+    },
+    {
+      "item_index": 2,
+      "prompt": "How does the `deriv` procedure approximate the derivative of a function `g` at a point `x`?",
+      "options": [
+        "By computing (g(x+dx) - g(x)) / dx for a small constant dx",
+        "By symbolically differentiating the body of g using algebraic rules",
+        "By calling g twice at x and dividing the two results",
+        "By repeatedly averaging g(x) with itself until it stabilizes"
+      ],
+      "answer_index": 0,
+      "explanation": "deriv implements the standard finite-difference approximation to a derivative - the change in g's output over a tiny step dx in its input - rather than any kind of symbolic differentiation."
+    },
+    {
+      "item_index": 3,
+      "prompt": "How does `newtons-method` use `fixed-point` to find a zero of a function `g`?",
+      "options": [
+        "It calls `fixed-point` on `newton-transform` applied to g, i.e. on the function x -> x - g(x)/Dg(x), since a fixed point of that transform is a zero of g",
+        "It calls `fixed-point` directly on g itself, since any fixed point of g is automatically a zero of g",
+        "It repeatedly averages g(x) with x until the average stops changing",
+        "It calls `deriv` on g and then treats the derivative's own zero as the answer"
+      ],
+      "answer_index": 0,
+      "explanation": "The chain is: newton-transform builds x -> x - g(x)/Dg(x) using deriv; newtons-method just runs fixed-point on that transformed function, since finding where the transform stabilizes is mathematically the same as finding where g is zero."
+    },
+    {
+      "item_index": 4,
+      "prompt": "What do the two `sqrt` procedures built from `fixed-point-of-transform` (one passing `average-damp`, one passing `newton-transform`) have in common?",
+      "options": [
+        "Both call the same general procedure, `fixed-point-of-transform`, differing only in which transform procedure they pass alongside the function and initial guess",
+        "Both compute the derivative of x -> x^2 - y explicitly before searching for a fixed point",
+        "Both are restricted to work only for square roots and cannot be reused for any other computation",
+        "Both bypass `fixed-point` entirely and use a closed-form formula instead"
+      ],
+      "answer_index": 0,
+      "explanation": "fixed-point-of-transform factors out the shared shape - take a function g, transform it, find a fixed point of the result - so the two sqrt definitions are just two instantiations of that one general procedure with different transform arguments (average-damp vs newton-transform)."
+    },
+    {
+      "item_index": 5,
+      "prompt": "What is the key point the text makes about procedures like `average-damp`, `deriv`, and `fixed-point-of-transform`?",
+      "options": [
+        "They let a programmer name and manipulate whole general methods of computation, not just ordinary numeric values, extending the reach of procedural abstraction",
+        "They exist only to make code shorter, with no effect on what can be expressed",
+        "They are special forms built into the interpreter rather than ordinary procedures",
+        "They only work correctly in Scheme and can't be expressed in other higher-order-capable languages"
+      ],
+      "answer_index": 0,
+      "explanation": "The text's closing point is that these higher-order procedures let general methods (like 'average damp this' or 'take the derivative of this') become explicit, nameable, manipulable elements of the language - not just a way to save keystrokes."
+    },
+    {
+      "item_index": 6,
+      "prompt": "According to the text, which of these is one of the 'rights and privileges' of a first-class element in a programming language?",
+      "options": [
+        "It may be returned as the result of a procedure",
+        "It must always be a numeric value, never a procedure",
+        "It cannot be stored inside a data structure, only used directly",
+        "It can only be passed as an argument, never named by a variable"
+      ],
+      "answer_index": 0,
+      "explanation": "The text lists four rights of first-class elements: being named by variables, passed as arguments, returned as results, and included in data structures; being returnable as a procedure's result is exactly one of these, and Lisp grants procedures all four."
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 2,
+      "est_seconds": 170,
+      "recap_md": "Order of growth Θ(f(n)) gives a coarse measure of how a process's resource use (steps or space) scales as the problem size n grows, formally defined by sandwiching R(n) between k1·f(n) and k2·f(n) for all sufficiently large n."
+    },
+    {
+      "start_paragraph_index": 3,
+      "end_paragraph_index": 4,
+      "est_seconds": 170,
+      "recap_md": "Comparing earlier examples: linear recursive factorial is Θ(n) steps and Θ(n) space, iterative factorial is Θ(n) steps but Θ(1) space, and tree-recursive Fibonacci is Θ(φ^n) steps and Θ(n) space; Θ notation is deliberately crude, since n², 1000n², and 3n²+10n+17 are all Θ(n²), yet it still usefully predicts how resource use changes as the problem size changes."
+    },
+    {
+      "start_paragraph_index": 5,
+      "end_paragraph_index": 8,
+      "est_seconds": 150,
+      "recap_md": "Exercise 1.14 asks for the tree and orders of growth of `count-change`, and exercise 1.15 asks about a sine-approximation built from `cube`, `p`, and `sine`, examining how many times `p` is applied and the resulting orders of growth in space and steps."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Order of growth Θ(f(n)) is a coarse measure of how a process's required resources R(n) (steps or storage) scale as the problem size n grows: R(n) = Θ(f(n)) means there exist positive constants k1, k2 such that k1·f(n) ≤ R(n) ≤ k2·f(n) for all sufficiently large n. Because this only pins R(n) down up to constant factors, very different exact step counts (e.g. n², 1000n², 3n²+10n+17) can share the same order of growth, so Θ deliberately discards constant factors and lower-order terms while still predicting how resource use changes as the problem size changes (e.g. doubling n roughly doubles resources for a linear process, but multiplies them by a constant factor for an exponential process).",
+      "block_indices": [0, 1]
+    },
+    {
+      "statement": "Applying order-of-growth analysis to the earlier examples: the linear recursive factorial process takes Θ(n) steps and Θ(n) space (it must keep a chain of deferred multiplications, one per recursive call); the linear iterative factorial process also takes Θ(n) steps but only Θ(1) space (it uses a fixed set of state variables regardless of n); and the tree-recursive Fibonacci process takes Θ(φ^n) steps (exponential) but only Θ(n) space (its space is bounded by the deepest single path down the recursion tree, not by the whole tree).",
+      "block_indices": [1]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "According to the text's definition, what does it mean to say R(n) = Θ(f(n))?",
+      "options": [
+        "There exist positive constants k1 and k2, independent of n, such that k1·f(n) ≤ R(n) ≤ k2·f(n) for all sufficiently large n",
+        "R(n) is exactly equal to f(n) for every value of n",
+        "R(n) grows strictly faster than f(n) for large n, with no upper bound relating them",
+        "f(n) is the average of R(n) taken over all possible inputs of size n"
+      ],
+      "answer_index": 0,
+      "explanation": "Θ(f(n)) is a sandwich bound, not an exact equality: it says R(n) stays between two constant multiples of f(n) once n is large enough, which is exactly why it's called a 'gross' or coarse measure rather than a precise formula."
+    },
+    {
+      "item_index": 0,
+      "prompt": "The text notes that a process requiring n² steps, one requiring 1000n² steps, and one requiring 3n²+10n+17 steps are all Θ(n²). What does this illustrate about order-of-growth notation?",
+      "options": [
+        "Θ notation deliberately ignores constant multiplicative factors and lower-order terms, so it gives only a crude, coarse-grained comparison of how resource use scales, not the exact running time",
+        "Θ notation is only valid when the constant factor in front of the dominant term equals exactly 1",
+        "Any two processes with the same order of growth must take exactly the same number of steps for every input size",
+        "Order-of-growth analysis proves that all three processes perform identically in practice"
+      ],
+      "answer_index": 0,
+      "explanation": "Since k1 and k2 can be any positive constants, the definition of Θ absorbs constant factors (like the 1000) and lower-order terms (like the 10n+17); that's precisely why it's a crude measure - useful for seeing how resource use scales with n, but blind to constant-factor or lower-order differences."
+    },
+    {
+      "item_index": 1,
+      "prompt": "How do the linear recursive and linear iterative implementations of factorial compare in order of growth?",
+      "options": [
+        "Both require Θ(n) steps, but the recursive version requires Θ(n) space while the iterative version requires only Θ(1) space",
+        "The recursive version requires Θ(n) steps and Θ(1) space, while the iterative version requires Θ(n) steps and Θ(n) space",
+        "Both versions require Θ(n) steps and Θ(n) space, since both must count up to n one way or another",
+        "The iterative version requires only Θ(log n) steps because it avoids the overhead of recursive calls"
+      ],
+      "answer_index": 0,
+      "explanation": "The recursive process must keep a growing chain of deferred multiplications alive until the base case returns, so its space grows with n; the iterative process instead carries its state in a fixed set of variables that get updated in place, so its space stays constant even though it still takes Θ(n) steps to reach n."
+    },
+    {
+      "item_index": 1,
+      "prompt": "Why does the tree-recursive Fibonacci process require only Θ(n) space, even though it takes an exponential Θ(φ^n) number of steps?",
+      "options": [
+        "Because the amount of state that must be kept track of at any moment is set by the depth of the recursion tree - the length of the longest single chain of deferred operations - which grows only linearly with n, even though the tree as a whole has exponentially many nodes",
+        "Because the interpreter automatically discards finished branches of the recursion tree, keeping total memory bounded by a constant",
+        "Because Θ(φ^n) steps and Θ(n) space are just two different notations for the same underlying quantity",
+        "Because the tree-recursive process memoizes repeated subproblems internally, so each Fibonacci value is only computed once"
+      ],
+      "answer_index": 0,
+      "explanation": "Space usage tracks how deep the recursion goes at any single moment, not how many nodes the whole tree has; since the deepest path down the Fibonacci recursion tree only has n levels, space stays Θ(n) even while the total number of steps taken across the whole tree grows exponentially as Θ(φ^n)."
+    }
+  ]
+}
