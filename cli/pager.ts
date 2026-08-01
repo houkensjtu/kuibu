@@ -4,7 +4,7 @@ import type { Block } from "../schema/types/pack.js";
 
 function renderBlock(block: Block): string {
   const location = block.section_path.join(" / ");
-  return `${block.section_title}（${location}）\n\n${block.content_md}\n`;
+  return `${block.section_title} (${location})\n\n${block.content_md}\n`;
 }
 
 /** 尝试把 text 交给系统 pager 显示；返回 pager 是否真的跑起来了。 */
@@ -29,6 +29,6 @@ export async function showBlockInPagerOrFallback(block: Block): Promise<void> {
 
   console.log(text);
   const rl = createInterface({ input: process.stdin, output: process.stdout });
-  await rl.question("（未找到 pager，已直接打印正文）读完了按 Enter 继续...");
+  await rl.question("(no pager found, printed directly) Press Enter when done reading...");
   rl.close();
 }

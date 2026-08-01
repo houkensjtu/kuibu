@@ -26,20 +26,20 @@ const program = new Command();
 
 program
   .name("kuibu")
-  .description("kuibu（跬步）—— 个人读书打卡工具")
+  .description("kuibu — a personal reading checkin tool")
   .version("0.1.0");
 
 program
   .command("today")
-  .description("开始/继续今天的阅读打卡")
-  .option("--pack <dir>", "内容包目录", "schema/examples/sample-pack")
-  .option("--log <path>", "事件日志文件路径", ".kuibu-events.jsonl")
-  .option("--minutes <n>", "调整每日阅读时长目标（分钟），会记住到下次运行", (v) => Number.parseInt(v, 10))
+  .description("start/continue today's reading checkin")
+  .option("--pack <dir>", "content pack directory", "schema/examples/sample-pack")
+  .option("--log <path>", "event log file path", ".kuibu-events.jsonl")
+  .option("--minutes <n>", "adjust daily reading target (minutes); remembered for next run", (v) => Number.parseInt(v, 10))
   .action(async (options: { pack: string; log: string; minutes?: number }) => {
     try {
       const pack = loadPack(options.pack);
       console.log(pack.manifest.title);
-      console.log(`共 ${pack.blocks.length} 个 block`);
+      console.log(`${pack.blocks.length} blocks total`);
 
       const questionItemMap = new Map(pack.questions.map((q) => [q.id, q.item_id]));
       const priorEvents = readEvents(options.log);
@@ -74,7 +74,7 @@ program
       let totalReadSecondsToday = 0;
 
       if (todaysBlocks.length === 0) {
-        console.log("这本书已经读完啦，今天只有复习题。");
+        console.log("You've finished this book - just review questions today.");
       } else {
         await runReadingFlow(todaysBlocks, {
           showBlock: showBlockInPagerOrFallback,
@@ -112,9 +112,9 @@ program
             answeredQuestionIds.add(question.id);
 
             if (correct) {
-              console.log("答对了！");
+              console.log("Correct!");
             } else {
-              console.log(`答错了。正确答案：${shuffled.options[shuffled.answerIndex]}`);
+              console.log(`Wrong. Correct answer: ${shuffled.options[shuffled.answerIndex]}`);
               console.log(question.explanation);
             }
 
@@ -148,10 +148,10 @@ program
           date: today,
         });
         checkinDates.add(today);
-        console.log(`打卡成功！今天读了 ${totalReadSecondsToday} 秒。`);
+        console.log(`Checked in! Read for ${totalReadSecondsToday}s today.`);
       } else {
         const remaining = Math.max(0, targetSeconds - totalReadSecondsToday);
-        console.log(`还没打上卡：阅读时长还差 ${remaining} 秒。`);
+        console.log(`Not checked in yet: ${remaining}s more reading needed.`);
       }
 
       const updatedReadBlockIds = new Set([
@@ -162,8 +162,8 @@ program
         pack.blocks,
         updatedReadBlockIds,
       );
-      const sectionLabel = lastCompletedSectionPath?.at(-1) ?? "（还没读完任何小节）";
-      console.log(`${sectionLabel} 已读完 · 全书 ${percentRead}%`);
+      const sectionLabel = lastCompletedSectionPath?.at(-1) ?? "(no section finished yet)";
+      console.log(`${sectionLabel} done · ${percentRead}% of the book`);
 
       console.log();
       console.log(renderHeatmap(buildHeatmap(checkinDates, today)));
@@ -179,8 +179,8 @@ program
 
 program
   .command("export")
-  .description("把事件日志导出到 stdout（配合 shell 重定向另存文件）")
-  .option("--log <path>", "事件日志文件路径", ".kuibu-events.jsonl")
+  .description("export the event log to stdout (pair with shell redirection to save a file)")
+  .option("--log <path>", "event log file path", ".kuibu-events.jsonl")
   .action((options: { log: string }) => {
     for (const event of readEvents(options.log)) {
       console.log(JSON.stringify(event));
@@ -189,14 +189,14 @@ program
 
 program
   .command("import <file>")
-  .description("把一份导出过的事件日志合并进当前日志（按 id 去重，按 ts 排序）")
-  .option("--log <path>", "事件日志文件路径", ".kuibu-events.jsonl")
+  .description("merge a previously-exported event log into the current one (dedupe by id, sort by ts)")
+  .option("--log <path>", "event log file path", ".kuibu-events.jsonl")
   .action((file: string, options: { log: string }) => {
     const incoming = readEvents(file);
     const current = readEvents(options.log);
     const merged = mergeEvents(current, incoming);
     writeEvents(options.log, merged);
-    console.log(`合并完成：当前 ${current.length} 条 + 导入 ${incoming.length} 条 -> ${merged.length} 条`);
+    console.log(`Merged: ${current.length} existing + ${incoming.length} imported -> ${merged.length} total`);
   });
 
 await program.parseAsync();

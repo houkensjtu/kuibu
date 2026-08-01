@@ -30,15 +30,15 @@ export function loadPack(packDir: string): ContentPack {
   const result = validatePack(combined);
   if (!result.valid) {
     throw new PackLoadError(
-      `内容包校验失败（${packDir}）：\n${result.errors.join("\n")}`,
+      `Content pack validation failed (${packDir}):\n${result.errors.join("\n")}`,
     );
   }
 
   const pack = result.data;
   if (pack.manifest.schema_version !== SUPPORTED_SCHEMA_VERSION) {
     throw new PackLoadError(
-      `内容包 schema_version 不兼容：包声明的版本是 "${pack.manifest.schema_version}"，` +
-        `这个阅读器只认 "${SUPPORTED_SCHEMA_VERSION}"。`,
+      `Incompatible content pack schema_version: pack declares "${pack.manifest.schema_version}", ` +
+        `this reader only supports "${SUPPORTED_SCHEMA_VERSION}".`,
     );
   }
 

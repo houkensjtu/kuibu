@@ -18,11 +18,11 @@ export async function askInTerminal(
   shuffled.options.forEach((option, i) => console.log(`  ${i + 1}. ${option}`));
 
   for (;;) {
-    const raw = (await rl.question("你的选择（输入数字）：")).trim();
+    const raw = (await rl.question("Your choice (enter a number): ")).trim();
     const choice = Number.parseInt(raw, 10);
     if (Number.isInteger(choice) && choice >= 1 && choice <= shuffled.options.length) {
       return choice - 1;
     }
-    console.log(`请输入 1 到 ${shuffled.options.length} 之间的数字。`);
+    console.log(`Please enter a number between 1 and ${shuffled.options.length}.`);
   }
 }
