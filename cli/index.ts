@@ -9,14 +9,15 @@ import { buildQuestionQueue } from "../core/questionQueue.js";
 import { leitnerScheduler } from "../core/scheduler.js";
 import { checkinDate } from "../core/checkinDate.js";
 import { isCheckinComplete } from "../core/checkinJudgment.js";
-import { buildHeatmap, computeCurrentStreak } from "../core/heatmap.js";
+import { computeCurrentStreak } from "../core/streak.js";
+import { buildYearCalendar } from "../core/yearCalendar.js";
 import { computeProgress } from "../core/progress.js";
 import { mergeEvents } from "../core/mergeEvents.js";
 import { runReadingFlow } from "./readingFlow.js";
 import { showBlockInPagerOrFallback } from "./pager.js";
 import { runAnswerFlow } from "./answerFlow.js";
 import { askInTerminal } from "./answerPrompt.js";
-import { renderHeatmap } from "./renderHeatmap.js";
+import { renderYearCalendar } from "./renderYearCalendar.js";
 import { askDailyTargetMinutes, classifyTimeSpent, askAdjustTarget } from "./targetPrompt.js";
 import { askReviewOrAhead } from "./reviewOrAheadPrompt.js";
 import { createLineReader } from "./lineReader.js";
@@ -264,7 +265,7 @@ program
         console.log(`${sectionLabel} done · ${percentRead}% of the book`);
 
         console.log();
-        console.log(renderHeatmap(buildHeatmap(checkinDates, today)));
+        console.log(renderYearCalendar(buildYearCalendar(checkinDates, Number(today.slice(0, 4)))));
       } finally {
         lineReader.close();
       }
@@ -311,7 +312,7 @@ program
       console.log(`${dueCount} item${dueCount === 1 ? "" : "s"} due for review today.`);
 
       console.log();
-      console.log(renderHeatmap(buildHeatmap(state.checkinDates, today)));
+      console.log(renderYearCalendar(buildYearCalendar(state.checkinDates, Number(today.slice(0, 4)))));
     } catch (err) {
       if (err instanceof PackLoadError) {
         console.error(err.message);
