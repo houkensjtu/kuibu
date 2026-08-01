@@ -18,9 +18,9 @@ import { showBlockInPagerOrFallback } from "./pager.js";
 import { runAnswerFlow } from "./answerFlow.js";
 import { askInTerminal } from "./answerPrompt.js";
 import { renderHeatmap } from "./renderHeatmap.js";
+import { askDailyTargetMinutes } from "./targetPrompt.js";
 
-// 阶段一先用一个固定默认值；每日时长目标可调（M2.19）会把它换成可配置项。
-const DEFAULT_TARGET_SECONDS = 720;
+const DEFAULT_TARGET_MINUTES = 12;
 
 const program = new Command();
 
@@ -45,67 +45,81 @@ program
       const priorEvents = readEvents(options.log);
       const state = reduceEvents(priorEvents, questionItemMap);
 
-      let targetSeconds = state.dailyTargetSeconds ?? DEFAULT_TARGET_SECONDS;
-      if (options.minutes !== undefined) {
-        targetSeconds = options.minutes * 60;
+      const rl = createInterface({ input: process.stdin, output: process.stdout });
+      try {
+        let targetSeconds: number;
+        let persistTargetChange = false;
+
+        if (options.minutes !== undefined) {
+          targetSeconds = options.minutes * 60;
+          persistTargetChange = true;
+        } else if (state.dailyTargetSeconds !== undefined) {
+          targetSeconds = state.dailyTargetSeconds;
+        } else {
+          // First run ever (no --minutes, nothing recorded before): ask instead
+          // of silently picking a number the user never agreed to.
+          const minutes = await askDailyTargetMinutes(rl, DEFAULT_TARGET_MINUTES);
+          targetSeconds = minutes * 60;
+          persistTargetChange = true;
+        }
+
+        if (persistTargetChange) {
+          appendEvent(options.log, {
+            id: randomUUID(),
+            ts: new Date().toISOString(),
+            type: "settings_change",
+            key: "daily_target_seconds",
+            value: targetSeconds,
+          });
+        }
+
         appendEvent(options.log, {
           id: randomUUID(),
           ts: new Date().toISOString(),
-          type: "settings_change",
-          key: "daily_target_seconds",
-          value: targetSeconds,
+          type: "session_start",
+          book_id: pack.manifest.book_id,
+          target_seconds: targetSeconds,
         });
-      }
 
-      appendEvent(options.log, {
-        id: randomUUID(),
-        ts: new Date().toISOString(),
-        type: "session_start",
-        book_id: pack.manifest.book_id,
-        target_seconds: targetSeconds,
-      });
-
-      const todaysBlocks = packSession({
-        blocks: pack.blocks,
-        readBlockIds: state.readBlockIds,
-        targetSeconds,
-      });
-
-      let totalReadSecondsToday = 0;
-
-      if (todaysBlocks.length === 0) {
-        console.log("You've finished this book - just review questions today.");
-      } else {
-        await runReadingFlow(todaysBlocks, {
-          showBlock: showBlockInPagerOrFallback,
-          onBlockRead: (blockId, seconds) => {
-            totalReadSecondsToday += seconds;
-            appendEvent(options.log, {
-              id: randomUUID(),
-              ts: new Date().toISOString(),
-              type: "block_read",
-              block_id: blockId,
-              seconds,
-            });
-          },
+        const todaysBlocks = packSession({
+          blocks: pack.blocks,
+          readBlockIds: state.readBlockIds,
+          targetSeconds,
         });
-      }
 
-      const dueItemIds = leitnerScheduler.due(
-        [...state.itemStates.values()],
-        checkinDate(new Date()),
-      );
-      const queue = buildQuestionQueue({
-        todayReadBlockIds: new Set(todaysBlocks.map((b) => b.id)),
-        items: pack.items,
-        wrongQuestionIdByItemId: state.wrongQuestionIdByItemId,
-        dueItemIds,
-      });
-      const questionsById = new Map(pack.questions.map((q) => [q.id, q]));
-      const answeredQuestionIds = new Set<string>();
+        let totalReadSecondsToday = 0;
 
-      const rl = createInterface({ input: process.stdin, output: process.stdout });
-      try {
+        if (todaysBlocks.length === 0) {
+          console.log("You've finished this book - just review questions today.");
+        } else {
+          await runReadingFlow(todaysBlocks, {
+            showBlock: showBlockInPagerOrFallback,
+            onBlockRead: (blockId, seconds) => {
+              totalReadSecondsToday += seconds;
+              appendEvent(options.log, {
+                id: randomUUID(),
+                ts: new Date().toISOString(),
+                type: "block_read",
+                block_id: blockId,
+                seconds,
+              });
+            },
+          });
+        }
+
+        const dueItemIds = leitnerScheduler.due(
+          [...state.itemStates.values()],
+          checkinDate(new Date()),
+        );
+        const queue = buildQuestionQueue({
+          todayReadBlockIds: new Set(todaysBlocks.map((b) => b.id)),
+          items: pack.items,
+          wrongQuestionIdByItemId: state.wrongQuestionIdByItemId,
+          dueItemIds,
+        });
+        const questionsById = new Map(pack.questions.map((q) => [q.id, q]));
+        const answeredQuestionIds = new Set<string>();
+
         await runAnswerFlow(queue, questionsById, {
           ask: (question, shuffled) => askInTerminal(rl, question, shuffled),
           onAnswered: (_entry, question, shuffled, _chosenIndex, correct) => {
@@ -127,46 +141,46 @@ program
             });
           },
         });
+
+        const today = checkinDate(new Date());
+        const passed = isCheckinComplete({
+          totalReadSeconds: totalReadSecondsToday,
+          targetSeconds,
+          queue,
+          answeredQuestionIds,
+        });
+
+        const checkinDates = new Set(state.checkinDates);
+        if (passed) {
+          appendEvent(options.log, {
+            id: randomUUID(),
+            ts: new Date().toISOString(),
+            type: "checkin",
+            date: today,
+          });
+          checkinDates.add(today);
+          console.log(`Checked in! Read for ${totalReadSecondsToday}s today.`);
+        } else {
+          const remaining = Math.max(0, targetSeconds - totalReadSecondsToday);
+          console.log(`Not checked in yet: ${remaining}s more reading needed.`);
+        }
+
+        const updatedReadBlockIds = new Set([
+          ...state.readBlockIds,
+          ...todaysBlocks.map((b) => b.id),
+        ]);
+        const { lastCompletedSectionPath, percentRead } = computeProgress(
+          pack.blocks,
+          updatedReadBlockIds,
+        );
+        const sectionLabel = lastCompletedSectionPath?.at(-1) ?? "(no section finished yet)";
+        console.log(`${sectionLabel} done · ${percentRead}% of the book`);
+
+        console.log();
+        console.log(renderHeatmap(buildHeatmap(checkinDates, today)));
       } finally {
         rl.close();
       }
-
-      const today = checkinDate(new Date());
-      const passed = isCheckinComplete({
-        totalReadSeconds: totalReadSecondsToday,
-        targetSeconds,
-        queue,
-        answeredQuestionIds,
-      });
-
-      const checkinDates = new Set(state.checkinDates);
-      if (passed) {
-        appendEvent(options.log, {
-          id: randomUUID(),
-          ts: new Date().toISOString(),
-          type: "checkin",
-          date: today,
-        });
-        checkinDates.add(today);
-        console.log(`Checked in! Read for ${totalReadSecondsToday}s today.`);
-      } else {
-        const remaining = Math.max(0, targetSeconds - totalReadSecondsToday);
-        console.log(`Not checked in yet: ${remaining}s more reading needed.`);
-      }
-
-      const updatedReadBlockIds = new Set([
-        ...state.readBlockIds,
-        ...todaysBlocks.map((b) => b.id),
-      ]);
-      const { lastCompletedSectionPath, percentRead } = computeProgress(
-        pack.blocks,
-        updatedReadBlockIds,
-      );
-      const sectionLabel = lastCompletedSectionPath?.at(-1) ?? "(no section finished yet)";
-      console.log(`${sectionLabel} done · ${percentRead}% of the book`);
-
-      console.log();
-      console.log(renderHeatmap(buildHeatmap(checkinDates, today)));
     } catch (err) {
       if (err instanceof PackLoadError) {
         console.error(err.message);
