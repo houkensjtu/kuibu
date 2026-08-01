@@ -17,7 +17,7 @@ import { showBlockInPagerOrFallback } from "./pager.js";
 import { runAnswerFlow } from "./answerFlow.js";
 import { askInTerminal } from "./answerPrompt.js";
 import { renderHeatmap } from "./renderHeatmap.js";
-import { askDailyTargetMinutes } from "./targetPrompt.js";
+import { askDailyTargetMinutes, classifyTimeSpent, askAdjustTarget } from "./targetPrompt.js";
 import { createLineReader } from "./lineReader.js";
 
 const DEFAULT_TARGET_MINUTES = 12;
@@ -88,6 +88,7 @@ program
         });
 
         let totalReadSecondsToday = 0;
+        const readBlockIdsToday = new Set<string>();
 
         if (todaysBlocks.length === 0) {
           console.log("You've finished this book - just review questions today.");
@@ -96,6 +97,7 @@ program
             showBlock: (block) => showBlockInPagerOrFallback(block, lineReader),
             onBlockRead: (blockId, seconds) => {
               totalReadSecondsToday += seconds;
+              readBlockIdsToday.add(blockId);
               appendEvent(options.log, {
                 id: randomUUID(),
                 ts: new Date().toISOString(),
@@ -144,8 +146,8 @@ program
 
         const today = checkinDate(new Date());
         const passed = isCheckinComplete({
-          totalReadSeconds: totalReadSecondsToday,
-          targetSeconds,
+          assignedBlockIds: todaysBlocks.map((b) => b.id),
+          readBlockIdsToday,
           queue,
           answeredQuestionIds,
         });
@@ -159,10 +161,52 @@ program
             date: today,
           });
           checkinDates.add(today);
-          console.log(`Checked in! Read for ${totalReadSecondsToday}s today.`);
+          console.log("Checked in!");
         } else {
-          const remaining = Math.max(0, targetSeconds - totalReadSecondsToday);
-          console.log(`Not checked in yet: ${remaining}s more reading needed.`);
+          console.log("Not checked in yet - today's reading or questions aren't finished.");
+        }
+
+        // 时长不再是打卡门槛，只作为事后反馈：明显偏离目标就顺手问一句要不要调整，
+        // 不偏离就只是告知一下，不用户每天都被追问。没有分配到阅读内容的日子
+        // （比如书读完了、只做复习题）时长反馈没有意义，跳过。
+        if (todaysBlocks.length > 0) {
+          const targetMinutes = Math.round(targetSeconds / 60);
+          const minutesToday = Math.round(totalReadSecondsToday / 60);
+          const classification = classifyTimeSpent(totalReadSecondsToday, targetSeconds);
+
+          if (classification === "under") {
+            console.log(
+              `You read for about ${minutesToday} min today, well under your ${targetMinutes}-min target - nice work getting through it anyway!`,
+            );
+            const newMinutes = await askAdjustTarget(lineReader, "increase", targetMinutes);
+            if (newMinutes !== null) {
+              appendEvent(options.log, {
+                id: randomUUID(),
+                ts: new Date().toISOString(),
+                type: "settings_change",
+                key: "daily_target_seconds",
+                value: newMinutes * 60,
+              });
+              console.log(`Updated tomorrow's target to ${newMinutes} min.`);
+            }
+          } else if (classification === "over") {
+            console.log(
+              `You read for about ${minutesToday} min today, well over your ${targetMinutes}-min target - great focus!`,
+            );
+            const newMinutes = await askAdjustTarget(lineReader, "decrease", targetMinutes);
+            if (newMinutes !== null) {
+              appendEvent(options.log, {
+                id: randomUUID(),
+                ts: new Date().toISOString(),
+                type: "settings_change",
+                key: "daily_target_seconds",
+                value: newMinutes * 60,
+              });
+              console.log(`Updated tomorrow's target to ${newMinutes} min.`);
+            }
+          } else {
+            console.log(`You read for about ${minutesToday} min today (target: ${targetMinutes} min).`);
+          }
         }
 
         const updatedReadBlockIds = new Set([

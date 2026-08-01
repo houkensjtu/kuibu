@@ -1,21 +1,32 @@
 import { isCheckinComplete } from "../core/checkinJudgment.js";
 
 const queue = [{ questionId: "q0001" }, { questionId: "q0002" }];
+const assignedBlockIds = ["b0001", "b0002"];
 
 const scenarios: [string, Parameters<typeof isCheckinComplete>[0]][] = [
   [
-    "读得不够，题也没做完",
-    { totalReadSeconds: 200, targetSeconds: 720, queue, answeredQuestionIds: new Set() },
-  ],
-  [
-    "读够了，但还有一道题没做",
-    { totalReadSeconds: 720, targetSeconds: 720, queue, answeredQuestionIds: new Set(["q0001"]) },
-  ],
-  [
-    "读够了，题也全做完了（不管对错）",
+    "block 没读完，题也没做完",
     {
-      totalReadSeconds: 720,
-      targetSeconds: 720,
+      assignedBlockIds,
+      readBlockIdsToday: new Set(["b0001"]),
+      queue,
+      answeredQuestionIds: new Set(),
+    },
+  ],
+  [
+    "block 读完了，但还有一道题没做",
+    {
+      assignedBlockIds,
+      readBlockIdsToday: new Set(["b0001", "b0002"]),
+      queue,
+      answeredQuestionIds: new Set(["q0001"]),
+    },
+  ],
+  [
+    "block 读完了，题也全做完了（不管对错，也不管花了多久）",
+    {
+      assignedBlockIds,
+      readBlockIdsToday: new Set(["b0001", "b0002"]),
       queue,
       answeredQuestionIds: new Set(["q0001", "q0002"]),
     },
