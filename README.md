@@ -6,39 +6,81 @@
 唯一目标：连续打卡 21 天不断签。详细设计见 `docs/DESIGN.md`，里程碑见
 `docs/MILESTONES.md`。
 
-## 版本
+---
 
-当前版本见 `package.json`（或跑 `npm run dev -- --version`）。版本号规则见
-`CLAUDE.md`「版本号规则」——大版本号对应产品阶段（1.0 = CLI 基本可用，2.0 =
-网页版基本可用），升级时机由我自己判断和宣布，不是 Claude 自主决定的。
+## 使用篇
 
-## 克隆后先做一件事
+这一部分假设你没有装过 Git、也没用过 npm，从零开始一步步走到能跑起来。
+
+### 第一步：装好两样东西
+
+**Git**（用来获取代码）和 **Node.js**（跑这个项目需要，自带 npm，不用单独装）。
+
+先检查是不是已经装过：打开一个终端（Windows 用 PowerShell 或 Git Bash，
+macOS/Linux 用 Terminal），依次输入：
+
+```
+git --version
+node --version
+npm --version
+```
+
+三条都能打印出版本号（不管具体是什么数字）就说明已经装好了，跳到下一步。
+如果提示"找不到命令"：
+
+- **Git**：Windows 去 <https://git-scm.com/downloads> 下载安装包；macOS 用
+  `xcode-select --install`；Linux 用发行版自带的包管理器（如
+  `sudo apt install git`）。
+- **Node.js**：去 <https://nodejs.org> 下载 LTS（长期支持）版安装包，一路
+  下一步即可；Windows 也可以用 `winget install OpenJS.NodeJS.LTS`，macOS
+  用 `brew install node`。装好后重新打开一个终端窗口，上面三条命令再跑
+  一遍确认。
+
+### 第二步：把代码拉到本地
+
+```
+git clone https://github.com/houkensjtu/kuibu.git
+cd kuibu
+```
+
+第一行把代码仓库复制一份到当前目录下的 `kuibu` 文件夹；第二行进入这个文件夹
+——之后所有命令都要在这个目录里跑。
+
+再跑一条一次性设置：
 
 ```
 git config core.hooksPath .githooks
 ```
 
-这条不会随 clone 自动生效（`core.hooksPath` 是本地配置，不进 git 历史），
-但拦截私有内容包误推的 pre-commit 检查依赖它，务必先跑一遍。
+这条不会随 `git clone` 自动生效（`core.hooksPath` 是本地配置，不会被记进
+仓库历史），但拦截私有内容包误推的 pre-commit 检查依赖它，务必先跑一遍。
 
-## 安装依赖
+### 第三步：安装项目依赖
 
 ```
 npm install
 ```
 
-## 日常怎么用
+这条命令会读 `package.json` 里列出的依赖列表，把项目需要用到的第三方代码包
+下载到本地的 `node_modules/` 文件夹里（这个文件夹很大、不进 git，属于正常
+现象）。只需要跑一次；以后如果 `pull` 到别人新增了依赖的改动，重新跑一次
+这条命令补齐就行。
 
-开发模式不用编译，最省事，日常就用这个：
+### 第四步：跑起来
 
 ```
 npm run dev -- today     # 今天的阅读 + 答题 + 打卡
 npm run dev -- status    # 只看当前状态，不开始新 session
 ```
 
-两个命令都默认读 `packs/public/sicp`（真实 SICP 第一章内容包）、
-默认事件日志在仓库根目录的 `.kuibu-events.jsonl`（这个文件不进 git，
-每个人的打卡记录是自己的）。
+`npm run dev` 是 `package.json` 里定义的一个脚本，作用是直接运行 TypeScript
+源码（通过一个叫 `tsx` 的工具），不需要额外编译这一步。`--` 后面跟的是要
+传给 kuibu 本身的参数（`today`/`status`），`--` 本身是约定俗成的分隔符，
+告诉 npm "后面这些是脚本的参数，不是 npm 自己的参数"。
+
+两个命令都默认读 `packs/public/sicp`（真实 SICP 第一章内容包）、默认事件
+日志在仓库根目录的 `.kuibu-events.jsonl`（这个文件不进 git，每个人的打卡
+记录是自己的）。
 
 如果想要一个真正的 `kuibu` 命令（不用每次打 `npm run dev --`），编译一次
 再全局链接：
@@ -50,7 +92,9 @@ kuibu today
 kuibu status
 ```
 
-`npm link` 改的是全局 npm 状态，只需做一次；以后代码有变动，重新
+`npm run build` 把 TypeScript 编译成普通 JS，放进 `dist/` 目录；`npm link`
+在系统里建一个全局软链接，指向这份编译产物，让你在任何目录下直接打
+`kuibu` 都能调用到它。`npm link` 只需做一次；以后代码有变动，重新
 `npm run build` 就行，不用再 `npm link`。
 
 ### 命令一览
@@ -77,7 +121,19 @@ rm .kuibu-events.jsonl
 `npm run dev -- today --log /tmp/kuibu-test.jsonl`——这样跑多少次都不会碰到
 真正的打卡记录。
 
-## 开发
+### 内容从哪来
+
+`packs/public/sicp/` 是 SICP 第一章的完整内容包（137 个 block、70 个知识点、
+73 道复习题、46 道原书 Exercise，覆盖 1.1/1.2/1.3 全部小节 + 章节引言）。
+复习题（每天必做，自动判分）和原书 Exercise（可选做，不判分，只给 hint 不给
+答案）是两种不同的东西，见 `docs/DESIGN.md` §3.3/§3.3.1。生成流程见
+`pack-gen/generator/section_prompt.md`：目前这一步还没接真正的 LLM API，是
+由人工（Claude）按同一份规格手写每小节的输出，将来接入 API 时会原样复用
+这份 schema。
+
+---
+
+## 开发篇
 
 ```
 npm run typecheck   # tsc --noEmit
@@ -91,25 +147,14 @@ cd pack-gen
 .venv/Scripts/python.exe -m pytest    # Windows；其他平台是 .venv/bin/python
 ```
 
-## 项目结构
+### 项目结构
 
 ```
 core/         纯逻辑，零 IO（打卡日换算、Leitner 调度、事件日志 reducer……）
 cli/          core + 文件 IO + 终端交互
-pack-gen/     构建期工具，产出内容包（目前手工代替 LLM，见下）
+pack-gen/     构建期工具，产出内容包（目前手工代替 LLM，见上）
 schema/       JSON Schema 契约，Python/TS 两侧的类型都从这里生成
 packs/public/ 公开内容包，进 git；packs-private/ 是私有内容包，不进 git
 ```
 
 架构上的硬性约束见 `CLAUDE.md`（如"阅读器绝不联网/调用 LLM"）。
-
-## 内容从哪来
-
-`packs/public/sicp/` 是 SICP 第一章的完整内容包（137 个 block、70 个知识点、
-73 道复习题、46 道原书 Exercise，覆盖 1.1/1.2/1.3 全部小节 + 章节引言）。生成
-流程见 `pack-gen/generator/section_prompt.md`：目前这一步还没接真正的 LLM
-API，是由人工（Claude）按同一份规格手写每小节的输出，将来接入 API 时会原样
-复用这份 schema。
-
-复习题（每天必做，自动判分）和原书 Exercise（可选做，不判分，只给 hint 不给
-答案）是两种不同的东西，见 `docs/DESIGN.md` §3.3/§3.3.1。
