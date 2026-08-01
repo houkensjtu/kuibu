@@ -11,7 +11,8 @@ import { checkinDate } from "../core/checkinDate.js";
 import { isCheckinComplete } from "../core/checkinJudgment.js";
 import { computeCurrentStreak } from "../core/streak.js";
 import { buildYearCalendar } from "../core/yearCalendar.js";
-import { computeProgress } from "../core/progress.js";
+import { computeProgress, computeCurrentPosition } from "../core/progress.js";
+import { estimateDaysRemaining } from "../core/completionEstimate.js";
 import { mergeEvents } from "../core/mergeEvents.js";
 import { runReadingFlow } from "./readingFlow.js";
 import { showBlockInPagerOrFallback } from "./pager.js";
@@ -307,6 +308,32 @@ program
       );
       const sectionLabel = lastCompletedSectionPath?.at(-1) ?? "(no section finished yet)";
       console.log(`${sectionLabel} done · ${percentRead}% of the book`);
+
+      const currentPosition = computeCurrentPosition(pack.blocks, state.readBlockIds);
+      if (currentPosition === null) {
+        console.log("You've read every block in this pack - nothing left!");
+      } else {
+        console.log(
+          `Currently at: ${currentPosition.sectionPath.join(" / ")} — ${currentPosition.sectionTitle}`,
+        );
+
+        // status 是只读命令、不问用户任何问题，所以从来没设置过目标时就借用
+        // today 首次运行时的同一个默认值，只是要老实说明这只是个假设，不是
+        // 用户真正定过的目标。
+        const targetSecondsForEstimate = state.dailyTargetSeconds ?? DEFAULT_TARGET_MINUTES * 60;
+        const daysRemaining = estimateDaysRemaining(
+          pack.blocks,
+          state.readBlockIds,
+          targetSecondsForEstimate,
+        );
+        const assumedNote =
+          state.dailyTargetSeconds === undefined
+            ? ` (assuming ${DEFAULT_TARGET_MINUTES} min/day - no target set yet)`
+            : "";
+        console.log(
+          `Estimated ${daysRemaining} more day${daysRemaining === 1 ? "" : "s"} to finish at your current pace${assumedNote}.`,
+        );
+      }
 
       const dueCount = leitnerScheduler.due([...state.itemStates.values()], today).length;
       console.log(`${dueCount} item${dueCount === 1 ? "" : "s"} due for review today.`);

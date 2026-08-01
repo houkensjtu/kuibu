@@ -42,3 +42,24 @@ export function computeProgress(
 
   return { lastCompletedSectionPath, percentRead };
 }
+
+export interface CurrentPosition {
+  sectionPath: string[];
+  sectionTitle: string;
+}
+
+/**
+ * "当前位置" = 第一个还没读过的 block 所在的小节——跟 lastCompletedSectionPath
+ * 不是一回事：一个小节只读了一半还不算"完成"，但用户已经身处其中了，
+ * "当前在哪" 应该反映这个，而不是停留在上一个真正读完的小节。
+ * 假设 blocks 已经按 seq 排好序（内容包的既定约定），这里不重新排序。
+ * 全部读完时返回 null。
+ */
+export function computeCurrentPosition(
+  blocks: readonly Block[],
+  readBlockIds: ReadonlySet<string>,
+): CurrentPosition | null {
+  const nextBlock = blocks.find((b) => !readBlockIds.has(b.id));
+  if (!nextBlock) return null;
+  return { sectionPath: nextBlock.section_path, sectionTitle: nextBlock.section_title };
+}

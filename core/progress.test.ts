@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { computeProgress } from "./progress.js";
+import { computeProgress, computeCurrentPosition } from "./progress.js";
 import type { Block } from "../schema/types/pack.js";
 
 function block(id: string, seq: number, section_path: [string, ...string[]]): Block {
@@ -50,5 +50,35 @@ describe("computeProgress", () => {
       lastCompletedSectionPath: null,
       percentRead: 0,
     });
+  });
+});
+
+describe("computeCurrentPosition", () => {
+  const blocks: Block[] = [
+    block("b0001", 1, ["1", "1.1", "1.1.1"]),
+    block("b0002", 2, ["1", "1.1", "1.1.1"]),
+    block("b0003", 3, ["1", "1.1", "1.1.2"]),
+    block("b0004", 4, ["1", "1.1", "1.1.3"]),
+  ];
+
+  it("points at the first unread block's section, even mid-section", () => {
+    // b0001 and b0002 (both 1.1.1) are read, but 1.1.1 being "done" isn't the
+    // point here - the reader is now inside 1.1.2, so that's the position.
+    const result = computeCurrentPosition(blocks, new Set(["b0001", "b0002"]));
+    expect(result).toEqual({ sectionPath: ["1", "1.1", "1.1.2"], sectionTitle: "1.1.1.1.1.2" });
+  });
+
+  it("is the very first section when nothing has been read yet", () => {
+    const result = computeCurrentPosition(blocks, new Set());
+    expect(result?.sectionPath).toEqual(["1", "1.1", "1.1.1"]);
+  });
+
+  it("is null once every block has been read", () => {
+    const result = computeCurrentPosition(blocks, new Set(blocks.map((b) => b.id)));
+    expect(result).toBeNull();
+  });
+
+  it("is null for an empty pack", () => {
+    expect(computeCurrentPosition([], new Set())).toBeNull();
   });
 });
