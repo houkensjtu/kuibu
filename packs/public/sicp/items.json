@@ -1,0 +1,247 @@
+[
+  {
+    "id": "k0001",
+    "block_ids": [
+      "b0002",
+      "b0003"
+    ],
+    "statement": "When evaluating a combination, the interpreter first recursively evaluates the operator and each operand, then applies the resulting procedure to the argument values.",
+    "question_ids": [
+      "q0001"
+    ]
+  },
+  {
+    "id": "k0002",
+    "block_ids": [
+      "b0003",
+      "b0004"
+    ],
+    "statement": "Prefix notation places the operator to the left of the operands, so it naturally accommodates an arbitrary number of arguments and allows unambiguous nesting.",
+    "question_ids": [
+      "q0002"
+    ]
+  },
+  {
+    "id": "k0003",
+    "block_ids": [
+      "b0005"
+    ],
+    "statement": "The Scheme interpreter runs a read-eval-print loop: it reads an expression, evaluates it, and automatically prints the result - the user never has to explicitly ask for the value to be printed.",
+    "question_ids": [
+      "q0003"
+    ]
+  },
+  {
+    "id": "k0004",
+    "block_ids": [
+      "b0006",
+      "b0007"
+    ],
+    "statement": "`define` is Lisp's simplest means of abstraction: it associates a name with a value in the environment (the interpreter's memory of name-object pairs), letting you refer to a complex result by a simple name instead of repeating its computation.",
+    "question_ids": [
+      "q0004"
+    ]
+  },
+  {
+    "id": "k0005",
+    "block_ids": [
+      "b0008"
+    ],
+    "statement": "Evaluating a combination is a recursive process: first evaluate each subexpression (the operator and every operand), then apply the resulting procedure to the resulting argument values.",
+    "question_ids": [
+      "q0005"
+    ]
+  },
+  {
+    "id": "k0006",
+    "block_ids": [
+      "b0010"
+    ],
+    "statement": "For primitive expressions, evaluation bottoms out directly: a numeral's value is the number it names, a built-in operator's value is its machine instructions, and any other name's value is whatever it's associated with in the environment.",
+    "question_ids": [
+      "q0006"
+    ]
+  },
+  {
+    "id": "k0007",
+    "block_ids": [
+      "b0011"
+    ],
+    "statement": "`define` is a special form, not a combination - it doesn't fit the general evaluate-then-apply rule, since its purpose is precisely to create a new name-value association rather than apply a procedure to already-evaluated arguments.",
+    "question_ids": [
+      "q0007"
+    ]
+  },
+  {
+    "id": "k0008",
+    "block_ids": [
+      "b0012"
+    ],
+    "statement": "A procedure definition like `(define (square x) (* x x))` creates a compound procedure named `square`, where `x` is a formal parameter: a local name for whatever argument the procedure is applied to.",
+    "question_ids": [
+      "q0008"
+    ]
+  },
+  {
+    "id": "k0009",
+    "block_ids": [
+      "b0013"
+    ],
+    "statement": "The general form of a procedure definition is `(define (⟨name⟩ ⟨formal parameters⟩) ⟨body⟩)`: the body is an expression that yields the procedure's value once the formal parameters are replaced by the actual arguments.",
+    "question_ids": [
+      "q0009"
+    ]
+  },
+  {
+    "id": "k0010",
+    "block_ids": [
+      "b0014",
+      "b0015"
+    ],
+    "statement": "Compound procedures can be used as building blocks for defining further compound procedures (e.g. `sum-of-squares` built from `square`, then `f` built from `sum-of-squares`), and are used exactly the same way as primitive procedures - there's no way to tell from how a procedure is used whether it's built in or user-defined.",
+    "question_ids": [
+      "q0010"
+    ]
+  },
+  {
+    "id": "k0011",
+    "block_ids": [
+      "b0016",
+      "b0017",
+      "b0018"
+    ],
+    "statement": "To apply a compound procedure, evaluate its body with each formal parameter replaced by the corresponding argument - this is the substitution model for procedure application.",
+    "question_ids": [
+      "q0011"
+    ]
+  },
+  {
+    "id": "k0012",
+    "block_ids": [
+      "b0019"
+    ],
+    "statement": "The substitution model is a way to think about what procedure application means, not a description of how a real interpreter works internally (which actually uses a local environment, not literal text substitution) - and it eventually breaks down once mutable data is introduced later in the book.",
+    "question_ids": [
+      "q0012"
+    ]
+  },
+  {
+    "id": "k0013",
+    "block_ids": [
+      "b0020",
+      "b0021"
+    ],
+    "statement": "Normal-order evaluation ('fully expand, then reduce') and applicative-order evaluation ('evaluate arguments, then apply') give the same answer for substitution-model-compatible procedures, but normal-order can re-evaluate the same subexpression multiple times; Lisp uses applicative-order for efficiency and simplicity.",
+    "question_ids": [
+      "q0013"
+    ]
+  },
+  {
+    "id": "k0014",
+    "block_ids": [
+      "b0022",
+      "b0023",
+      "b0024"
+    ],
+    "statement": "`cond` evaluates its clauses' predicates in order and returns the value of the consequent expression for the first predicate that's true; a clause whose predicate is the special symbol `else` always matches when reached.",
+    "question_ids": [
+      "q0014"
+    ]
+  },
+  {
+    "id": "k0015",
+    "block_ids": [
+      "b0025"
+    ],
+    "statement": "`if` is a restricted conditional for exactly two cases: it evaluates the predicate, then evaluates and returns either the consequent (if true) or the alternative (if false) - never both.",
+    "question_ids": [
+      "q0015"
+    ]
+  },
+  {
+    "id": "k0016",
+    "block_ids": [
+      "b0026"
+    ],
+    "statement": "`and` and `or` are special forms, not ordinary procedures, because they don't necessarily evaluate all their subexpressions (`and` stops at the first false one, `or` stops at the first true one); `not` is an ordinary procedure.",
+    "question_ids": [
+      "q0016"
+    ]
+  },
+  {
+    "id": "k0017",
+    "block_ids": [
+      "b0031",
+      "b0032",
+      "b0033"
+    ],
+    "statement": "Newton's method for square roots repeatedly improves a guess by averaging it with x/guess, converging toward the true square root; the process is formalized as `sqrt-iter`, which calls itself with an improved guess until `good-enough?` is satisfied.",
+    "question_ids": [
+      "q0017"
+    ]
+  },
+  {
+    "id": "k0018",
+    "block_ids": [
+      "b0034"
+    ],
+    "statement": "This simple procedural language (define, if/cond, procedure calls) is sufficient to express iteration without any special looping construct - `sqrt-iter` achieves repetition purely through an ordinary (recursive) procedure call.",
+    "question_ids": [
+      "q0018"
+    ]
+  },
+  {
+    "id": "k0019",
+    "block_ids": [
+      "b0035"
+    ],
+    "statement": "If `if` were defined as an ordinary procedure (like `new-if`, built from `cond`) instead of a special form, applying it under applicative-order evaluation would require evaluating every argument - including the recursive call - before `new-if` could even be applied, so a recursive procedure like `sqrt-iter` written with `new-if` would never terminate, even once the base case is already true.",
+    "question_ids": [
+      "q0019"
+    ]
+  },
+  {
+    "id": "k0020",
+    "block_ids": [
+      "b0038",
+      "b0039"
+    ],
+    "statement": "A procedure is a 'black box' / procedural abstraction: what matters to a caller is only what result it computes, not how it's implemented internally - so two different implementations that compute the same values are indistinguishable to any caller.",
+    "question_ids": [
+      "q0020"
+    ]
+  },
+  {
+    "id": "k0021",
+    "block_ids": [
+      "b0039",
+      "b0040"
+    ],
+    "statement": "A formal parameter's name shouldn't matter to callers either; parameter names must therefore be local to the procedure's own body, or two procedures using the same parameter name (like two different uses of `x`) could interfere with each other.",
+    "question_ids": [
+      "q0021"
+    ]
+  },
+  {
+    "id": "k0022",
+    "block_ids": [
+      "b0041"
+    ],
+    "statement": "A formal parameter is a bound variable, scoped to the procedure's body; a name that isn't bound by any enclosing definition is free. Renaming a bound variable to collide with a free variable's name (variable capture) introduces a bug by changing that name's meaning.",
+    "question_ids": [
+      "q0022"
+    ]
+  },
+  {
+    "id": "k0023",
+    "block_ids": [
+      "b0042",
+      "b0043",
+      "b0044"
+    ],
+    "statement": "Block structure lets you nest auxiliary procedure definitions inside the procedure that uses them, hiding names that would otherwise clutter the caller's namespace; going further, lexical scoping lets an inner definition treat the enclosing procedure's parameter as a free variable, so it doesn't need to be passed explicitly to every internal helper.",
+    "question_ids": [
+      "q0023"
+    ]
+  }
+]

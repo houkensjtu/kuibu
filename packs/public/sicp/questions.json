@@ -1,0 +1,324 @@
+[
+  {
+    "id": "q0001",
+    "item_id": "k0001",
+    "type": "single_choice",
+    "prompt": "When evaluating the combination (+ (* 2 3) 4), what is the actual order of evaluation the interpreter follows?",
+    "options": [
+      "It recursively evaluates the operator and each operand (here, (* 2 3) and 4), then applies the resulting procedure to those values",
+      "It scans the expression character by character from left to right and prints it directly, without recursive evaluation",
+      "It performs a string-substitution expansion of the whole expression first, then evaluates it all at once",
+      "It only evaluates the outermost operator; operands are passed in unevaluated, and the operator decides internally when to evaluate them"
+    ],
+    "answer_index": 0,
+    "explanation": "SICP emphasizes that evaluating a combination follows the rule of evaluate-then-apply: recursively evaluate each subexpression (the operator and each operand), then apply the resulting procedure to the argument values."
+  },
+  {
+    "id": "q0002",
+    "item_id": "k0002",
+    "type": "single_choice",
+    "prompt": "What is the main advantage of prefix notation (like (+ 1 2 3)) over infix notation (like 1 + 2 + 3)?",
+    "options": [
+      "The operator is always leftmost, so it naturally supports an arbitrary number of operands and combinations can nest without ambiguity",
+      "Prefix notation evaluates faster than infix notation",
+      "Prefix notation lets you omit parentheses, making expressions shorter",
+      "Prefix notation is just a Lisp-specific syntactic convention with no effect on expressive power, purely historical habit"
+    ],
+    "answer_index": 0,
+    "explanation": "The text explicitly names two advantages of prefix notation: it accommodates an arbitrary number of arguments, and it nests without ambiguity - neither is about evaluation speed or parenthesis count."
+  },
+  {
+    "id": "q0003",
+    "item_id": "k0003",
+    "type": "single_choice",
+    "prompt": "In the Scheme interpreter's read-eval-print loop, does the user need to explicitly tell the interpreter to print the value of an expression?",
+    "options": [
+      "No - the read-eval-print loop itself automatically prints the result after every evaluation",
+      "Yes, an explicit call to something like a print procedure is required to see the result",
+      "Only in an interactive terminal; running as a script wouldn't print automatically",
+      "Only when the return value is a number; other types need to be printed manually"
+    ],
+    "answer_index": 0,
+    "explanation": "The text specifically notes that it is not necessary to explicitly instruct the interpreter to print the value of an expression - that's exactly what the read-eval-print loop does, over and over."
+  },
+  {
+    "id": "q0004",
+    "item_id": "k0004",
+    "type": "single_choice",
+    "prompt": "What does `(define circumference (* 2 pi radius))` actually do?",
+    "options": [
+      "It associates the name `circumference` with the value of `(* 2 pi radius)` in the environment, so `circumference` can be used later to refer to that value",
+      "It immediately prints the value of `(* 2 pi radius)` without storing it anywhere",
+      "It creates a procedure named `circumference` that recomputes `(* 2 pi radius)` every time it's called with no arguments",
+      "It redefines the built-in multiplication operator to always include `pi` and `radius`"
+    ],
+    "answer_index": 0,
+    "explanation": "`define` is a naming operation: it creates an association between a name and a value in the environment. `circumference` afterward just refers to that already-computed value, the same way `size` refers to 2 in the section's first example - it does not create a procedure or print anything by itself."
+  },
+  {
+    "id": "q0005",
+    "item_id": "k0005",
+    "type": "single_choice",
+    "prompt": "According to the evaluation rule given for combinations, what must happen before a procedure can be applied?",
+    "options": [
+      "Every subexpression of the combination (the operator and all operands) must first be evaluated",
+      "Only the operands need to be evaluated; the operator is used exactly as written",
+      "The whole combination is first converted to a string and parsed a second time",
+      "Nothing - application happens first, and evaluation only happens if the result looks incomplete"
+    ],
+    "answer_index": 0,
+    "explanation": "The rule is explicitly two steps: evaluate the subexpressions of the combination, then apply the procedure (the value of the leftmost subexpression) to the values of the operands. Evaluation always comes first for every subexpression."
+  },
+  {
+    "id": "q0006",
+    "item_id": "k0006",
+    "type": "single_choice",
+    "prompt": "When the recursive evaluation rule bottoms out at a primitive expression that is a plain name (not a numeral or a built-in operator), what is that name's value?",
+    "options": [
+      "Whatever object is currently associated with that name in the environment",
+      "The name's own text, treated as a string",
+      "Always 0, since an unbound name has no meaning otherwise",
+      "The value of the most recently evaluated combination, regardless of the name"
+    ],
+    "answer_index": 0,
+    "explanation": "The text stipulates that the value of a name (other than a built-in operator) is the object associated with that name in the environment - this is exactly why an expression like (+ x 1) is meaningless without an environment that gives x a value."
+  },
+  {
+    "id": "q0007",
+    "item_id": "k0007",
+    "type": "single_choice",
+    "prompt": "Why doesn't `(define x 3)` fit the general evaluate-then-apply rule for combinations?",
+    "options": [
+      "Because define's whole purpose is to associate x with a value, not to apply a procedure to already-evaluated arguments - it's a special form with its own evaluation rule",
+      "Because define always signals an error if x already has a value",
+      "Because numbers like 3 can never appear as operands in a combination",
+      "Because define is actually just an alias for the built-in `+` procedure"
+    ],
+    "answer_index": 0,
+    "explanation": "The text is explicit: (define x 3) does not apply define to the value of x and to 3, since the purpose of define is precisely to associate x with a value - that's why define is a special form rather than an ordinary combination, and special forms each get their own evaluation rule."
+  },
+  {
+    "id": "q0008",
+    "item_id": "k0008",
+    "type": "single_choice",
+    "prompt": "In `(define (square x) (* x x))`, what role does `x` play?",
+    "options": [
+      "It's a formal parameter: a local name standing for whatever argument `square` is applied to, similar to how a pronoun stands in for a noun",
+      "It's a global variable that must already have a numeric value before this definition is evaluated",
+      "It's the name of the procedure itself; `square` is just a comment",
+      "It's a fixed constant equal to 1, used as a placeholder"
+    ],
+    "answer_index": 0,
+    "explanation": "The text compares the formal parameter to a pronoun in natural language: `x` names 'the thing to be multiplied' generically, and gets replaced by the actual argument each time `square` is applied - it isn't a global variable or a constant."
+  },
+  {
+    "id": "q0009",
+    "item_id": "k0009",
+    "type": "single_choice",
+    "prompt": "In the general form `(define (⟨name⟩ ⟨formal parameters⟩) ⟨body⟩)`, when does the body's expression actually get evaluated to produce a value?",
+    "options": [
+      "When the procedure is applied, with the formal parameters replaced by the actual arguments of that application",
+      "Immediately, at the moment the `define` itself is evaluated, using whatever values the formal parameters currently hold",
+      "Only the first time the procedure is ever called; later calls reuse that first cached result",
+      "Never automatically - the body must be evaluated manually afterward with a separate command"
+    ],
+    "answer_index": 0,
+    "explanation": "Defining a procedure just creates and names it; the body is an expression that yields the procedure application's value once the formal parameters are replaced by the actual arguments of a specific call - evaluating `define` itself doesn't run the body."
+  },
+  {
+    "id": "q0010",
+    "item_id": "k0010",
+    "type": "single_choice",
+    "prompt": "Looking only at the definition of `sum-of-squares`, which calls `square`, can you tell whether `square` is a primitive built into the interpreter or a compound procedure the user defined?",
+    "options": [
+      "No - compound procedures are used exactly the same way as primitive procedures, so the definition alone doesn't reveal which `square` is",
+      "Yes - compound procedures always require an extra keyword like `compound` before their name",
+      "Yes - only primitive procedures can appear inside another procedure's body",
+      "Yes - primitive procedures never take exactly one argument the way `square` does"
+    ],
+    "answer_index": 0,
+    "explanation": "The text says exactly this: one could not tell by looking at the definition of sum-of-squares whether square was built into the interpreter or defined as a compound procedure - compound and primitive procedures are indistinguishable in use."
+  },
+  {
+    "id": "q0011",
+    "item_id": "k0011",
+    "type": "single_choice",
+    "prompt": "To apply the compound procedure `f` (whose body is `(sum-of-squares (+ a 1) (* a 2))`) to the argument 5 under the substitution model, what's the first step?",
+    "options": [
+      "Replace the formal parameter `a` with the argument 5 throughout the body, getting `(sum-of-squares (+ 5 1) (* 5 2))`",
+      "Immediately look up a cached result for `f` applied to 5, if one exists",
+      "Replace the procedure name `f` itself with the number 5",
+      "Evaluate `sum-of-squares` and `square` first as standalone expressions, ignoring the argument"
+    ],
+    "answer_index": 0,
+    "explanation": "The substitution model applies a compound procedure by evaluating its body with each formal parameter replaced by the corresponding argument - here, replacing `a` with 5 throughout `f`'s body."
+  },
+  {
+    "id": "q0012",
+    "item_id": "k0012",
+    "type": "single_choice",
+    "prompt": "According to the text, is the substitution model an accurate description of how a real Lisp interpreter evaluates procedure applications internally?",
+    "options": [
+      "No - it's a way to help us think about what procedure application means; real interpreters use a local environment for the formal parameters instead of manipulating program text",
+      "Yes - every real Lisp interpreter literally rewrites the procedure's source text, substituting in the argument values",
+      "Yes, but only for procedures with exactly one formal parameter",
+      "No - real interpreters ignore formal parameters entirely and only look at argument order"
+    ],
+    "answer_index": 0,
+    "explanation": "The text explicitly stresses that the purpose of substitution is to help us think about procedure application, not to describe how the interpreter really works - actual implementations use a local environment, as later chapters explain."
+  },
+  {
+    "id": "q0013",
+    "item_id": "k0013",
+    "type": "single_choice",
+    "prompt": "Under normal-order evaluation (fully expand, then reduce) applied to `(f 5)`, what actually happens to subexpressions like `(+ 5 1)` compared to applicative-order evaluation?",
+    "options": [
+      "They can get evaluated more than once, since substitution happens before any reduction, duplicating any operand expression that's used more than once in the body",
+      "They are evaluated exactly once, just like in applicative-order evaluation, with no difference in efficiency",
+      "They are never evaluated at all under normal-order evaluation",
+      "They are evaluated before the procedure name itself is looked up"
+    ],
+    "answer_index": 0,
+    "explanation": "The text shows `(+ 5 1)` and `(* 5 2)` each get evaluated twice under normal-order evaluation, because `square`'s body `(* x x)` uses its parameter twice, duplicating whatever expression was substituted in - this repeated work is part of why Lisp uses applicative-order evaluation instead."
+  },
+  {
+    "id": "q0014",
+    "item_id": "k0014",
+    "type": "single_choice",
+    "prompt": "In `(cond ((> x 0) x) ((= x 0) 0) ((< x 0) (- x)))`, if x is 0, what value does the `cond` expression return?",
+    "options": [
+      "0, because the second clause's predicate `(= x 0)` is the first one that evaluates to true",
+      "x, because the first clause is always tried and its result is used regardless of the predicate",
+      "(- x), because the interpreter always evaluates the last clause first",
+      "The cond expression is undefined whenever more than one clause could conceivably be true"
+    ],
+    "answer_index": 0,
+    "explanation": "cond tries each clause's predicate in order and returns the consequent of the first one that's true; here `(> x 0)` is false when x=0, but `(= x 0)` is true, so 0 is returned."
+  },
+  {
+    "id": "q0015",
+    "item_id": "k0015",
+    "type": "single_choice",
+    "prompt": "For `(if (< x 0) (- x) x)`, if the predicate `(< x 0)` evaluates to false, what does the interpreter do?",
+    "options": [
+      "It evaluates the alternative, `x`, and returns that value - it does not also evaluate the consequent `(- x)`",
+      "It evaluates both the consequent and the alternative and returns whichever is larger",
+      "It re-evaluates the predicate a second time to confirm before choosing a branch",
+      "It returns the predicate's own false value directly, without evaluating consequent or alternative"
+    ],
+    "answer_index": 0,
+    "explanation": "if evaluates exactly one of consequent/alternative depending on the predicate's truth value - here, since the predicate is false, only the alternative `x` is evaluated and returned; `(- x)` is never touched."
+  },
+  {
+    "id": "q0016",
+    "item_id": "k0016",
+    "type": "single_choice",
+    "prompt": "Why are `and` and `or` special forms rather than ordinary procedures?",
+    "options": [
+      "Because they don't necessarily evaluate all of their subexpressions - `and` stops at the first false one, `or` stops at the first true one",
+      "Because they can only take exactly two arguments, unlike ordinary procedures",
+      "Because they must always be the outermost expression in a program",
+      "Because, unlike ordinary procedures, they aren't allowed to appear inside a `define`"
+    ],
+    "answer_index": 0,
+    "explanation": "The text notes `and`/`or` are special forms precisely because their subexpressions aren't necessarily all evaluated (short-circuiting), unlike ordinary procedures (like `not`) which always evaluate all their arguments."
+  },
+  {
+    "id": "q0017",
+    "item_id": "k0017",
+    "type": "single_choice",
+    "prompt": "In Newton's method for computing square roots, how is a guess `y` improved into a better guess for the square root of `x`?",
+    "options": [
+      "By averaging `y` with `x/y`",
+      "By squaring `y` and comparing it directly to `x` with no further computation",
+      "By adding 1 to `y` each time until `y*y` exceeds `x`",
+      "By dividing `y` by 2 repeatedly until it's smaller than `x`"
+    ],
+    "answer_index": 0,
+    "explanation": "The text states the key manipulation: average the current guess y with the quotient x/y to get a guess closer to the actual square root - that's exactly what the `improve` procedure computes."
+  },
+  {
+    "id": "q0018",
+    "item_id": "k0018",
+    "type": "single_choice",
+    "prompt": "The `sqrt` example is used to illustrate that the simple procedural language introduced so far (define, if, ordinary procedure calls) is already sufficient to express what?",
+    "options": [
+      "Iteration (repetition), even though the language has no special looping construct - `sqrt-iter` repeats itself purely via an ordinary procedure call",
+      "Only mathematical functions that have a closed-form algebraic solution",
+      "Only programs that terminate in a fixed, predetermined number of steps",
+      "Graphical output, since `sqrt-iter` can be adapted to draw shapes"
+    ],
+    "answer_index": 0,
+    "explanation": "The text explicitly makes this point: the language has no special iterative construct, yet sqrt-iter demonstrates that iteration can be accomplished using nothing more than the ordinary ability to call a procedure."
+  },
+  {
+    "id": "q0019",
+    "item_id": "k0019",
+    "type": "single_choice",
+    "prompt": "In Exercise 1.6, Alyssa rewrites `sqrt-iter` to use `new-if` (an ordinary procedure built from `cond`) instead of the special form `if`. What actually happens when she tries to compute a square root this way?",
+    "options": [
+      "It never terminates: since `new-if` is an ordinary procedure, applicative-order evaluation must evaluate all of its arguments - including the recursive call to `sqrt-iter` - before `new-if` can even be applied, regardless of whether `good-enough?` is already true",
+      "It works exactly the same as before, since `new-if` and `if` behave identically in every situation",
+      "It immediately signals a syntax error, since `cond` cannot appear inside a procedure definition",
+      "It returns the wrong numeric answer, but still terminates in the same number of steps as before"
+    ],
+    "answer_index": 0,
+    "explanation": "Because new-if is an ordinary procedure, applying it evaluates all of its arguments first (applicative order) - including the recursive `(sqrt-iter (improve guess x) x)` argument - so the recursion never gets a chance to stop, even after good-enough? becomes true. A special form like if avoids this by only evaluating the branch it actually needs."
+  },
+  {
+    "id": "q0020",
+    "item_id": "k0020",
+    "type": "single_choice",
+    "prompt": "Why are `(define (square x) (* x x))` and `(define (square x) (exp (double (log x))))` considered indistinguishable, even though they compute the square completely differently internally?",
+    "options": [
+      "Because at the level of procedural abstraction, only the value a procedure returns matters to its caller, not how that value is computed internally",
+      "Because Lisp automatically rewrites every procedure definition into the most efficient equivalent form before running it",
+      "Because `exp`, `double`, and `log` are secretly defined to behave exactly like `*` internally",
+      "Because both definitions use exactly the same number of parentheses"
+    ],
+    "answer_index": 0,
+    "explanation": "The text's point is procedural abstraction: as far as any caller (like good-enough?) is concerned, square is a black box - any implementation that returns the correct squared value is equally good, regardless of internal mechanism."
+  },
+  {
+    "id": "q0021",
+    "item_id": "k0021",
+    "type": "single_choice",
+    "prompt": "Why must a procedure's formal parameter names be local to that procedure's own body?",
+    "options": [
+      "So that one procedure's use of a parameter name (like `x` in `square`) can never collide with or affect another procedure's own use of the same name (like `x` in `good-enough?`)",
+      "Because the interpreter only has a limited, fixed set of legal parameter names to choose from",
+      "So that every procedure in a program is forced to use a different parameter name from every other procedure",
+      "Because otherwise the interpreter would print the parameter's name instead of its value"
+    ],
+    "answer_index": 0,
+    "explanation": "The text traces through exactly this scenario: good-enough?'s x and square's x must be different x's, or running square would risk disturbing the x that good-enough? still needs - keeping parameter names local to their own procedure body is what prevents this collision."
+  },
+  {
+    "id": "q0022",
+    "item_id": "k0022",
+    "type": "single_choice",
+    "prompt": "In the definition of `good-enough?`, which names are bound variables and which are free variables?",
+    "options": [
+      "`guess` and `x` are bound (they're the formal parameters); `<`, `-`, `abs`, and `square` are free",
+      "All of `guess`, `x`, `<`, `-`, `abs`, and `square` are bound, since they all appear inside the same procedure body",
+      "`guess` and `x` are free, since their values come from outside the procedure when it's called",
+      "Only `square` is bound, since it's the only one being called as a procedure"
+    ],
+    "answer_index": 0,
+    "explanation": "The text states this directly: guess and x are bound variables (they're good-enough?'s formal parameters, scoped to its body), while <, -, abs, and square are free - their meaning comes from outside this particular definition, e.g. from the global environment."
+  },
+  {
+    "id": "q0023",
+    "item_id": "k0023",
+    "type": "single_choice",
+    "prompt": "What problem does giving `sqrt` internal (nested) definitions of `good-enough?`, `improve`, and `sqrt-iter` solve?",
+    "options": [
+      "It hides those auxiliary procedure names inside `sqrt`, so they don't clutter the namespace or collide with another part of the program that happens to define its own procedure with the same name",
+      "It makes `sqrt` run asymptotically faster than the version with separate top-level definitions",
+      "It allows `sqrt` to be called with a different number of arguments than before",
+      "It converts `sqrt-iter`'s recursion into an explicit loop construct"
+    ],
+    "answer_index": 0,
+    "explanation": "The text's motivation is namespace hygiene: only sqrt itself matters to sqrt's callers, while good-enough?/improve/sqrt-iter are implementation clutter that could collide with someone else's same-named procedures - block structure (nested definitions) hides them inside sqrt instead of leaving them at top level."
+  }
+]
