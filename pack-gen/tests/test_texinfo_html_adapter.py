@@ -18,6 +18,13 @@ FIXTURE_HTML = """<?xml version="1.0" encoding="utf-8"?>
 <li>item two</li>
 </ul>
 <div class="lisp"><pre class="lisp">(define (square x) (* x x))<!-- /@w --> <i>486</i></pre></div>
+<blockquote>
+<p>To evaluate a combination, do the following:</p>
+<ol>
+<li>Evaluate the subexpressions.</li>
+<li>Apply the procedure.</li>
+</ol>
+</blockquote>
 <div class="footnote"><p>this footnote definition should be skipped</p></div>
 <h4 class="subsection"><span class="secnum">1.1.2</span><span class="sectitle">Second</span></h4>
 <p>Second subsection paragraph.</p>
@@ -89,6 +96,17 @@ def test_html_comments_inside_code_blocks_are_dropped(fixture_path):
     subsections = TexinfoHtmlAdapter().parse([fixture_path])
     code_paragraphs = [p for p in subsections[0].paragraphs if p.kind == ParagraphKind.code]
     assert "/@w" not in code_paragraphs[0].text
+
+
+def test_blockquote_contents_are_not_silently_dropped(fixture_path):
+    # texinfo renders @quotation-style blocks as <blockquote>, wrapping a <p> and
+    # an <ol> (e.g. SICP's "to evaluate a combination, do the following" rule).
+    # blockquote wasn't a recognized top-level tag, so this content used to
+    # vanish entirely - it must be expanded by recursing into its children.
+    subsections = TexinfoHtmlAdapter().parse([fixture_path])
+    texts = [p.text for p in subsections[0].paragraphs if p.kind == ParagraphKind.text]
+    assert "To evaluate a combination, do the following:" in texts
+    assert "- Evaluate the subexpressions.\n- Apply the procedure." in texts
 
 
 def test_ascii_art_example_blocks_preserve_whitespace_verbatim(fixture_path):

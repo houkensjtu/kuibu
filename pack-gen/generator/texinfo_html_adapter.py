@@ -67,10 +67,10 @@ def _extract_verbatim_text(node) -> str:
     return "".join(_extract_verbatim_text(child) for child in node.children)
 
 
-def _paragraph_from_element(el: Tag) -> Optional[Paragraph]:
+def _paragraphs_from_element(el: Tag) -> List[Paragraph]:
     if el.name == "p":
         text = _clean_text(_render_inline(el))
-        return Paragraph(kind=ParagraphKind.text, text=text) if text else None
+        return [Paragraph(kind=ParagraphKind.text, text=text)] if text else []
 
     if el.name in ("ul", "ol"):
         lines = []
@@ -78,20 +78,31 @@ def _paragraph_from_element(el: Tag) -> Optional[Paragraph]:
             text = _clean_text(_render_inline(li))
             if text:
                 lines.append(f"- {text}")
-        return Paragraph(kind=ParagraphKind.text, text="\n".join(lines)) if lines else None
+        return [Paragraph(kind=ParagraphKind.text, text="\n".join(lines))] if lines else []
 
     if el.name == "div":
         classes = el.get("class") or []
         if "footnote" in classes:
-            return None  # 脚注定义，跳过
+            return []  # 脚注定义，跳过
         if "lisp" in classes or "example" in classes:
             pre = el.find("pre")
             if pre is None:
-                return None
+                return []
             code_text = _extract_verbatim_text(pre)
-            return Paragraph(kind=ParagraphKind.code, text=code_text) if code_text.strip() else None
+            return [Paragraph(kind=ParagraphKind.code, text=code_text)] if code_text.strip() else []
 
-    return None  # nav、blockquote 等其他标签，不属于正文
+    if el.name == "blockquote":
+        # texinfo 把 @quotation 之类的块渲染成 <blockquote>，里面可以包好几个
+        # <p>/<ol> 子元素（比如"求值规则"那段：一个说明段落 + 一个步骤列表）。
+        # 之前只在 <section> 顶层认 p/ul/ol/div，blockquote 整个被当成"不认识
+        # 的标签"跳过，把里面的内容全丢了——递归展开它的每个子元素。
+        paragraphs: List[Paragraph] = []
+        for child in el.find_all(recursive=False):
+            if isinstance(child, Tag):
+                paragraphs.extend(_paragraphs_from_element(child))
+        return paragraphs
+
+    return []  # nav 等其他标签，不属于正文
 
 
 class TexinfoHtmlAdapter:
@@ -150,14 +161,14 @@ class TexinfoHtmlAdapter:
             if el.name == "h4" and "footnotes-heading" in classes:
                 break  # 正文结束，后面是脚注区
 
-            paragraph = _paragraph_from_element(el)
-            if paragraph is None:
+            new_paragraphs = _paragraphs_from_element(el)
+            if not new_paragraphs:
                 continue
 
             if current_path is None:
-                intro_paragraphs.append(paragraph)
+                intro_paragraphs.extend(new_paragraphs)
             else:
-                current_paragraphs.append(paragraph)
+                current_paragraphs.extend(new_paragraphs)
 
         flush()
         return subsections
