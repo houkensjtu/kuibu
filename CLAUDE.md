@@ -59,7 +59,7 @@
 ```
 pack-gen/     Python      构建期工具，调 LLM，产出内容包
 core/         TypeScript  纯逻辑，零 IO
-cli/          TypeScript  core + 文件 IO + pager + 终端
+cli/          TypeScript  core + 文件 IO + 终端交互
 web/          TypeScript  core + IndexedDB + DOM（阶段二，暂不实现）
 schema/       JSON Schema 契约单一真相源
 packs/public/             公开内容包，进 git
@@ -77,7 +77,12 @@ packs/public/             公开内容包，进 git
 - **每日题目顺序**：新内容理解题（固定 2 道）→ 错题 → 其余到期项。超时间预算则停止。
 - **超预算未做的到期项视同"未到期"**，明天继续排队。**绝不能视同答对**——那会产生虚假掌握。
 - **当日读过的知识点全部入队**，被抽中出题的按答题结果进 box 0/1，未出题的从 box 2 起步。
-- **阅读计时锚点** = 进入 pager 到退出 pager。
+- **阅读计时锚点**（2026-08 修订）= 今天全部 block 一次性打印 → 用户按 Enter
+  表示读完，量一个总时长，再按各 block 的 `est_seconds` 占比分摊回每个
+  block——不再是逐 block 进出 pager 计时（pager 已经整个去掉，见
+  `docs/DESIGN.md` §7.4 的修订说明）。
+- **章节号显示在标题左侧、按层级拼接**（如 `Chapter 1 › 1.1 › 1.1.3`），不要
+  塞回标题右侧的括号里——这是用户实测反馈过的，之前那样不容易一眼看出层级。
 - **进度呈现** = 小节 + 整章百分比同时显示。
 
 ---

@@ -18,7 +18,8 @@ import { renderTableOfContents } from "./renderTableOfContents.js";
 import { mergeEvents } from "../core/mergeEvents.js";
 import { buildExerciseQueue } from "../core/exerciseQueue.js";
 import { runReadingFlow } from "./readingFlow.js";
-import { showBlockInPagerOrFallback } from "./pager.js";
+import { printBlocks } from "./renderBlocks.js";
+import { printSectionDivider } from "./sectionDivider.js";
 import { runAnswerFlow } from "./answerFlow.js";
 import { askInTerminal } from "./answerPrompt.js";
 import { runExerciseFlow } from "./exerciseFlow.js";
@@ -76,9 +77,8 @@ program
             if (reviewBlocks.length === 0) {
               console.log("No reading recorded for today yet - nothing to review.");
             } else {
-              for (const block of reviewBlocks) {
-                await showBlockInPagerOrFallback(block, lineReader);
-              }
+              printSectionDivider("Reading (review)");
+              printBlocks(reviewBlocks);
               console.log("Review complete.");
             }
             return;
@@ -148,8 +148,13 @@ program
         if (todaysBlocks.length === 0) {
           console.log("You've finished this book - just review questions today.");
         } else {
+          printSectionDivider("Reading");
           await runReadingFlow(todaysBlocks, {
-            showBlock: (block) => showBlockInPagerOrFallback(block, lineReader),
+            showBlocks: (blocks) => printBlocks(blocks),
+            waitUntilDone: async () => {
+              process.stdout.write("Press Enter to continue to review questions (or 'q' to quit): ");
+              await readLineOrQuit(lineReader);
+            },
             onBlockRead: (blockId, seconds) => {
               totalReadSecondsToday += seconds;
               readBlockIdsToday.add(blockId);
@@ -174,6 +179,9 @@ program
         const questionsById = new Map(pack.questions.map((q) => [q.id, q]));
         const answeredQuestionIds = new Set<string>();
 
+        if (queue.length > 0) {
+          printSectionDivider("Review Questions");
+        }
         await runAnswerFlow(queue, questionsById, {
           ask: (question, shuffled) => askInTerminal(lineReader, question, shuffled),
           onAnswered: (_entry, question, shuffled, _chosenIndex, correct) => {
@@ -196,35 +204,37 @@ program
           },
         });
 
-        // 习题是可选做的，跟上面的复习题是两种不同的东西：不影响打卡判定，
-        // 只在用户主动要求时才进入。花在习题上的时间计入今天的阅读时长反馈
-        // （下面的 classifyTimeSpent），但不影响 est_seconds/block 切分——
-        // 切分本来就只按文字量估算，跟做题要花多久无关，这是用户自己的事。
+        // 习题是可选做的，跟上面的复习题是两种不同的东西：不影响打卡判定。
+        // 进入习题环节本身不问 y/N（跟阅读→复习一样，按 Enter 就往下走），
+        // 但每一道题都可以直接按 Enter 跳过，不点开 hint 也不强求作答——
+        // "可选"体现在题目本身可以秒过，而不是靠一个整体的"要不要做"开关。
+        // 花在习题上的时间计入今天的阅读时长反馈（下面的 classifyTimeSpent），
+        // 但不影响 est_seconds/block 切分——切分本来就只按文字量估算，跟做题
+        // 要花多久无关，这是用户自己的事。
         const todaysExercises = buildExerciseQueue(
           pack.exercises,
           new Set(todaysBlocks.map((b) => b.id)),
         );
         if (todaysExercises.length > 0) {
           process.stdout.write(
-            `There ${todaysExercises.length === 1 ? "is" : "are"} ${todaysExercises.length} optional exercise${todaysExercises.length === 1 ? "" : "s"} from today's reading. Try them? (y/N, or 'q' to quit): `,
+            `There ${todaysExercises.length === 1 ? "is" : "are"} ${todaysExercises.length} optional exercise${todaysExercises.length === 1 ? "" : "s"} from today's reading.\nPress Enter to continue to exercises (or 'q' to quit): `,
           );
-          const wantsExercises = (await readLineOrQuit(lineReader)).trim().toLowerCase();
-          if (wantsExercises === "y" || wantsExercises === "yes") {
-            await runExerciseFlow(todaysExercises, {
-              attempt: (exercise) => attemptExercise(lineReader, exercise),
-              onAttempted: (exercise, outcome) => {
-                totalReadSecondsToday += outcome.seconds;
-                appendEvent(options.log, {
-                  id: randomUUID(),
-                  ts: new Date().toISOString(),
-                  type: "exercise_attempt",
-                  exercise_id: exercise.id,
-                  seconds: outcome.seconds,
-                  used_hint: outcome.usedHint,
-                });
-              },
-            });
-          }
+          await readLineOrQuit(lineReader);
+          printSectionDivider("Exercises (optional)");
+          await runExerciseFlow(todaysExercises, {
+            attempt: (exercise) => attemptExercise(lineReader, exercise),
+            onAttempted: (exercise, outcome) => {
+              totalReadSecondsToday += outcome.seconds;
+              appendEvent(options.log, {
+                id: randomUUID(),
+                ts: new Date().toISOString(),
+                type: "exercise_attempt",
+                exercise_id: exercise.id,
+                seconds: outcome.seconds,
+                used_hint: outcome.usedHint,
+              });
+            },
+          });
         }
 
         const passed = isCheckinComplete({

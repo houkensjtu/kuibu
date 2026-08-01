@@ -58,7 +58,7 @@ kuibu status
 | 命令 | 作用 |
 |---|---|
 | `today` | 开始/继续今天的阅读+答题+打卡；`--minutes <n>` 临时调整今日目标（会记住） |
-| `status` | 查看当前连续打卡天数、今天是否已打卡、阅读进度、待复习题数——不会打开 pager 或进入答题 |
+| `status` | 查看当前连续打卡天数、今天是否已打卡、阅读进度、待复习题数——不会进入阅读或答题流程 |
 | `export` | 把事件日志导出到 stdout，配合 shell 重定向存成文件备份 |
 | `import <file>` | 合并一份之前导出的日志（按 id 去重），用于跨设备同步或恢复备份 |
 
@@ -95,7 +95,7 @@ cd pack-gen
 
 ```
 core/         纯逻辑，零 IO（打卡日换算、Leitner 调度、事件日志 reducer……）
-cli/          core + 文件 IO + pager + 终端交互
+cli/          core + 文件 IO + 终端交互
 pack-gen/     构建期工具，产出内容包（目前手工代替 LLM，见下）
 schema/       JSON Schema 契约，Python/TS 两侧的类型都从这里生成
 packs/public/ 公开内容包，进 git；packs-private/ 是私有内容包，不进 git

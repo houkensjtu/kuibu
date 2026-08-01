@@ -42,7 +42,8 @@
 
 - [x] 加载内容包 + 校验 schema_version
 - [x] 事件日志读写（逐条 append + 落盘）
-- [x] pager 呈现正文 + 进出计时（含无 pager 时的降级）
+- [x] 阅读呈现 + 计时（2026-08 由逐 block 经 pager 改成一次性打印全部内容 +
+  分摊计时，pager 整个去掉，见 `docs/DESIGN.md` §7.4 修订）
 - [x] 答题交互（数字键选择）
 - [x] 打卡热力图（2026-08 升级成全年 GitHub 风格日历，见 `core/yearCalendar.ts`）
 - [x] 进度呈现（小节 + 整章百分比，另加 `status` 的详细当前位置/目录/预计完读天数）

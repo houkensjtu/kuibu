@@ -2,74 +2,91 @@ import { describe, it, expect, vi } from "vitest";
 import { runReadingFlow } from "./readingFlow.js";
 import type { Block } from "../schema/types/pack.js";
 
-function block(id: string): Block {
+function block(id: string, est_seconds: number): Block {
   return {
     id,
     seq: 1,
     section_path: ["1", "1.1", "1.1.1"],
     section_title: "The Elements of Programming",
     content_md: `content of ${id}`,
-    est_seconds: 150,
+    est_seconds,
     recap_md: `recap of ${id}`,
   };
 }
 
 describe("runReadingFlow", () => {
-  it("shows each block in order and reports elapsed seconds per block", async () => {
-    const blocks = [block("b0001"), block("b0002")];
-    const shown: string[] = [];
+  it("shows all blocks at once, then splits the single measured duration proportionally by est_seconds", async () => {
+    const blocks = [block("b0001", 100), block("b0002", 300)]; // 1:3 ratio
+    let shown: readonly Block[] | null = null;
     const reads: [string, number][] = [];
 
-    // 每个 block 的 showBlock 分别耗时 5s、12s（用递增的假时钟模拟）。
-    const clockValues = [1000, 1000 + 5000, 1000 + 5000, 1000 + 5000 + 12000];
-    let clockIndex = 0;
-    const now = () => clockValues[clockIndex++];
+    const clockValues = [1000, 1000 + 40000]; // 40s total elapsed
+    let i = 0;
+    const now = () => clockValues[i++];
 
     await runReadingFlow(blocks, {
-      showBlock: async (b) => {
-        shown.push(b.id);
+      showBlocks: (bs) => {
+        shown = bs;
       },
+      waitUntilDone: async () => {},
       onBlockRead: (blockId, seconds) => {
         reads.push([blockId, seconds]);
       },
       now,
     });
 
-    expect(shown).toEqual(["b0001", "b0002"]);
+    expect(shown).toEqual(blocks);
+    // 100/400 * 40 = 10s, 300/400 * 40 = 30s
     expect(reads).toEqual([
-      ["b0001", 5],
-      ["b0002", 12],
+      ["b0001", 10],
+      ["b0002", 30],
     ]);
   });
 
-  it("awaits an async showBlock before moving to the next block", async () => {
-    const blocks = [block("b0001"), block("b0002")];
+  it("makes the last block absorb any rounding remainder so the total always matches", async () => {
+    const blocks = [block("b0001", 100), block("b0002", 100), block("b0003", 100)]; // even thirds of 10s
+    const reads: [string, number][] = [];
+    const clockValues = [0, 10000];
+    let i = 0;
+    const now = () => clockValues[i++];
+
+    await runReadingFlow(blocks, {
+      showBlocks: () => {},
+      waitUntilDone: async () => {},
+      onBlockRead: (blockId, seconds) => reads.push([blockId, seconds]),
+      now,
+    });
+
+    const total = reads.reduce((sum, [, s]) => sum + s, 0);
+    expect(total).toBe(10);
+  });
+
+  it("awaits an async waitUntilDone before allocating any time", async () => {
+    const blocks = [block("b0001", 100)];
     const order: string[] = [];
 
     await runReadingFlow(blocks, {
-      showBlock: async (b) => {
-        order.push(`start:${b.id}`);
+      showBlocks: () => order.push("shown"),
+      waitUntilDone: async () => {
+        order.push("waiting:start");
         await new Promise((resolve) => setTimeout(resolve, 0));
-        order.push(`end:${b.id}`);
+        order.push("waiting:end");
       },
-      onBlockRead: (blockId) => {
-        order.push(`read:${blockId}`);
-      },
+      onBlockRead: () => order.push("read"),
     });
 
-    expect(order).toEqual([
-      "start:b0001",
-      "end:b0001",
-      "read:b0001",
-      "start:b0002",
-      "end:b0002",
-      "read:b0002",
-    ]);
+    expect(order).toEqual(["shown", "waiting:start", "waiting:end", "read"]);
   });
 
-  it("does nothing when given an empty block list", async () => {
+  it("does nothing when given an empty block list - does not even call showBlocks/waitUntilDone", async () => {
+    const showBlocks = vi.fn();
+    const waitUntilDone = vi.fn();
     const onBlockRead = vi.fn();
-    await runReadingFlow([], { showBlock: vi.fn(), onBlockRead });
+
+    await runReadingFlow([], { showBlocks, waitUntilDone, onBlockRead });
+
+    expect(showBlocks).not.toHaveBeenCalled();
+    expect(waitUntilDone).not.toHaveBeenCalled();
     expect(onBlockRead).not.toHaveBeenCalled();
   });
 });
