@@ -33,16 +33,69 @@ export function computeHeaderLines(
 }
 
 /**
- * 给正文每一行加统一的缩进前缀，深度比这个 block 自己的小节标题再深一级
- * （呼应 "..." 续读提示用的同一个缩进量），让正文在视觉上"挂在"它所属的
- * 标题下面。空行不加前缀，避免留下没意义的行尾空白；代码块（```scheme ...```）
- * 里的每一行也会被整体右移，但只是加一个恒定前缀，代码本身的相对缩进不受影响。
+ * 贪心断行：把一段（不含换行符的）文本按空格切词，尽量塞满每行，超过
+ * maxWidth 才换到下一行。单个词本身比 maxWidth 还长时不强行截断（不影响
+ * 阅读，简单起见不处理这种边界情况）。
  */
-export function indentContent(content: string, indent: string): string {
-  return content
-    .split("\n")
-    .map((line) => (line === "" ? line : indent + line))
-    .join("\n");
+function wordWrap(text: string, maxWidth: number): string[] {
+  const words = text.split(" ");
+  const lines: string[] = [];
+  let current = "";
+
+  for (const word of words) {
+    const candidate = current.length === 0 ? word : `${current} ${word}`;
+    if (candidate.length > maxWidth && current.length > 0) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = candidate;
+    }
+  }
+  if (current.length > 0) lines.push(current);
+  return lines.length > 0 ? lines : [""];
+}
+
+/**
+ * 给正文加统一的缩进前缀，深度比这个 block 自己的小节标题再深一级（呼应
+ * "..." 续读提示用的同一个缩进量），让正文在视觉上"挂在"它所属的标题下面。
+ *
+ * 光给每行开头加前缀不够——`content_md` 里一个段落本来就是不含换行符的
+ * 一整行长文本，终端会自己在屏幕宽度处折行，折行后续接的部分不会带缩进
+ * （表现出来就是"只有第一行缩进，后面又顶头了"）。所以这里需要真正按
+ * `width` 手动断行、给断出来的每一行都加前缀，而不是指望终端的自动折行。
+ *
+ * 代码块内容原样保留、不参与断行（重新折行会破坏代码本身的语义/可读性），
+ * 但 ```scheme / ``` 这两行围栏标记本身不打印——纯文本终端不认识 Markdown，
+ * 这两行光秃秃地杵在那里既不高亮也不成框，只是噪音（2026-08 用户反馈）。
+ * 开头围栏换成一行明说"接下来是代码"的纯文本提示（有语言标注就带上，如
+ * "Code (scheme):"），兼容任何终端/字体，不依赖 ANSI 颜色或 Unicode 画框；
+ * 结尾围栏直接省略，代码结束后原有的空行本身就足够当作分隔。空行不加
+ * 前缀，避免留下没意义的行尾空白。
+ */
+export function indentContent(content: string, indent: string, width = 80): string {
+  const wrapWidth = Math.max(20, width - indent.length);
+  let inCodeFence = false;
+  const output: string[] = [];
+
+  for (const line of content.split("\n")) {
+    const fenceMatch = line.trim().match(/^```(\w+)?/);
+    if (fenceMatch) {
+      if (!inCodeFence) {
+        const label = fenceMatch[1] ? `Code (${fenceMatch[1]}):` : "Code:";
+        output.push(indent + label);
+      }
+      inCodeFence = !inCodeFence;
+    } else if (line === "") {
+      output.push(line);
+    } else if (inCodeFence) {
+      output.push(indent + line);
+    } else {
+      for (const wrapped of wordWrap(line, wrapWidth)) {
+        output.push(indent + wrapped);
+      }
+    }
+  }
+  return output.join("\n");
 }
 
 /**
@@ -76,7 +129,7 @@ export function printBlocks(
     if (headerLines.length > 0) {
       console.log();
     }
-    console.log(indentContent(block.content_md, contentIndent));
+    console.log(indentContent(block.content_md, contentIndent, process.stdout.columns ?? 80));
     console.log();
 
     previousPath = block.section_path;

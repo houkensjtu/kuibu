@@ -66,9 +66,30 @@ describe("indentContent", () => {
     expect(indentContent("para one\n\npara two", "  ")).toBe("  para one\n\n  para two");
   });
 
-  it("indents every line of a fenced code block the same amount", () => {
+  it("replaces the opening fence with a plain-text label naming the language, and drops the closing fence", () => {
     const code = "```scheme\n(+ 1 2)\n```";
-    expect(indentContent(code, "  ")).toBe("  ```scheme\n  (+ 1 2)\n  ```");
+    expect(indentContent(code, "  ")).toBe("  Code (scheme):\n  (+ 1 2)");
+  });
+
+  it("uses a bare 'Code:' label when the fence has no language tag", () => {
+    const code = "```\n(+ 1 2)\n```";
+    expect(indentContent(code, "  ")).toBe("  Code:\n  (+ 1 2)");
+  });
+
+  it("word-wraps a long paragraph to fit the width, indenting every wrapped line", () => {
+    const paragraph = "one two three four five six seven eight";
+    // wrapWidth floors at 20 regardless of how narrow `width` is, so this
+    // exercises the floor rather than width - indent.length directly.
+    const result = indentContent(paragraph, "  ", 14);
+    expect(result).toBe("  one two three four\n  five six seven eight");
+  });
+
+  it("does not word-wrap content inside a fenced code block, even past the width", () => {
+    const code = "```scheme\n(define (very-long-procedure-name x) (+ x 1))\n```";
+    const result = indentContent(code, "  ", 20);
+    expect(result).toBe(
+      "  Code (scheme):\n  (define (very-long-procedure-name x) (+ x 1))",
+    );
   });
 });
 
