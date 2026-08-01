@@ -33,6 +33,19 @@ export function computeHeaderLines(
 }
 
 /**
+ * 给正文每一行加统一的缩进前缀，深度比这个 block 自己的小节标题再深一级
+ * （呼应 "..." 续读提示用的同一个缩进量），让正文在视觉上"挂在"它所属的
+ * 标题下面。空行不加前缀，避免留下没意义的行尾空白；代码块（```scheme ...```）
+ * 里的每一行也会被整体右移，但只是加一个恒定前缀，代码本身的相对缩进不受影响。
+ */
+export function indentContent(content: string, indent: string): string {
+  return content
+    .split("\n")
+    .map((line) => (line === "" ? line : indent + line))
+    .join("\n");
+}
+
+/**
  * 把今天要读的所有 block 正文一次性打印出来，不做任何暂停——真人终端本来就能
  * 自己滚动翻看，不需要再套一层 pager 逐块暂停（2026-08 修订，取代旧的
  * cli/pager.ts；见 docs/DESIGN.md §7.4）。
@@ -54,14 +67,16 @@ export function printBlocks(
       console.log(line);
     }
 
+    const contentIndent = "  ".repeat(block.section_path.length);
+
     if (index === 0 && options.resumingMidSection && headerLines.length > 0) {
-      console.log(`${"  ".repeat(block.section_path.length)}...`);
+      console.log(`${contentIndent}...`);
     }
 
     if (headerLines.length > 0) {
       console.log();
     }
-    console.log(block.content_md);
+    console.log(indentContent(block.content_md, contentIndent));
     console.log();
 
     previousPath = block.section_path;

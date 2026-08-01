@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { computeHeaderLines, printBlocks } from "./renderBlocks.js";
+import { computeHeaderLines, indentContent, printBlocks } from "./renderBlocks.js";
 import type { Block, SectionHeading } from "../schema/types/pack.js";
 
 const HEADINGS: SectionHeading[] = [
@@ -57,6 +57,21 @@ describe("computeHeaderLines", () => {
   });
 });
 
+describe("indentContent", () => {
+  it("prefixes every non-empty line with the given indent", () => {
+    expect(indentContent("line one\nline two", "    ")).toBe("    line one\n    line two");
+  });
+
+  it("leaves empty lines untouched (no trailing whitespace)", () => {
+    expect(indentContent("para one\n\npara two", "  ")).toBe("  para one\n\n  para two");
+  });
+
+  it("indents every line of a fenced code block the same amount", () => {
+    const code = "```scheme\n(+ 1 2)\n```";
+    expect(indentContent(code, "  ")).toBe("  ```scheme\n  (+ 1 2)\n  ```");
+  });
+});
+
 describe("printBlocks", () => {
   it("prints headers only when the section changes, and content for every block", () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
@@ -77,6 +92,16 @@ describe("printBlocks", () => {
     expect(output).toContain("third content");
     // second block shares b0001's section, so its header must not repeat
     expect(output.match(/Title of 1\.1\.1/g)).toHaveLength(1);
+
+    logSpy.mockRestore();
+  });
+
+  it("indents content to one level deeper than the block's own section depth", () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    printBlocks([block("b0001", ["1", "1.1", "1.1.1"], "some content")], HEADINGS);
+
+    const contentCall = logSpy.mock.calls.map((args) => args[0]).find((line) => line?.includes("some content"));
+    expect(contentCall).toBe("      some content");
 
     logSpy.mockRestore();
   });
