@@ -124,12 +124,13 @@ rm .kuibu-events.jsonl
 ### 内容从哪来
 
 `packs/public/sicp/` 是 SICP 第一章的完整内容包（137 个 block、70 个知识点、
-73 道复习题、46 道原书 Exercise，覆盖 1.1/1.2/1.3 全部小节 + 章节引言）。
-复习题（每天必做，自动判分）和原书 Exercise（可选做，不判分，只给 hint 不给
-答案）是两种不同的东西，见 `docs/DESIGN.md` §3.3/§3.3.1。生成流程见
-`pack-gen/generator/section_prompt.md`：目前这一步还没接真正的 LLM API，是
-由人工（Claude）按同一份规格手写每小节的输出，将来接入 API 时会原样复用
-这份 schema。
+73 道复习题、46 道原书 Exercise、35 条前情回顾，覆盖 1.1/1.2/1.3 全部小节 +
+章节引言）。复习题（每天必做，自动判分）和原书 Exercise（可选做，不判分，
+只给 hint 不给答案）是两种不同的东西，见 `docs/DESIGN.md` §3.3/§3.3.1；前情
+回顾在阅读之前展示累计读过的内容，阅读器只查表、不调用任何 API，见
+`docs/DESIGN.md` §3.1.1。生成流程见 `pack-gen/generator/section_prompt.md`：
+目前这一步还没接真正的 LLM API，是由人工（Claude）按同一份规格手写每小节
+的输出，将来接入 API 时会原样复用这份 schema。
 
 ---
 

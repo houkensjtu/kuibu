@@ -13,7 +13,7 @@ const SAMPLE_PACK_DIR = join(
 );
 
 function copySamplePackTo(dir: string, patchManifest: Record<string, unknown> = {}) {
-  for (const name of ["blocks.json", "items.json", "questions.json", "exercises.json"]) {
+  for (const name of ["blocks.json", "items.json", "questions.json", "exercises.json", "recap_checkpoints.json"]) {
     writeFileSync(join(dir, name), readFileSync(join(SAMPLE_PACK_DIR, name)));
   }
   const manifest = JSON.parse(

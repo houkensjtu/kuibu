@@ -52,6 +52,13 @@ function samplePack() {
         hint_md: "先确定每个子表达式的类型，再套用先求值再应用的规则。",
       },
     ],
+    recap_checkpoints: [
+      {
+        id: "r0001",
+        through_block_count: 1,
+        recap_md: "上次读到：组合式的求值遵循先求值再应用的规则。",
+      },
+    ],
   };
 }
 

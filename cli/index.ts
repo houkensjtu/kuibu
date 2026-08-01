@@ -17,6 +17,7 @@ import { buildTableOfContents } from "../core/tableOfContents.js";
 import { renderTableOfContents } from "./renderTableOfContents.js";
 import { mergeEvents } from "../core/mergeEvents.js";
 import { buildExerciseQueue } from "../core/exerciseQueue.js";
+import { findApplicableRecapCheckpoint } from "../core/recapCheckpoints.js";
 import { runReadingFlow } from "./readingFlow.js";
 import { printBlocks } from "./renderBlocks.js";
 import { printSectionDivider } from "./sectionDivider.js";
@@ -144,6 +145,26 @@ program
 
         let totalReadSecondsToday = 0;
         const readBlockIdsToday = new Set<string>();
+
+        // 前情回顾：查表，不调用任何 LLM/API——回顾文本是构建期一次性写好的，
+        // 按"用户实际累计读过多少个 block"定位，不依赖每天固定读多久这个假设
+        // （那个假设只在生成回顾文本时用来决定切分粒度，见 core/recapCheckpoints.ts）。
+        // 花在这段的时间计入今天的阅读时长反馈，跟习题时间同一个模式。
+        if (todaysBlocks.length > 0) {
+          const checkpoint = findApplicableRecapCheckpoint(
+            pack.recap_checkpoints,
+            state.readBlockIds.size,
+          );
+          if (checkpoint !== null) {
+            printSectionDivider("Recap");
+            console.log(checkpoint.recap_md);
+            console.log();
+            const recapStartedAt = Date.now();
+            process.stdout.write("Press Enter to continue to today's reading (or 'q' to quit): ");
+            await readLineOrQuit(lineReader);
+            totalReadSecondsToday += Math.max(0, Math.round((Date.now() - recapStartedAt) / 1000));
+          }
+        }
 
         if (todaysBlocks.length === 0) {
           console.log("You've finished this book - just review questions today.");

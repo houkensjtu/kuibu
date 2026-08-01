@@ -17,6 +17,7 @@ function loadSamplePack() {
     items: readJson("items.json"),
     questions: readJson("questions.json"),
     exercises: readJson("exercises.json"),
+    recap_checkpoints: readJson("recap_checkpoints.json"),
   };
 }
 
@@ -28,6 +29,7 @@ describe("sample-pack fixture", () => {
     expect(result.data.items).toHaveLength(2);
     expect(result.data.questions).toHaveLength(2);
     expect(result.data.exercises).toHaveLength(1);
+    expect(result.data.recap_checkpoints).toHaveLength(1);
   });
 
   it("rejects the fixture once a field is corrupted", () => {

@@ -6,7 +6,7 @@
  */
 
 /**
- * kuibu 内容包：manifest + blocks + items + questions + exercises 的组合视图
+ * kuibu 内容包：manifest + blocks + items + questions + exercises + recap_checkpoints 的组合视图
  */
 export interface ContentPack {
   manifest: Manifest;
@@ -14,6 +14,7 @@ export interface ContentPack {
   items: KnowledgeItem[];
   questions: Question[];
   exercises: Exercise[];
+  recap_checkpoints: RecapCheckpoint[];
 }
 export interface Manifest {
   /**
@@ -82,4 +83,15 @@ export interface Exercise {
    * 提示（不是答案）。当前阶段刻意不提供答案，只给一个不透题的提示
    */
   hint_md: string;
+}
+export interface RecapCheckpoint {
+  id: string;
+  /**
+   * 这条回顾覆盖了累计读到第几个 block（按 seq 计数，不是按天数）——运行时取 <= 用户实际已读 block 数里最大的那一条，不依赖任何每日阅读时长的假设
+   */
+  through_block_count: number;
+  /**
+   * 对累计读过的内容的回顾，构建期一次性写好，阅读器运行时只做查表，不重新生成
+   */
+  recap_md: string;
 }

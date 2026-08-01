@@ -14,6 +14,7 @@ __pycache__/
 pack-gen/build/sicp/sections/
 pack-gen/build/sicp/pack-parts/
 pack-gen/build/sicp/merged-pack-parts.json
+pack-gen/build/sicp/recap-boundaries.json
 pack-gen/.env
 
 # 私有内容包（版权不允许公开分发的书）。见 CLAUDE.md/DESIGN.md §4.5：

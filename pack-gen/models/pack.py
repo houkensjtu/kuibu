@@ -87,9 +87,24 @@ class Exercise(BaseModel):
     )
 
 
+class RecapCheckpoint(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: constr(min_length=1)
+    through_block_count: conint(ge=1) = Field(
+        ...,
+        description='这条回顾覆盖了累计读到第几个 block（按 seq 计数，不是按天数）——运行时取 <= 用户实际已读 block 数里最大的那一条，不依赖任何每日阅读时长的假设',
+    )
+    recap_md: str = Field(
+        ...,
+        description='对累计读过的内容的回顾，构建期一次性写好，阅读器运行时只做查表，不重新生成',
+    )
+
+
 class ContentPack(BaseModel):
     """
-    kuibu 内容包：manifest + blocks + items + questions + exercises 的组合视图
+    kuibu 内容包：manifest + blocks + items + questions + exercises + recap_checkpoints 的组合视图
     """
 
     model_config = ConfigDict(
@@ -100,3 +115,4 @@ class ContentPack(BaseModel):
     items: List[KnowledgeItem]
     questions: List[Question]
     exercises: List[Exercise]
+    recap_checkpoints: List[RecapCheckpoint]

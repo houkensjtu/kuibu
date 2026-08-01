@@ -2,10 +2,10 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://kuibu.dev/schema/pack.schema.json",
   "title": "ContentPack",
-  "description": "kuibu 内容包：manifest + blocks + items + questions + exercises 的组合视图",
+  "description": "kuibu 内容包：manifest + blocks + items + questions + exercises + recap_checkpoints 的组合视图",
   "type": "object",
   "additionalProperties": false,
-  "required": ["manifest", "blocks", "items", "questions", "exercises"],
+  "required": ["manifest", "blocks", "items", "questions", "exercises", "recap_checkpoints"],
   "properties": {
     "manifest": { "$ref": "#/definitions/manifest" },
     "blocks": {
@@ -23,6 +23,10 @@
     "exercises": {
       "type": "array",
       "items": { "$ref": "#/definitions/exercise" }
+    },
+    "recap_checkpoints": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/recapCheckpoint" }
     }
   },
   "definitions": {
@@ -147,6 +151,23 @@
         "hint_md": {
           "type": "string",
           "description": "提示（不是答案）。当前阶段刻意不提供答案，只给一个不透题的提示"
+        }
+      }
+    },
+    "recapCheckpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "through_block_count", "recap_md"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "through_block_count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "这条回顾覆盖了累计读到第几个 block（按 seq 计数，不是按天数）——运行时取 <= 用户实际已读 block 数里最大的那一条，不依赖任何每日阅读时长的假设"
+        },
+        "recap_md": {
+          "type": "string",
+          "description": "对累计读过的内容的回顾，构建期一次性写好，阅读器运行时只做查表，不重新生成"
         }
       }
     }

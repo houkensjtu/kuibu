@@ -1,0 +1,177 @@
+[
+  {
+    "id": "r0001",
+    "through_block_count": 4,
+    "recap_md": "So far: the chapter opens with Locke's epigraph on how the mind combines, compares, and abstracts simple ideas - the same three moves this whole book is about. Programs are framed as 'spells' that conjure computational processes: precise and powerful, but small bugs can have large, unanticipated consequences, which is why real-world programming demands care and modular design. Lisp itself began as McCarthy's 1950s formalism for recursion equations and evolved into a family of dialects; this book uses the dialect called Scheme."
+  },
+  {
+    "id": "r0002",
+    "through_block_count": 8,
+    "recap_md": "So far: the chapter frames programming as combining/comparing/abstracting ideas (echoing Locke's epigraph), with programs as precise 'spells' whose bugs can have real consequences - hence Lisp, whose key trait is that procedures can themselves be manipulated as data. Every powerful language needs three mechanisms: primitive expressions, means of combination, and means of abstraction. You've started evaluating simple number combinations in Lisp's prefix notation, where the operator comes first and naturally supports any number of operands."
+  },
+  {
+    "id": "r0003",
+    "through_block_count": 12,
+    "recap_md": "So far: after the opening framing (Locke's epigraph, programs as precise 'spells', Lisp's procedures-as-data trait) and the three basic mechanisms of any language (primitive expressions / combination / abstraction), you've seen prefix notation nest arbitrarily deeply and the interpreter's read-eval-print loop pretty-print the results. `define` was introduced as the simplest means of abstraction - binding a name to a value (or a whole expression like `circumference`) so it can stand in for that value later, with the interpreter's memory of these bindings called the environment."
+  },
+  {
+    "id": "r0004",
+    "through_block_count": 16,
+    "recap_md": "So far: you've met the three basic language mechanisms, prefix notation, and define/environments. The interpreter itself follows a procedure to evaluate any combination: recursively evaluate the subexpressions, then apply the resulting procedure to the values - a rule that, for deeply nested expressions, looks like values percolating up a tree. Primitive expressions (numerals, built-in operators, environment lookups) are the base case; define sits outside this rule entirely, since as a special form its whole job is just to create a name-value binding, not to be evaluated and applied."
+  },
+  {
+    "id": "r0005",
+    "through_block_count": 20,
+    "recap_md": "So far: you've covered the three basic mechanisms, naming/environments, and the interpreter's own evaluate-then-apply rule (with define as a special-case exception). Now you've started defining your own compound procedures, like `square`, where a formal parameter stands in for whatever argument the procedure is applied to. Compound procedures build on each other exactly like primitive ones - `square` became a building block for `sum-of-squares`, which in turn became a building block for a further procedure `f`."
+  },
+  {
+    "id": "r0006",
+    "through_block_count": 24,
+    "recap_md": "So far: you've covered the basic mechanisms, naming, the interpreter's eval rule, and defining/composing your own compound procedures (`square` -> `sum-of-squares` -> `f`). You've now seen the substitution model for how a compound procedure gets applied: replace each formal parameter in the body with the corresponding argument, then evaluate - worked through step by step reducing `(f 5)` all the way down to 136. This model is explicitly a way to think about procedure application, not a description of how a real interpreter actually works."
+  },
+  {
+    "id": "r0007",
+    "through_block_count": 28,
+    "recap_md": "So far: you've covered procedure definition, composition, and the substitution model for applying them. You've now seen there are two ways substitution could work - evaluate arguments first (applicative order, what Lisp actually uses) versus fully expand then reduce (normal order) - which reach the same answer but can redo work differently. To handle case analysis beyond simple procedures, `cond` was introduced: it tries a list of (predicate, expression) clauses in order and returns the first one whose predicate is true."
+  },
+  {
+    "id": "r0008",
+    "through_block_count": 32,
+    "recap_md": "So far: you've covered procedure definition/composition, the substitution model, applicative- vs normal-order evaluation, and `cond` for multi-way case analysis. This was rounded out with cond's `else` clause, the two-way special form `if`, and `and`/`or`/`not` for building compound predicates (the first two are special forms that short-circuit; `not` is an ordinary procedure) - enough machinery now to write real conditional logic."
+  },
+  {
+    "id": "r0009",
+    "through_block_count": 36,
+    "recap_md": "So far: you've covered how to define, compose, and apply procedures (substitution model, evaluation order), plus conditionals (cond/if/and/or). After a set of practice exercises on evaluation and case analysis, the chapter turned to a running example: since procedures must be effective (unlike a purely declarative math definition), computing square roots needs an actual method - Newton's method, which repeatedly improves a guess by averaging it with x/guess, converging toward the true square root."
+  },
+  {
+    "id": "r0010",
+    "through_block_count": 40,
+    "recap_md": "So far: you've covered procedure basics, conditionals, and are partway through building `sqrt` via Newton's method. That method is now formalized as `sqrt-iter` (repeat until good-enough?), `improve` (average the guess with x/guess), and a small `average` helper - showing that ordinary procedure calls alone, with no special looping construct, are already enough to express iteration. Exercise 1.6 then poses a subtle trap: rewriting `if` as an ordinary procedure `new-if` breaks `sqrt-iter` in a surprising way."
+  },
+  {
+    "id": "r0011",
+    "through_block_count": 44,
+    "recap_md": "So far: you've covered procedure/conditional basics and built `sqrt` via Newton's method (sqrt-iter/good-enough?/improve), including the new-if pitfall from exercise 1.6. The chapter now turns to procedural abstraction: `sqrt` decomposes into a cluster of subproblem procedures, each usable as a self-contained black box - illustrated by two totally different implementations of `square` being indistinguishable to any caller, since only the return value matters, not the internal mechanism. Parameter names, similarly, shouldn't matter to callers."
+  },
+  {
+    "id": "r0012",
+    "through_block_count": 48,
+    "recap_md": "So far: you've covered procedure/conditional basics, built `sqrt`, and met procedural abstraction (implementations are interchangeable black boxes, parameter names are local). This was sharpened into the bound-vs-free variable distinction (a formal parameter is bound to its procedure's body; unbound names are free, and capturing a free name by careless renaming is a bug), then resolved a namespace-clutter problem: nesting `sqrt`'s helper procedures inside it via block structure, using lexical scoping so they can treat sqrt's own parameter as a free variable instead of needing it passed explicitly."
+  },
+  {
+    "id": "r0013",
+    "through_block_count": 52,
+    "recap_md": "So far: you've covered procedure/conditional basics, built `sqrt` end to end, and learned procedural abstraction plus block structure/lexical scoping. The chapter now shifts to processes: like a chess novice who knows the rules but not the patterns, you need to learn to visualize the shape a procedure's execution takes. Factorial is the running example - first as a direct recursive translation of n! = n*(n-1)!, then reformulated with a running product and counter updated step by step instead of deferring multiplications."
+  },
+  {
+    "id": "r0014",
+    "through_block_count": 56,
+    "recap_md": "So far: you've covered procedure/conditional/abstraction basics and are now studying the shapes processes take, starting with two factorial implementations. Tracing them with the substitution model reveals genuinely different shapes: the first builds a growing chain of deferred multiplications (a linear recursive process, needing memory that grows with n), while the second just updates a fixed set of state variables (a linear iterative process, needing constant memory) - and crucially, 'recursive process' (how it evolves) is not the same thing as 'recursive procedure' (how it's written): fact-iter is syntactically recursive but iterative in shape. Scheme's tail-recursive implementation runs such iterative processes in constant space with no special looping syntax needed."
+  },
+  {
+    "id": "r0015",
+    "through_block_count": 60,
+    "recap_md": "So far: you've covered procedure/conditional/abstraction basics and the recursive-vs-iterative-process distinction (via factorial and tail recursion). After exercises classifying two addition procedures and exploring Ackermann's function, tree recursion was introduced through the most natural example: the Fibonacci sequence, translated almost verbatim from its mathematical definition into a Scheme procedure that calls itself twice per invocation."
+  },
+  {
+    "id": "r0016",
+    "through_block_count": 64,
+    "recap_md": "So far: you've covered process shapes (recursive/iterative) plus the start of tree recursion via naive Fibonacci. Tracing `(fib 5)` shows the computation branching into a genuine tree, redoing so much redundant work that its step count grows exponentially even though its space stays linear; an alternative iterative formulation carries a running pair forward instead. The chapter then poses a new tree-recursion example, the classic coin-change counting problem, and works out its recursive reduction rule (change without the first coin kind, plus change for the reduced amount using all kinds)."
+  },
+  {
+    "id": "r0017",
+    "through_block_count": 68,
+    "recap_md": "So far: you've covered process shapes and tree recursion (Fibonacci, and the change-counting problem's reduction rule). `count-change` is now fully implemented and returns 292 ways to change a dollar - but like fib, it's tree-recursive with the same redundancy, prompting a passing thought experiment about a hypothetical 'smart compiler.' After three closing exercises (a 3-term recursive function, Pascal's triangle, the golden-ratio Fibonacci formula), the chapter introduces order-of-growth notation Θ(f(n)) as a coarse, formal way to describe how a process's resource use scales with problem size."
+  },
+  {
+    "id": "r0018",
+    "through_block_count": 72,
+    "recap_md": "So far: you've covered process shapes, tree recursion, and order-of-growth (Θ) notation. Comparing all the examples so far: recursive factorial is Θ(n) steps/Θ(n) space, iterative factorial is Θ(n) steps/Θ(1) space, and tree-recursive Fibonacci is Θ(φⁿ) steps/Θ(n) space - Θ is deliberately coarse, but still useful. After exercises on count-change's growth and a sine-approximation's growth, the chapter turns to exponentiation: a naive recursive bⁿ = b·b^(n-1) (Θ(n) steps/space) is first given, then reformulated iteratively (still Θ(n) steps, but Θ(1) space) the same way factorial was."
+  },
+  {
+    "id": "r0019",
+    "through_block_count": 76,
+    "recap_md": "So far: you've covered process shapes, tree recursion, Θ-notation, and both recursive/iterative Θ(n) exponentiation. Noticing that b⁸ takes only 3 squarings instead of 7 multiplications, that idea generalizes into `fast-expt` - square on even exponents, peel off one factor on odd ones - achieving Θ(log n) in both steps and space, since squaring bⁿ to reach b²ⁿ costs only one more multiplication. Exercise 1.16 asks for an equivalent iterative (not recursive) version."
+  },
+  {
+    "id": "r0020",
+    "through_block_count": 80,
+    "recap_md": "So far: you've covered process shapes, tree recursion, Θ-notation, and exponentiation up through the log-time fast-expt. Three exercises extend the same successive-squaring idea: a logarithmic multiplication procedure built from double/halve instead of repeated addition, combining that with iterative squaring, and even computing Fibonacci numbers in logarithmic time by squaring a state-transformation. The chapter then turns to GCDs (needed later for reducing fractions), noting a much faster approach than factoring both numbers."
+  },
+  {
+    "id": "r0021",
+    "through_block_count": 84,
+    "recap_md": "So far: you've covered process shapes, tree recursion, Θ-notation, log-time exponentiation/multiplication/Fibonacci, and GCD's motivation. Euclid's Algorithm is introduced (common divisors of a,b = common divisors of b, remainder), translated into a short but iterative `gcd` procedure, and shown via Lamé's theorem to run in Θ(log n) - its step count ties directly to the Fibonacci numbers. Exercise 1.20 asks you to hand-trace `(gcd 206 40)` under both evaluation orders and count remainder calls."
+  },
+  {
+    "id": "r0022",
+    "through_block_count": 88,
+    "recap_md": "So far: you've covered process shapes, tree recursion, Θ-notation, log-time algorithms (exponentiation, multiplication, Fibonacci), and GCD/Euclid's Algorithm. The chapter now compares two primality tests: a Θ(√n) trial-division approach (smallest-divisor, since any non-prime factor can't exceed √n) versus a faster probabilistic one built on Fermat's Little Theorem (aⁿ ≡ a mod n for prime n), computed efficiently via expmod's own successive-squaring trick."
+  },
+  {
+    "id": "r0023",
+    "through_block_count": 91,
+    "recap_md": "So far: you've covered everything through the two primality-testing approaches (Θ(√n) trial division vs. Fermat-based). fermat-test/fast-prime? are completed, but unlike every earlier algorithm in the chapter, this one is only probably correct - failing proves non-primality, but passing never quite guarantees it (rare Carmichael numbers fool it), introducing probabilistic algorithms as a genuinely new category. Exercises then ask you to try smallest-divisor directly and build a timed-prime-test harness to empirically check the Θ(√n) prediction."
+  },
+  {
+    "id": "r0024",
+    "through_block_count": 95,
+    "recap_md": "So far: you've covered everything up through Fermat/probabilistic primality testing and the start of its exercises. The remaining exercises in this section: skipping even test-divisors to roughly halve trial-division work, timing the Fermat test's growth, checking whether a simplified expmod still works, diagnosing Louis's bug (an explicit-multiplication rewrite that silently turns expmod from log-time back to linear), verifying Carmichael numbers fool the Fermat test, and the stronger Miller-Rabin test that catches more non-primes with certainty."
+  },
+  {
+    "id": "r0025",
+    "through_block_count": 99,
+    "recap_md": "So far: you've covered defining/composing procedures, process shapes and Θ-notation, several logarithmic algorithms, and primality testing (deterministic and probabilistic). Chapter 1's final section introduces higher-order procedures - procedures that accept or return other procedures - starting from the observation that summing integers, summing cubes, and summing a series all share the same shape, differing only in the term and next-value functions; factoring those two out gives one general `sum` procedure, exactly like mathematical sigma notation."
+  },
+  {
+    "id": "r0026",
+    "through_block_count": 103,
+    "recap_md": "So far: everything through basic procedure/process concepts, plus the newly-introduced general `sum` higher-order procedure. `sum` is shown to be genuinely reusable: with an identity helper it reproduces summing integers directly, it rebuilds the earlier π-approximating series, and it becomes the foundation for a numerical `integral` procedure (approximating a definite integral by summing thin rectangle strips). Exercises then ask for a more accurate Simpson's-Rule integrator and an iterative rewrite of `sum`."
+  },
+  {
+    "id": "r0027",
+    "through_block_count": 107,
+    "recap_md": "So far: everything through process shapes/Θ-notation/primality, plus `sum` and its reuses (pi-approximation, integral). Three exercises generalize the pattern further: a `product` procedure analogous to sum, both sum and product folded into one general `accumulate` (parameterized by a combiner and base value), and accumulate extended once more into `filtered-accumulate` (adding a predicate over which terms get combined). `lambda` is then introduced, letting you write \"the procedure that does X\" directly without a separate named definition."
+  },
+  {
+    "id": "r0028",
+    "through_block_count": 111,
+    "recap_md": "So far: everything through Chapter 1's core ideas plus the higher-order-procedure family (sum/product/accumulate) and the start of `lambda`. `lambda` turns out to be what define was secretly built on all along - a named procedure is just sugar for binding a name to a lambda. Beyond one-off arguments, lambda also lets you introduce local variables via an immediately-applied anonymous procedure; the special form `let` packages up exactly that pattern more conveniently."
+  },
+  {
+    "id": "r0029",
+    "through_block_count": 115,
+    "recap_md": "So far: everything through the higher-order-procedure family and lambda/let. `let` turns out to be lambda in disguise too - no new interpreter mechanism needed - which is why a let-bound variable's scope is strictly local to the let's own body, and why the usual style is to reserve internal define for helper procedures while using let for local variables. Exercise 1.34 then poses a puzzle: what happens when you evaluate `(f f)` given `(define (f g) (g 2))`?"
+  },
+  {
+    "id": "r0030",
+    "through_block_count": 119,
+    "recap_md": "So far: everything through defining/composing procedures, process shapes, primality testing, and higher-order procedures (sum/accumulate/lambda/let). The chapter's closing theme is using higher-order procedures to express general methods independent of any specific function - starting with the half-interval method for finding a function's root by repeatedly bisecting an interval whose endpoints have opposite-signed values, worked through with search/close-enough?/half-interval-method and two examples (a root of sin x, a cubic root)."
+  },
+  {
+    "id": "r0031",
+    "through_block_count": 123,
+    "recap_md": "So far: everything through higher-order procedures and the half-interval root-finding method. A second general method is introduced: a fixed point of f is where f(x)=x, found by repeatedly applying f until two guesses converge (fixed-point). Reformulating square roots as a fixed point of y -> x/y looks natural but actually oscillates forever without converging - fixed by average damping (finding a fixed point of y -> average(y, x/y) instead), which reproduces the original guess-improving sqrt exactly."
+  },
+  {
+    "id": "r0032",
+    "through_block_count": 127,
+    "recap_md": "So far: everything through higher-order procedures and the two general methods (half-interval, fixed-point search with average damping). After exercises on the golden ratio, damping experiments, and continued fractions, the chapter turns to returning procedures as values: average damping is factored into its own reusable `average-damp` procedure (given f, returns a damped version of it), and sqrt is rewritten explicitly as fixed-point of average-damp applied to y->x/y - the same pattern immediately generalizes to cube-root."
+  },
+  {
+    "id": "r0033",
+    "through_block_count": 131,
+    "recap_md": "So far: everything through higher-order procedures, general methods (half-interval, fixed-point/average damping), and procedures returned as values (average-damp). Newton's method is now recognized as a special case of this same fixed-point idea: a zero of g is a fixed point of x - g(x)/Dg(x). `deriv` is introduced as another function-to-function transform, approximating a derivative numerically via a small increment rather than symbolically, and is shown accurately approximating the derivative of x³."
+  },
+  {
+    "id": "r0034",
+    "through_block_count": 135,
+    "recap_md": "So far: everything through higher-order procedures, general methods, and procedures-returning-procedures (average-damp, deriv). Applying Newton's method to y²-x gives yet a third way to define sqrt - and since all three routes share the same shape (start from a function, transform it, find a fixed point), that shape is factored out into one general `fixed-point-of-transform` procedure, with both earlier sqrt formulations reduced to two calls to it. The unifying theme: Lisp treats procedures as fully first-class values - nameable, passable, returnable, storable - which is what makes all of this higher-order machinery possible."
+  },
+  {
+    "id": "r0035",
+    "through_block_count": 137,
+    "recap_md": "So far, cumulatively: Chapter 1 built from primitive expressions and naming, through procedure definition/composition/substitution, process shapes (recursive vs. iterative, tree recursion, Θ-notation), a run of logarithmic-time algorithms (exponentiation, GCD, primality), and finally higher-order procedures - sum/accumulate, lambda/let, and procedures that return procedures (average-damp, deriv, fixed-point-of-transform) - all resting on procedures being fully first-class values. The closing exercises (cubic, double, compose, repeated, smoothing, iterative-improve) round out this same procedures-as-values toolkit."
+  }
+]

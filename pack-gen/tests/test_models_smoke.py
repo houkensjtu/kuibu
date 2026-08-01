@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from models.pack import ContentPack, Manifest, Block, KnowledgeItem, Question, Exercise, Type
+from models.pack import ContentPack, Manifest, Block, KnowledgeItem, Question, Exercise, RecapCheckpoint, Type
 from models.events import Event, SessionStart
 
 
@@ -53,6 +53,13 @@ def test_content_pack_round_trip():
                 number="1.1",
                 prompt_md="以下每个表达式的结果是什么？",
                 hint_md="先确定每个子表达式的类型，再套用先求值再应用的规则。",
+            )
+        ],
+        recap_checkpoints=[
+            RecapCheckpoint(
+                id="r0001",
+                through_block_count=1,
+                recap_md="上次读到：组合式的求值遵循先求值再应用的规则。",
             )
         ],
     )
