@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { estimateDaysRemaining } from "./completionEstimate.js";
+import { estimateDaysRemaining, estimateMinutesRemaining } from "./completionEstimate.js";
 import type { Block } from "../schema/types/pack.js";
 
 function block(id: string, est_seconds: number): Block {
@@ -36,5 +36,23 @@ describe("estimateDaysRemaining", () => {
 
   it("handles an empty pack as already finished", () => {
     expect(estimateDaysRemaining([], new Set(), 720)).toBe(0);
+  });
+});
+
+describe("estimateMinutesRemaining", () => {
+  it("sums remaining blocks' est_seconds and converts to minutes, independent of any daily target", () => {
+    const blocks = [block("b1", 700), block("b2", 800), block("b3", 500)];
+    const readIds = new Set(["b1"]);
+    // 800+500 = 1300s -> 21.67min -> rounds to 22
+    expect(estimateMinutesRemaining(blocks, readIds)).toBe(22);
+  });
+
+  it("is 0 when everything has been read", () => {
+    const blocks = [block("b1", 300)];
+    expect(estimateMinutesRemaining(blocks, new Set(["b1"]))).toBe(0);
+  });
+
+  it("handles an empty pack", () => {
+    expect(estimateMinutesRemaining([], new Set())).toBe(0);
   });
 });

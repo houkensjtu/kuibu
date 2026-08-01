@@ -17,6 +17,7 @@ def _load_sample_pack_dict():
         "questions": json.loads((SAMPLE_PACK_DIR / "questions.json").read_text(encoding="utf-8")),
         "exercises": json.loads((SAMPLE_PACK_DIR / "exercises.json").read_text(encoding="utf-8")),
         "recap_checkpoints": json.loads((SAMPLE_PACK_DIR / "recap_checkpoints.json").read_text(encoding="utf-8")),
+        "section_headings": json.loads((SAMPLE_PACK_DIR / "section_headings.json").read_text(encoding="utf-8")),
     }
 
 
@@ -27,6 +28,7 @@ def test_sample_pack_is_valid():
     assert len(pack.questions) == 2
     assert len(pack.exercises) == 1
     assert len(pack.recap_checkpoints) == 1
+    assert len(pack.section_headings) == 2
 
 
 def test_sample_pack_rejects_corrupted_field():

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from models.pack import ContentPack, Manifest, Block, KnowledgeItem, Question, Exercise, RecapCheckpoint, Type
+from models.pack import ContentPack, Manifest, Block, KnowledgeItem, Question, Exercise, RecapCheckpoint, SectionHeading, Type
 from models.events import Event, SessionStart
 
 
@@ -60,6 +60,12 @@ def test_content_pack_round_trip():
                 id="r0001",
                 through_block_count=1,
                 recap_md="上次读到：组合式的求值遵循先求值再应用的规则。",
+            )
+        ],
+        section_headings=[
+            SectionHeading(
+                path=["1"],
+                title="The Elements of Programming",
             )
         ],
     )

@@ -6,7 +6,7 @@
  */
 
 /**
- * kuibu 内容包：manifest + blocks + items + questions + exercises + recap_checkpoints 的组合视图
+ * kuibu 内容包：manifest + blocks + items + questions + exercises + recap_checkpoints + section_headings 的组合视图
  */
 export interface ContentPack {
   manifest: Manifest;
@@ -15,6 +15,7 @@ export interface ContentPack {
   questions: Question[];
   exercises: Exercise[];
   recap_checkpoints: RecapCheckpoint[];
+  section_headings: SectionHeading[];
 }
 export interface Manifest {
   /**
@@ -94,4 +95,16 @@ export interface RecapCheckpoint {
    * 对累计读过的内容的回顾，构建期一次性写好，阅读器运行时只做查表，不重新生成
    */
   recap_md: string;
+}
+export interface SectionHeading {
+  /**
+   * 章/节这一级的路径，如 ["1"]（章）或 ["1","1.1"]（节）——不是 block 的完整叶子路径
+   *
+   * @minItems 1
+   */
+  path: [string, ...string[]];
+  /**
+   * 原书自己的章/节标题，机械从原文标题标签里提取，不是生成器编的
+   */
+  title: string;
 }

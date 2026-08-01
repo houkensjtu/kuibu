@@ -276,3 +276,29 @@ block 数**查表——12 分钟这个假设只用来决定回顾切多细（复
 
 版本号按 `CLAUDE.md` 的规则升级到 0.2.0（MINOR：新增了一个用户可见能力），
 大版本号继续停在 0。
+
+## 2026-08-01 —— read ahead 忘记 build；status 目录补齐层级标题、加剩余分钟数
+
+用户反馈"选 read ahead 时没看到 recap"，排查后发现是虚惊一场：用户在测试的是
+链接过的 `kuibu` 全局命令，推送 recap 功能后忘了重新 `npm run build`，跑的其实
+是旧编译产物——直接复现过一遍相同场景（先完成只读 4 个 block 的打卡，再选
+read ahead）确认代码本身没问题，recap 正常显示。
+
+顺带两个真实的小改进：
+
+1. `status` 的目录之前只有叶子小节（1.1.1、1.1.2……），漏了原书自己的章/节
+   标题（"1 Building Abstractions with Procedures"、"1.1 The Elements of
+   Programming" 等）。这些标题其实源文件里已经有干净的标签
+   （`<h2 class="chapter">`/`<h3 class="section">` 的 chapnum/chaptitle、
+   secnum/sectitle），纯机械提取，不需要人工/LLM 参与——新增
+   `TexinfoHtmlAdapter.extract_section_headings` 和 schema 类型
+   `SectionHeading`（`path`/`title`），`core/tableOfContents.ts` 改成按
+   `section_path` 的每一级前缀查表插入标题行，配合缩进画出正确的层级关系；
+   章节引言的合成路径（"1.0"）在表里查不到对应标题，自然不会插入，不需要
+   特殊处理。
+2. 剩余阅读时间估计除了"还要几天"，现在也顺手显示"总共还要读大约多少分钟"
+   （`core/completionEstimate.ts` 新增 `estimateMinutesRemaining`，和天数估计
+   共用同一个"剩余总秒数"计算）。
+
+版本号：这两个都算已上线的 `status` 命令的细节补全/体验改进，不是全新能力，
+按 `CLAUDE.md` 的规则算 PATCH，升到 0.2.1。

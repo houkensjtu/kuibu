@@ -12,7 +12,7 @@ import { isCheckinComplete } from "../core/checkinJudgment.js";
 import { computeCurrentStreak } from "../core/streak.js";
 import { buildYearCalendar } from "../core/yearCalendar.js";
 import { computeProgress, computeCurrentPosition } from "../core/progress.js";
-import { estimateDaysRemaining } from "../core/completionEstimate.js";
+import { estimateDaysRemaining, estimateMinutesRemaining } from "../core/completionEstimate.js";
 import { buildTableOfContents } from "../core/tableOfContents.js";
 import { renderTableOfContents } from "./renderTableOfContents.js";
 import { mergeEvents } from "../core/mergeEvents.js";
@@ -382,7 +382,7 @@ program
       console.log("Table of contents:");
       console.log(
         renderTableOfContents(
-          buildTableOfContents(pack.blocks),
+          buildTableOfContents(pack.blocks, pack.section_headings),
           currentPosition?.sectionPath ?? null,
         ),
       );
@@ -399,6 +399,7 @@ program
           state.readBlockIds,
           targetSecondsForEstimate,
         );
+        const minutesRemaining = estimateMinutesRemaining(pack.blocks, state.readBlockIds);
         const assumedNote =
           state.dailyTargetSeconds === undefined
             ? ` (assuming ${DEFAULT_TARGET_MINUTES} min/day - no target set yet)`
@@ -406,6 +407,7 @@ program
         console.log(
           `Estimated ${daysRemaining} more day${daysRemaining === 1 ? "" : "s"} to finish at your current pace${assumedNote}.`,
         );
+        console.log(`About ${minutesRemaining} minute${minutesRemaining === 1 ? "" : "s"} of reading left in total.`);
       }
 
       const dueCount = leitnerScheduler.due([...state.itemStates.values()], today).length;

@@ -498,6 +498,19 @@ pack/
 > `through_block_count` 是累计 block 数，不是天数——运行时找"不超过用户实际
 > 累计读过的 block 数"里最靠后的一条，不依赖任何每日阅读时长假设。
 
+**SectionHeading**（2026-08 新增）
+```json
+{
+  "path": ["1", "1.1"],
+  "title": "The Elements of Programming"
+}
+```
+
+> 章/节这一级（不是 block 的叶子小节）的标题，纯机械从原文标题标签提取
+> （`TexinfoHtmlAdapter.extract_section_headings`），不需要人工/LLM 参与。
+> `kuibu status` 的目录用它在叶子小节之间插入"1"/"1.1"/"1.2"/"1.3" 这几级
+> 标题行，配合缩进呈现出正确的层级关系，而不是一串平铺的叶子小节。
+
 ---
 
 ## 10. v0.1 范围（MoSCoW）

@@ -59,6 +59,12 @@ function samplePack() {
         recap_md: "上次读到：组合式的求值遵循先求值再应用的规则。",
       },
     ],
+    section_headings: [
+      {
+        path: ["1"],
+        title: "The Elements of Programming",
+      },
+    ],
   };
 }
 

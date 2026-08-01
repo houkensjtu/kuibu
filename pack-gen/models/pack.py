@@ -102,9 +102,23 @@ class RecapCheckpoint(BaseModel):
     )
 
 
+class SectionHeading(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    path: List[str] = Field(
+        ...,
+        description='章/节这一级的路径，如 ["1"]（章）或 ["1","1.1"]（节）——不是 block 的完整叶子路径',
+        min_length=1,
+    )
+    title: constr(min_length=1) = Field(
+        ..., description='原书自己的章/节标题，机械从原文标题标签里提取，不是生成器编的'
+    )
+
+
 class ContentPack(BaseModel):
     """
-    kuibu 内容包：manifest + blocks + items + questions + exercises + recap_checkpoints 的组合视图
+    kuibu 内容包：manifest + blocks + items + questions + exercises + recap_checkpoints + section_headings 的组合视图
     """
 
     model_config = ConfigDict(
@@ -116,3 +130,4 @@ class ContentPack(BaseModel):
     questions: List[Question]
     exercises: List[Exercise]
     recap_checkpoints: List[RecapCheckpoint]
+    section_headings: List[SectionHeading]

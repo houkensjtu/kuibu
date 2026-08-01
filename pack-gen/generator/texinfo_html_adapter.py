@@ -121,6 +121,41 @@ class TexinfoHtmlAdapter:
             result.extend(self._parse_file(path))
         return result
 
+    def extract_section_headings(self, source_paths: List[str]) -> List[dict]:
+        """
+        每个源文件顶层只有一个章标题（<h2 class="chapter">）或一个节标题
+        （<h3 class="section">），机械提取即可，不需要 LLM——跟 block 的正文
+        不一样，这里没有"切分粒度"的问题，一个文件正好对应一条 heading。
+        章节引言文件（Chapter-1.xhtml）只贡献章一级的 heading，不贡献节级的
+        （它没有编号小节）。
+        """
+        headings: List[dict] = []
+        for path in source_paths:
+            with open(path, encoding="utf-8") as f:
+                soup = BeautifulSoup(f.read(), "lxml")
+            section_el = soup.body.find("section")
+
+            section_h3 = section_el.find("h3", class_="section")
+            if section_h3 is not None:
+                secnum = _clean_text(_render_inline(section_h3.find("span", class_="secnum")))
+                sectitle = _clean_text(_render_inline(section_h3.find("span", class_="sectitle")))
+                chapter_num = secnum.split(".")[0]
+                headings.append({"path": [chapter_num, secnum], "title": sectitle})
+                continue
+
+            chapter_h2 = section_el.find("h2", class_="chapter")
+            if chapter_h2 is not None:
+                chapnum = _clean_text(_render_inline(chapter_h2.find("span", class_="chapnum")))
+                chaptitle = _clean_text(_render_inline(chapter_h2.find("span", class_="chaptitle")))
+                headings.append({"path": [chapnum], "title": chaptitle})
+                continue
+
+            raise ValueError(
+                f"{path}: 既没找到 <h3 class=\"section\"> 也没找到 <h2 class=\"chapter\">，"
+                "不认识这个文件的结构"
+            )
+        return headings
+
     def _parse_file(self, path: str) -> List[Subsection]:
         with open(path, encoding="utf-8") as f:
             soup = BeautifulSoup(f.read(), "lxml")
