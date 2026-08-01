@@ -33,7 +33,8 @@ program
   .description("开始/继续今天的阅读打卡")
   .option("--pack <dir>", "内容包目录", "schema/examples/sample-pack")
   .option("--log <path>", "事件日志文件路径", ".kuibu-events.jsonl")
-  .action(async (options: { pack: string; log: string }) => {
+  .option("--minutes <n>", "调整每日阅读时长目标（分钟），会记住到下次运行", (v) => Number.parseInt(v, 10))
+  .action(async (options: { pack: string; log: string; minutes?: number }) => {
     try {
       const pack = loadPack(options.pack);
       console.log(pack.manifest.title);
@@ -43,18 +44,30 @@ program
       const priorEvents = readEvents(options.log);
       const state = reduceEvents(priorEvents, questionItemMap);
 
+      let targetSeconds = state.dailyTargetSeconds ?? DEFAULT_TARGET_SECONDS;
+      if (options.minutes !== undefined) {
+        targetSeconds = options.minutes * 60;
+        appendEvent(options.log, {
+          id: randomUUID(),
+          ts: new Date().toISOString(),
+          type: "settings_change",
+          key: "daily_target_seconds",
+          value: targetSeconds,
+        });
+      }
+
       appendEvent(options.log, {
         id: randomUUID(),
         ts: new Date().toISOString(),
         type: "session_start",
         book_id: pack.manifest.book_id,
-        target_seconds: DEFAULT_TARGET_SECONDS,
+        target_seconds: targetSeconds,
       });
 
       const todaysBlocks = packSession({
         blocks: pack.blocks,
         readBlockIds: state.readBlockIds,
-        targetSeconds: DEFAULT_TARGET_SECONDS,
+        targetSeconds,
       });
 
       let totalReadSecondsToday = 0;
@@ -120,7 +133,7 @@ program
       const today = checkinDate(new Date());
       const passed = isCheckinComplete({
         totalReadSeconds: totalReadSecondsToday,
-        targetSeconds: DEFAULT_TARGET_SECONDS,
+        targetSeconds,
         queue,
         answeredQuestionIds,
       });
@@ -136,7 +149,7 @@ program
         checkinDates.add(today);
         console.log(`打卡成功！今天读了 ${totalReadSecondsToday} 秒。`);
       } else {
-        const remaining = Math.max(0, DEFAULT_TARGET_SECONDS - totalReadSecondsToday);
+        const remaining = Math.max(0, targetSeconds - totalReadSecondsToday);
         console.log(`还没打上卡：阅读时长还差 ${remaining} 秒。`);
       }
 
