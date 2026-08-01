@@ -32,7 +32,7 @@ program
 program
   .command("today")
   .description("start/continue today's reading checkin")
-  .option("--pack <dir>", "content pack directory", "schema/examples/sample-pack")
+  .option("--pack <dir>", "content pack directory", "packs/public/sicp")
   .option("--log <path>", "event log file path", ".kuibu-events.jsonl")
   .option("--minutes <n>", "adjust daily reading target (minutes); remembered for next run", (v) => Number.parseInt(v, 10))
   .action(async (options: { pack: string; log: string; minutes?: number }) => {
@@ -238,7 +238,7 @@ program
 program
   .command("status")
   .description("show current streak, today's checkin state, and reading progress without starting a session")
-  .option("--pack <dir>", "content pack directory", "schema/examples/sample-pack")
+  .option("--pack <dir>", "content pack directory", "packs/public/sicp")
   .option("--log <path>", "event log file path", ".kuibu-events.jsonl")
   .action((options: { pack: string; log: string }) => {
     try {
