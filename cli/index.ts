@@ -29,6 +29,7 @@ import { askReviewOrAhead } from "./reviewOrAheadPrompt.js";
 import { createLineReader } from "./lineReader.js";
 import { UserQuit, readLineOrQuit } from "./readLineOrQuit.js";
 import { printGoodbye } from "./goodbye.js";
+import packageJson from "../package.json" with { type: "json" };
 
 const DEFAULT_TARGET_MINUTES = 12;
 
@@ -37,7 +38,7 @@ const program = new Command();
 program
   .name("kuibu")
   .description("kuibu — a personal reading checkin tool")
-  .version("0.1.0");
+  .version(packageJson.version);
 
 program
   .command("today")
