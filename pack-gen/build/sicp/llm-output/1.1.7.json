@@ -1,0 +1,98 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 4,
+      "est_seconds": 180,
+      "recap_md": "Procedures must be effective, unlike declarative mathematical definitions; defining square root as 'the y such that y^2=x' begs the question of how to actually compute it - the declarative-vs-imperative-knowledge distinction."
+    },
+    {
+      "start_paragraph_index": 5,
+      "end_paragraph_index": 7,
+      "est_seconds": 160,
+      "recap_md": "Newton's method improves a guess by averaging it with x/guess; a worked table shows successive guesses converging toward the square root of 2."
+    },
+    {
+      "start_paragraph_index": 8,
+      "end_paragraph_index": 14,
+      "est_seconds": 180,
+      "recap_md": "Formalized as procedures: `sqrt-iter` repeats until `good-enough?`, `improve` averages the guess with x/guess, `average` is a small helper."
+    },
+    {
+      "start_paragraph_index": 15,
+      "end_paragraph_index": 19,
+      "est_seconds": 170,
+      "recap_md": "`good-enough?` checks the guess's square against a tolerance; `sqrt` kicks off `sqrt-iter` with an initial guess of 1.0, and works like any other procedure."
+    },
+    {
+      "start_paragraph_index": 20,
+      "end_paragraph_index": 20,
+      "est_seconds": 130,
+      "recap_md": "The language introduced so far - with no special looping construct - is already sufficient for any numerical program; `sqrt-iter` achieves iteration purely via an ordinary procedure call."
+    },
+    {
+      "start_paragraph_index": 21,
+      "end_paragraph_index": 27,
+      "est_seconds": 190,
+      "recap_md": "Exercise 1.6: Alyssa rewrites `if` as an ordinary procedure `new-if` using `cond`, then uses it in `sqrt-iter` - with surprising consequences."
+    },
+    {
+      "start_paragraph_index": 28,
+      "end_paragraph_index": 29,
+      "est_seconds": 160,
+      "recap_md": "Exercises 1.7 and 1.8: why `good-enough?` fails for very small/large numbers, and adapting Newton's method to cube roots."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Newton's method for square roots repeatedly improves a guess by averaging it with x/guess, converging toward the true square root; the process is formalized as `sqrt-iter`, which calls itself with an improved guess until `good-enough?` is satisfied.",
+      "block_indices": [1, 2, 3]
+    },
+    {
+      "statement": "This simple procedural language (define, if/cond, procedure calls) is sufficient to express iteration without any special looping construct - `sqrt-iter` achieves repetition purely through an ordinary (recursive) procedure call.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "If `if` were defined as an ordinary procedure (like `new-if`, built from `cond`) instead of a special form, applying it under applicative-order evaluation would require evaluating every argument - including the recursive call - before `new-if` could even be applied, so a recursive procedure like `sqrt-iter` written with `new-if` would never terminate, even once the base case is already true.",
+      "block_indices": [5]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "In Newton's method for computing square roots, how is a guess `y` improved into a better guess for the square root of `x`?",
+      "options": [
+        "By averaging `y` with `x/y`",
+        "By squaring `y` and comparing it directly to `x` with no further computation",
+        "By adding 1 to `y` each time until `y*y` exceeds `x`",
+        "By dividing `y` by 2 repeatedly until it's smaller than `x`"
+      ],
+      "answer_index": 0,
+      "explanation": "The text states the key manipulation: average the current guess y with the quotient x/y to get a guess closer to the actual square root - that's exactly what the `improve` procedure computes."
+    },
+    {
+      "item_index": 1,
+      "prompt": "The `sqrt` example is used to illustrate that the simple procedural language introduced so far (define, if, ordinary procedure calls) is already sufficient to express what?",
+      "options": [
+        "Iteration (repetition), even though the language has no special looping construct - `sqrt-iter` repeats itself purely via an ordinary procedure call",
+        "Only mathematical functions that have a closed-form algebraic solution",
+        "Only programs that terminate in a fixed, predetermined number of steps",
+        "Graphical output, since `sqrt-iter` can be adapted to draw shapes"
+      ],
+      "answer_index": 0,
+      "explanation": "The text explicitly makes this point: the language has no special iterative construct, yet sqrt-iter demonstrates that iteration can be accomplished using nothing more than the ordinary ability to call a procedure."
+    },
+    {
+      "item_index": 2,
+      "prompt": "In Exercise 1.6, Alyssa rewrites `sqrt-iter` to use `new-if` (an ordinary procedure built from `cond`) instead of the special form `if`. What actually happens when she tries to compute a square root this way?",
+      "options": [
+        "It never terminates: since `new-if` is an ordinary procedure, applicative-order evaluation must evaluate all of its arguments - including the recursive call to `sqrt-iter` - before `new-if` can even be applied, regardless of whether `good-enough?` is already true",
+        "It works exactly the same as before, since `new-if` and `if` behave identically in every situation",
+        "It immediately signals a syntax error, since `cond` cannot appear inside a procedure definition",
+        "It returns the wrong numeric answer, but still terminates in the same number of steps as before"
+      ],
+      "answer_index": 0,
+      "explanation": "Because new-if is an ordinary procedure, applying it evaluates all of its arguments first (applicative order) - including the recursive `(sqrt-iter (improve guess x) x)` argument - so the recursion never gets a chance to stop, even after good-enough? becomes true. A special form like if avoids this by only evaluating the branch it actually needs."
+    }
+  ]
+}

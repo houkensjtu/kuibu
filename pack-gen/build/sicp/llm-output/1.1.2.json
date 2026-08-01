@@ -1,0 +1,36 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 4,
+      "est_seconds": 140,
+      "recap_md": "Names identify variables; `define` associates a name with a value (e.g. `size` with 2), and afterward the name can be used in place of the value."
+    },
+    {
+      "start_paragraph_index": 5,
+      "end_paragraph_index": 8,
+      "est_seconds": 150,
+      "recap_md": "More `define` examples build up `circumference`; `define` is Lisp's simplest means of abstraction, and the interpreter's memory of name-value pairs is called the environment."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "`define` is Lisp's simplest means of abstraction: it associates a name with a value in the environment (the interpreter's memory of name-object pairs), letting you refer to a complex result by a simple name instead of repeating its computation.",
+      "block_indices": [0, 1]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "What does `(define circumference (* 2 pi radius))` actually do?",
+      "options": [
+        "It associates the name `circumference` with the value of `(* 2 pi radius)` in the environment, so `circumference` can be used later to refer to that value",
+        "It immediately prints the value of `(* 2 pi radius)` without storing it anywhere",
+        "It creates a procedure named `circumference` that recomputes `(* 2 pi radius)` every time it's called with no arguments",
+        "It redefines the built-in multiplication operator to always include `pi` and `radius`"
+      ],
+      "answer_index": 0,
+      "explanation": "`define` is a naming operation: it creates an association between a name and a value in the environment. `circumference` afterward just refers to that already-computed value, the same way `size` refers to 2 in the section's first example - it does not create a procedure or print anything by itself."
+    }
+  ]
+}

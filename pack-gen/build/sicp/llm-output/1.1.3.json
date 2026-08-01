@@ -1,0 +1,80 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 2,
+      "est_seconds": 130,
+      "recap_md": "The interpreter itself follows a procedure to evaluate a combination: evaluate the subexpressions, then apply the operator's procedure to the operand values."
+    },
+    {
+      "start_paragraph_index": 3,
+      "end_paragraph_index": 6,
+      "est_seconds": 190,
+      "recap_md": "The evaluation rule is recursive; a deeply nested combination can be pictured as a tree, with values percolating upward from the leaves - an example of tree accumulation."
+    },
+    {
+      "start_paragraph_index": 7,
+      "end_paragraph_index": 9,
+      "est_seconds": 170,
+      "recap_md": "Primitive expressions are the base case: numerals name numbers, built-in operators name machine instructions, and other names get their value from the environment."
+    },
+    {
+      "start_paragraph_index": 10,
+      "end_paragraph_index": 11,
+      "est_seconds": 140,
+      "recap_md": "`define` is a special form, not a combination - its whole purpose is to create a name-value association, so it doesn't fit the general evaluate-then-apply rule."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Evaluating a combination is a recursive process: first evaluate each subexpression (the operator and every operand), then apply the resulting procedure to the resulting argument values.",
+      "block_indices": [0]
+    },
+    {
+      "statement": "For primitive expressions, evaluation bottoms out directly: a numeral's value is the number it names, a built-in operator's value is its machine instructions, and any other name's value is whatever it's associated with in the environment.",
+      "block_indices": [2]
+    },
+    {
+      "statement": "`define` is a special form, not a combination - it doesn't fit the general evaluate-then-apply rule, since its purpose is precisely to create a new name-value association rather than apply a procedure to already-evaluated arguments.",
+      "block_indices": [3]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "According to the evaluation rule given for combinations, what must happen before a procedure can be applied?",
+      "options": [
+        "Every subexpression of the combination (the operator and all operands) must first be evaluated",
+        "Only the operands need to be evaluated; the operator is used exactly as written",
+        "The whole combination is first converted to a string and parsed a second time",
+        "Nothing - application happens first, and evaluation only happens if the result looks incomplete"
+      ],
+      "answer_index": 0,
+      "explanation": "The rule is explicitly two steps: evaluate the subexpressions of the combination, then apply the procedure (the value of the leftmost subexpression) to the values of the operands. Evaluation always comes first for every subexpression."
+    },
+    {
+      "item_index": 1,
+      "prompt": "When the recursive evaluation rule bottoms out at a primitive expression that is a plain name (not a numeral or a built-in operator), what is that name's value?",
+      "options": [
+        "Whatever object is currently associated with that name in the environment",
+        "The name's own text, treated as a string",
+        "Always 0, since an unbound name has no meaning otherwise",
+        "The value of the most recently evaluated combination, regardless of the name"
+      ],
+      "answer_index": 0,
+      "explanation": "The text stipulates that the value of a name (other than a built-in operator) is the object associated with that name in the environment - this is exactly why an expression like (+ x 1) is meaningless without an environment that gives x a value."
+    },
+    {
+      "item_index": 2,
+      "prompt": "Why doesn't `(define x 3)` fit the general evaluate-then-apply rule for combinations?",
+      "options": [
+        "Because define's whole purpose is to associate x with a value, not to apply a procedure to already-evaluated arguments - it's a special form with its own evaluation rule",
+        "Because define always signals an error if x already has a value",
+        "Because numbers like 3 can never appear as operands in a combination",
+        "Because define is actually just an alias for the built-in `+` procedure"
+      ],
+      "answer_index": 0,
+      "explanation": "The text is explicit: (define x 3) does not apply define to the value of x and to 3, since the purpose of define is precisely to associate x with a value - that's why define is a special form rather than an ordinary combination, and special forms each get their own evaluation rule."
+    }
+  ]
+}

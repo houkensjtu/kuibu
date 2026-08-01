@@ -1,0 +1,92 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 2,
+      "est_seconds": 140,
+      "recap_md": "To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument - the substitution rule."
+    },
+    {
+      "start_paragraph_index": 3,
+      "end_paragraph_index": 9,
+      "est_seconds": 170,
+      "recap_md": "Worked example: substituting 5 for `a` in `f`'s body reduces `(f 5)` down to `(sum-of-squares 6 10)`."
+    },
+    {
+      "start_paragraph_index": 10,
+      "end_paragraph_index": 16,
+      "est_seconds": 160,
+      "recap_md": "Continuing the reduction through `square`'s definition and arithmetic, `(sum-of-squares 6 10)` reduces step by step to 136."
+    },
+    {
+      "start_paragraph_index": 17,
+      "end_paragraph_index": 18,
+      "est_seconds": 180,
+      "recap_md": "This process is the substitution model - a way to think about procedure application, not a description of how a real interpreter works, and it will eventually be replaced by more refined models."
+    },
+    {
+      "start_paragraph_index": 19,
+      "end_paragraph_index": 23,
+      "est_seconds": 180,
+      "recap_md": "An alternative model - fully expand operand expressions first, then reduce - reaches the same answer for `(f 5)` but re-evaluates some subexpressions more than once."
+    },
+    {
+      "start_paragraph_index": 24,
+      "end_paragraph_index": 25,
+      "est_seconds": 160,
+      "recap_md": "The 'expand then reduce' method is normal-order evaluation; Lisp actually uses applicative-order evaluation (evaluate arguments, then apply) for efficiency and simplicity."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "To apply a compound procedure, evaluate its body with each formal parameter replaced by the corresponding argument - this is the substitution model for procedure application.",
+      "block_indices": [0, 1, 2]
+    },
+    {
+      "statement": "The substitution model is a way to think about what procedure application means, not a description of how a real interpreter works internally (which actually uses a local environment, not literal text substitution) - and it eventually breaks down once mutable data is introduced later in the book.",
+      "block_indices": [3]
+    },
+    {
+      "statement": "Normal-order evaluation ('fully expand, then reduce') and applicative-order evaluation ('evaluate arguments, then apply') give the same answer for substitution-model-compatible procedures, but normal-order can re-evaluate the same subexpression multiple times; Lisp uses applicative-order for efficiency and simplicity.",
+      "block_indices": [4, 5]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "To apply the compound procedure `f` (whose body is `(sum-of-squares (+ a 1) (* a 2))`) to the argument 5 under the substitution model, what's the first step?",
+      "options": [
+        "Replace the formal parameter `a` with the argument 5 throughout the body, getting `(sum-of-squares (+ 5 1) (* 5 2))`",
+        "Immediately look up a cached result for `f` applied to 5, if one exists",
+        "Replace the procedure name `f` itself with the number 5",
+        "Evaluate `sum-of-squares` and `square` first as standalone expressions, ignoring the argument"
+      ],
+      "answer_index": 0,
+      "explanation": "The substitution model applies a compound procedure by evaluating its body with each formal parameter replaced by the corresponding argument - here, replacing `a` with 5 throughout `f`'s body."
+    },
+    {
+      "item_index": 1,
+      "prompt": "According to the text, is the substitution model an accurate description of how a real Lisp interpreter evaluates procedure applications internally?",
+      "options": [
+        "No - it's a way to help us think about what procedure application means; real interpreters use a local environment for the formal parameters instead of manipulating program text",
+        "Yes - every real Lisp interpreter literally rewrites the procedure's source text, substituting in the argument values",
+        "Yes, but only for procedures with exactly one formal parameter",
+        "No - real interpreters ignore formal parameters entirely and only look at argument order"
+      ],
+      "answer_index": 0,
+      "explanation": "The text explicitly stresses that the purpose of substitution is to help us think about procedure application, not to describe how the interpreter really works - actual implementations use a local environment, as later chapters explain."
+    },
+    {
+      "item_index": 2,
+      "prompt": "Under normal-order evaluation (fully expand, then reduce) applied to `(f 5)`, what actually happens to subexpressions like `(+ 5 1)` compared to applicative-order evaluation?",
+      "options": [
+        "They can get evaluated more than once, since substitution happens before any reduction, duplicating any operand expression that's used more than once in the body",
+        "They are evaluated exactly once, just like in applicative-order evaluation, with no difference in efficiency",
+        "They are never evaluated at all under normal-order evaluation",
+        "They are evaluated before the procedure name itself is looked up"
+      ],
+      "answer_index": 0,
+      "explanation": "The text shows `(+ 5 1)` and `(* 5 2)` each get evaluated twice under normal-order evaluation, because `square`'s body `(* x x)` uses its parameter twice, duplicating whatever expression was substituted in - this repeated work is part of why Lisp uses applicative-order evaluation instead."
+    }
+  ]
+}

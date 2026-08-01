@@ -1,0 +1,80 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 6,
+      "est_seconds": 170,
+      "recap_md": "A procedure definition like `(define (square x) (* x x))` creates a compound procedure named `square`, where `x` is a formal parameter standing for whatever argument it's applied to."
+    },
+    {
+      "start_paragraph_index": 7,
+      "end_paragraph_index": 11,
+      "est_seconds": 160,
+      "recap_md": "The general form is `(define (⟨name⟩ ⟨formal parameters⟩) ⟨body⟩)`; the body yields the procedure's value once the formal parameters are replaced by actual arguments."
+    },
+    {
+      "start_paragraph_index": 12,
+      "end_paragraph_index": 15,
+      "est_seconds": 160,
+      "recap_md": "`square` is used to build `sum-of-squares` (x^2 + y^2), showing how a compound procedure becomes a building block for another."
+    },
+    {
+      "start_paragraph_index": 16,
+      "end_paragraph_index": 19,
+      "est_seconds": 150,
+      "recap_md": "`sum-of-squares` in turn becomes a building block for `f`; compound procedures are used exactly like primitive ones, indistinguishably."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "A procedure definition like `(define (square x) (* x x))` creates a compound procedure named `square`, where `x` is a formal parameter: a local name for whatever argument the procedure is applied to.",
+      "block_indices": [0]
+    },
+    {
+      "statement": "The general form of a procedure definition is `(define (⟨name⟩ ⟨formal parameters⟩) ⟨body⟩)`: the body is an expression that yields the procedure's value once the formal parameters are replaced by the actual arguments.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "Compound procedures can be used as building blocks for defining further compound procedures (e.g. `sum-of-squares` built from `square`, then `f` built from `sum-of-squares`), and are used exactly the same way as primitive procedures - there's no way to tell from how a procedure is used whether it's built in or user-defined.",
+      "block_indices": [2, 3]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "In `(define (square x) (* x x))`, what role does `x` play?",
+      "options": [
+        "It's a formal parameter: a local name standing for whatever argument `square` is applied to, similar to how a pronoun stands in for a noun",
+        "It's a global variable that must already have a numeric value before this definition is evaluated",
+        "It's the name of the procedure itself; `square` is just a comment",
+        "It's a fixed constant equal to 1, used as a placeholder"
+      ],
+      "answer_index": 0,
+      "explanation": "The text compares the formal parameter to a pronoun in natural language: `x` names 'the thing to be multiplied' generically, and gets replaced by the actual argument each time `square` is applied - it isn't a global variable or a constant."
+    },
+    {
+      "item_index": 1,
+      "prompt": "In the general form `(define (⟨name⟩ ⟨formal parameters⟩) ⟨body⟩)`, when does the body's expression actually get evaluated to produce a value?",
+      "options": [
+        "When the procedure is applied, with the formal parameters replaced by the actual arguments of that application",
+        "Immediately, at the moment the `define` itself is evaluated, using whatever values the formal parameters currently hold",
+        "Only the first time the procedure is ever called; later calls reuse that first cached result",
+        "Never automatically - the body must be evaluated manually afterward with a separate command"
+      ],
+      "answer_index": 0,
+      "explanation": "Defining a procedure just creates and names it; the body is an expression that yields the procedure application's value once the formal parameters are replaced by the actual arguments of a specific call - evaluating `define` itself doesn't run the body."
+    },
+    {
+      "item_index": 2,
+      "prompt": "Looking only at the definition of `sum-of-squares`, which calls `square`, can you tell whether `square` is a primitive built into the interpreter or a compound procedure the user defined?",
+      "options": [
+        "No - compound procedures are used exactly the same way as primitive procedures, so the definition alone doesn't reveal which `square` is",
+        "Yes - compound procedures always require an extra keyword like `compound` before their name",
+        "Yes - only primitive procedures can appear inside another procedure's body",
+        "Yes - primitive procedures never take exactly one argument the way `square` does"
+      ],
+      "answer_index": 0,
+      "explanation": "The text says exactly this: one could not tell by looking at the definition of sum-of-squares whether square was built into the interpreter or defined as a compound procedure - compound and primitive procedures are indistinguishable in use."
+    }
+  ]
+}

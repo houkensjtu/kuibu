@@ -1,0 +1,104 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 4,
+      "est_seconds": 170,
+      "recap_md": "Case analysis needs a new special form: `cond` tries clauses of the form `(⟨predicate⟩ ⟨expression⟩)` in order."
+    },
+    {
+      "start_paragraph_index": 5,
+      "end_paragraph_index": 8,
+      "est_seconds": 170,
+      "recap_md": "`cond` evaluates predicates left to right and returns the consequent of the first true one; `abs` uses the primitive predicates `>`, `<`, `=`."
+    },
+    {
+      "start_paragraph_index": 9,
+      "end_paragraph_index": 11,
+      "est_seconds": 140,
+      "recap_md": "`else` can replace the predicate in a `cond`'s final clause, matching whenever every earlier clause was bypassed."
+    },
+    {
+      "start_paragraph_index": 12,
+      "end_paragraph_index": 16,
+      "est_seconds": 160,
+      "recap_md": "`if` is a restricted two-case conditional: `(if ⟨predicate⟩ ⟨consequent⟩ ⟨alternative⟩)` evaluates exactly one of consequent/alternative based on the predicate."
+    },
+    {
+      "start_paragraph_index": 17,
+      "end_paragraph_index": 19,
+      "est_seconds": 180,
+      "recap_md": "`and`, `or`, and `not` let you build compound predicates; `and`/`or` are special forms (they short-circuit), while `not` is an ordinary procedure."
+    },
+    {
+      "start_paragraph_index": 20,
+      "end_paragraph_index": 25,
+      "est_seconds": 160,
+      "recap_md": "A range check uses `and`; `>=` can be defined either via `or` or via `not`, two equivalent formulations of the same predicate."
+    },
+    {
+      "start_paragraph_index": 26,
+      "end_paragraph_index": 28,
+      "est_seconds": 150,
+      "recap_md": "Exercises 1.1 and 1.2: evaluating a sequence of expressions by hand, and translating an arithmetic expression into prefix form."
+    },
+    {
+      "start_paragraph_index": 29,
+      "end_paragraph_index": 36,
+      "est_seconds": 190,
+      "recap_md": "Exercises 1.3-1.5: sum of squares of the two larger of three numbers, a procedure whose operator is itself a compound expression, and Ben Bitdiddle's applicative-order-vs-normal-order test."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "`cond` evaluates its clauses' predicates in order and returns the value of the consequent expression for the first predicate that's true; a clause whose predicate is the special symbol `else` always matches when reached.",
+      "block_indices": [0, 1, 2]
+    },
+    {
+      "statement": "`if` is a restricted conditional for exactly two cases: it evaluates the predicate, then evaluates and returns either the consequent (if true) or the alternative (if false) - never both.",
+      "block_indices": [3]
+    },
+    {
+      "statement": "`and` and `or` are special forms, not ordinary procedures, because they don't necessarily evaluate all their subexpressions (`and` stops at the first false one, `or` stops at the first true one); `not` is an ordinary procedure.",
+      "block_indices": [4]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "In `(cond ((> x 0) x) ((= x 0) 0) ((< x 0) (- x)))`, if x is 0, what value does the `cond` expression return?",
+      "options": [
+        "0, because the second clause's predicate `(= x 0)` is the first one that evaluates to true",
+        "x, because the first clause is always tried and its result is used regardless of the predicate",
+        "(- x), because the interpreter always evaluates the last clause first",
+        "The cond expression is undefined whenever more than one clause could conceivably be true"
+      ],
+      "answer_index": 0,
+      "explanation": "cond tries each clause's predicate in order and returns the consequent of the first one that's true; here `(> x 0)` is false when x=0, but `(= x 0)` is true, so 0 is returned."
+    },
+    {
+      "item_index": 1,
+      "prompt": "For `(if (< x 0) (- x) x)`, if the predicate `(< x 0)` evaluates to false, what does the interpreter do?",
+      "options": [
+        "It evaluates the alternative, `x`, and returns that value - it does not also evaluate the consequent `(- x)`",
+        "It evaluates both the consequent and the alternative and returns whichever is larger",
+        "It re-evaluates the predicate a second time to confirm before choosing a branch",
+        "It returns the predicate's own false value directly, without evaluating consequent or alternative"
+      ],
+      "answer_index": 0,
+      "explanation": "if evaluates exactly one of consequent/alternative depending on the predicate's truth value - here, since the predicate is false, only the alternative `x` is evaluated and returned; `(- x)` is never touched."
+    },
+    {
+      "item_index": 2,
+      "prompt": "Why are `and` and `or` special forms rather than ordinary procedures?",
+      "options": [
+        "Because they don't necessarily evaluate all of their subexpressions - `and` stops at the first false one, `or` stops at the first true one",
+        "Because they can only take exactly two arguments, unlike ordinary procedures",
+        "Because they must always be the outermost expression in a program",
+        "Because, unlike ordinary procedures, they aren't allowed to appear inside a `define`"
+      ],
+      "answer_index": 0,
+      "explanation": "The text notes `and`/`or` are special forms precisely because their subexpressions aren't necessarily all evaluated (short-circuiting), unlike ordinary procedures (like `not`) which always evaluate all their arguments."
+    }
+  ]
+}

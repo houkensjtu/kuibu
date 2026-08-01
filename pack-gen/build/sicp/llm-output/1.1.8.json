@@ -1,0 +1,120 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 2,
+      "est_seconds": 170,
+      "recap_md": "`sqrt-iter`'s recursive definition will be explained properly in 1.2; the square-root program decomposes into subproblems, each its own procedure - a cluster mirroring the problem's decomposition, each usable as a black box."
+    },
+    {
+      "start_paragraph_index": 3,
+      "end_paragraph_index": 5,
+      "est_seconds": 160,
+      "recap_md": "Two completely different implementations of `square` are indistinguishable to a caller like `good-enough?` - only the returned value matters, not the internal mechanism (procedural abstraction)."
+    },
+    {
+      "start_paragraph_index": 6,
+      "end_paragraph_index": 9,
+      "est_seconds": 160,
+      "recap_md": "A parameter's name shouldn't matter to callers either - `(define (square x) ...)` and `(define (square y) ...)` must be indistinguishable."
+    },
+    {
+      "start_paragraph_index": 10,
+      "end_paragraph_index": 11,
+      "est_seconds": 160,
+      "recap_md": "`good-enough?`'s `x` and `square`'s `x` must be different variables - if parameter names weren't local, running `square` could corrupt the `x` that `good-enough?` still needs."
+    },
+    {
+      "start_paragraph_index": 12,
+      "end_paragraph_index": 13,
+      "est_seconds": 180,
+      "recap_md": "A formal parameter is a bound variable, scoped to its procedure's body; names not bound anywhere are free. Renaming a bound variable to collide with a free one (capture) introduces a bug."
+    },
+    {
+      "start_paragraph_index": 14,
+      "end_paragraph_index": 16,
+      "est_seconds": 170,
+      "recap_md": "sqrt's helper procedures (sqrt-iter, good-enough?, improve) clutter the top-level namespace and could collide with someone else's same-named procedures - we'd like to hide them inside sqrt."
+    },
+    {
+      "start_paragraph_index": 17,
+      "end_paragraph_index": 18,
+      "est_seconds": 180,
+      "recap_md": "Block structure nests the helper definitions inside `sqrt`; since `x` is already bound by `sqrt`, the internal procedures can treat `x` as a free variable instead of an explicit parameter - lexical scoping."
+    },
+    {
+      "start_paragraph_index": 19,
+      "end_paragraph_index": 20,
+      "est_seconds": 140,
+      "recap_md": "The lexically-scoped version of `sqrt` no longer passes `x` explicitly to its internal helpers; block structure (from Algol 60) is a key tool for organizing large programs."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "A procedure is a 'black box' / procedural abstraction: what matters to a caller is only what result it computes, not how it's implemented internally - so two different implementations that compute the same values are indistinguishable to any caller.",
+      "block_indices": [1, 2]
+    },
+    {
+      "statement": "A formal parameter's name shouldn't matter to callers either; parameter names must therefore be local to the procedure's own body, or two procedures using the same parameter name (like two different uses of `x`) could interfere with each other.",
+      "block_indices": [2, 3]
+    },
+    {
+      "statement": "A formal parameter is a bound variable, scoped to the procedure's body; a name that isn't bound by any enclosing definition is free. Renaming a bound variable to collide with a free variable's name (variable capture) introduces a bug by changing that name's meaning.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "Block structure lets you nest auxiliary procedure definitions inside the procedure that uses them, hiding names that would otherwise clutter the caller's namespace; going further, lexical scoping lets an inner definition treat the enclosing procedure's parameter as a free variable, so it doesn't need to be passed explicitly to every internal helper.",
+      "block_indices": [5, 6, 7]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "Why are `(define (square x) (* x x))` and `(define (square x) (exp (double (log x))))` considered indistinguishable, even though they compute the square completely differently internally?",
+      "options": [
+        "Because at the level of procedural abstraction, only the value a procedure returns matters to its caller, not how that value is computed internally",
+        "Because Lisp automatically rewrites every procedure definition into the most efficient equivalent form before running it",
+        "Because `exp`, `double`, and `log` are secretly defined to behave exactly like `*` internally",
+        "Because both definitions use exactly the same number of parentheses"
+      ],
+      "answer_index": 0,
+      "explanation": "The text's point is procedural abstraction: as far as any caller (like good-enough?) is concerned, square is a black box - any implementation that returns the correct squared value is equally good, regardless of internal mechanism."
+    },
+    {
+      "item_index": 1,
+      "prompt": "Why must a procedure's formal parameter names be local to that procedure's own body?",
+      "options": [
+        "So that one procedure's use of a parameter name (like `x` in `square`) can never collide with or affect another procedure's own use of the same name (like `x` in `good-enough?`)",
+        "Because the interpreter only has a limited, fixed set of legal parameter names to choose from",
+        "So that every procedure in a program is forced to use a different parameter name from every other procedure",
+        "Because otherwise the interpreter would print the parameter's name instead of its value"
+      ],
+      "answer_index": 0,
+      "explanation": "The text traces through exactly this scenario: good-enough?'s x and square's x must be different x's, or running square would risk disturbing the x that good-enough? still needs - keeping parameter names local to their own procedure body is what prevents this collision."
+    },
+    {
+      "item_index": 2,
+      "prompt": "In the definition of `good-enough?`, which names are bound variables and which are free variables?",
+      "options": [
+        "`guess` and `x` are bound (they're the formal parameters); `<`, `-`, `abs`, and `square` are free",
+        "All of `guess`, `x`, `<`, `-`, `abs`, and `square` are bound, since they all appear inside the same procedure body",
+        "`guess` and `x` are free, since their values come from outside the procedure when it's called",
+        "Only `square` is bound, since it's the only one being called as a procedure"
+      ],
+      "answer_index": 0,
+      "explanation": "The text states this directly: guess and x are bound variables (they're good-enough?'s formal parameters, scoped to its body), while <, -, abs, and square are free - their meaning comes from outside this particular definition, e.g. from the global environment."
+    },
+    {
+      "item_index": 3,
+      "prompt": "What problem does giving `sqrt` internal (nested) definitions of `good-enough?`, `improve`, and `sqrt-iter` solve?",
+      "options": [
+        "It hides those auxiliary procedure names inside `sqrt`, so they don't clutter the namespace or collide with another part of the program that happens to define its own procedure with the same name",
+        "It makes `sqrt` run asymptotically faster than the version with separate top-level definitions",
+        "It allows `sqrt` to be called with a different number of arguments than before",
+        "It converts `sqrt-iter`'s recursion into an explicit loop construct"
+      ],
+      "answer_index": 0,
+      "explanation": "The text's motivation is namespace hygiene: only sqrt itself matters to sqrt's callers, while good-enough?/improve/sqrt-iter are implementation clutter that could collide with someone else's same-named procedures - block structure (nested definitions) hides them inside sqrt instead of leaving them at top level."
+    }
+  ]
+}
