@@ -9,7 +9,7 @@ import { buildQuestionQueue } from "../core/questionQueue.js";
 import { leitnerScheduler } from "../core/scheduler.js";
 import { checkinDate } from "../core/checkinDate.js";
 import { isCheckinComplete } from "../core/checkinJudgment.js";
-import { buildHeatmap } from "../core/heatmap.js";
+import { buildHeatmap, computeCurrentStreak } from "../core/heatmap.js";
 import { computeProgress } from "../core/progress.js";
 import { mergeEvents } from "../core/mergeEvents.js";
 import { runReadingFlow } from "./readingFlow.js";
@@ -225,6 +225,47 @@ program
       } finally {
         lineReader.close();
       }
+    } catch (err) {
+      if (err instanceof PackLoadError) {
+        console.error(err.message);
+      } else {
+        console.error(err);
+      }
+      process.exitCode = 1;
+    }
+  });
+
+program
+  .command("status")
+  .description("show current streak, today's checkin state, and reading progress without starting a session")
+  .option("--pack <dir>", "content pack directory", "schema/examples/sample-pack")
+  .option("--log <path>", "event log file path", ".kuibu-events.jsonl")
+  .action((options: { pack: string; log: string }) => {
+    try {
+      const pack = loadPack(options.pack);
+      const questionItemMap = new Map(pack.questions.map((q) => [q.id, q.item_id]));
+      const state = reduceEvents(readEvents(options.log), questionItemMap);
+
+      const today = checkinDate(new Date());
+      const streak = computeCurrentStreak(state.checkinDates, today);
+      const checkedInToday = state.checkinDates.has(today);
+
+      console.log(pack.manifest.title);
+      console.log(checkedInToday ? `Checked in today (${today}).` : `Not checked in today (${today}) yet.`);
+      console.log(`Current streak: ${streak} day${streak === 1 ? "" : "s"}.`);
+
+      const { lastCompletedSectionPath, percentRead } = computeProgress(
+        pack.blocks,
+        state.readBlockIds,
+      );
+      const sectionLabel = lastCompletedSectionPath?.at(-1) ?? "(no section finished yet)";
+      console.log(`${sectionLabel} done · ${percentRead}% of the book`);
+
+      const dueCount = leitnerScheduler.due([...state.itemStates.values()], today).length;
+      console.log(`${dueCount} item${dueCount === 1 ? "" : "s"} due for review today.`);
+
+      console.log();
+      console.log(renderHeatmap(buildHeatmap(state.checkinDates, today)));
     } catch (err) {
       if (err instanceof PackLoadError) {
         console.error(err.message);
