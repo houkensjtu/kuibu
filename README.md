@@ -6,6 +6,12 @@
 唯一目标：连续打卡 21 天不断签。详细设计见 `docs/DESIGN.md`，里程碑见
 `docs/MILESTONES.md`。
 
+## 版本
+
+当前版本见 `package.json`（或跑 `npm run dev -- --version`）。版本号规则见
+`CLAUDE.md`「版本号规则」——大版本号对应产品阶段（1.0 = CLI 基本可用，2.0 =
+网页版基本可用），升级时机由我自己判断和宣布，不是 Claude 自主决定的。
+
 ## 克隆后先做一件事
 
 ```
@@ -99,8 +105,11 @@ packs/public/ 公开内容包，进 git；packs-private/ 是私有内容包，�
 
 ## 内容从哪来
 
-`packs/public/sicp/` 是 SICP 第一章的完整内容包（137 个 block、76 个知识点、
-80 道题，覆盖 1.1/1.2/1.3 全部小节 + 章节引言）。生成流程见
-`pack-gen/generator/section_prompt.md`：目前这一步还没接真正的 LLM API，是
-由人工（Claude）按同一份规格手写每小节的输出，将来接入 API 时会原样复用
-这份 schema。
+`packs/public/sicp/` 是 SICP 第一章的完整内容包（137 个 block、70 个知识点、
+73 道复习题、46 道原书 Exercise，覆盖 1.1/1.2/1.3 全部小节 + 章节引言）。生成
+流程见 `pack-gen/generator/section_prompt.md`：目前这一步还没接真正的 LLM
+API，是由人工（Claude）按同一份规格手写每小节的输出，将来接入 API 时会原样
+复用这份 schema。
+
+复习题（每天必做，自动判分）和原书 Exercise（可选做，不判分，只给 hint 不给
+答案）是两种不同的东西，见 `docs/DESIGN.md` §3.3/§3.3.1。

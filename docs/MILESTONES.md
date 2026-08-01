@@ -8,11 +8,11 @@
 
 **目标**：schema 定死，两侧校验器能跑通。
 
-- [ ] `schema/pack.schema.json` —— manifest / block / item / question
-- [ ] `schema/events.schema.json` —— 事件日志各 event type
-- [ ] Python 侧 pydantic 模型（由 schema 生成或校验一致性）
-- [ ] TS 侧 zod 模型（同上）
-- [ ] 一份手写的**极小样例内容包**（3 个 block、2 个知识点、2 道题），双侧校验通过
+- [x] `schema/pack.schema.json` —— manifest / block / item / question
+- [x] `schema/events.schema.json` —— 事件日志各 event type
+- [x] Python 侧 pydantic 模型（由 schema 生成或校验一致性）
+- [x] TS 侧 ajv 校验器 + 生成的类型（当初设想用 zod，实际用了 ajv 直接吃 JSON Schema）
+- [x] 一份手写的**极小样例内容包**（3 个 block、2 个知识点、2 道题），双侧校验通过
 
 **验收**：手写样例包能同时通过 Python 和 TS 的校验。
 
@@ -25,12 +25,12 @@
 
 **目标**：纯函数层跑通，全部单元测试覆盖。
 
-- [ ] session 打包器：给定剩余 block 与当日时长目标 → 今日 block 列表
-- [ ] Leitner 调度器（策略接口 + 默认实现，5 档 box）
-- [ ] 事件日志 reducer：JSONL → 当前状态（阅读位置 / box 状态 / 打卡日集合 / 错题集）
-- [ ] 打卡日换算（偏移自然日，默认 offset=4）
-- [ ] 题目队列排序 + 选项 shuffle
-- [ ] 打卡判定
+- [x] session 打包器：给定剩余 block 与当日时长目标 → 今日 block 列表
+- [x] Leitner 调度器（策略接口 + 默认实现，5 档 box）
+- [x] 事件日志 reducer：JSONL → 当前状态（阅读位置 / box 状态 / 打卡日集合 / 错题集）
+- [x] 打卡日换算（偏移自然日，默认 offset=4）
+- [x] 题目队列排序 + 选项 shuffle
+- [x] 打卡判定（2026-08 修订为"读完+做完题"，不再要求时长达标，见 DESIGN.md §3.2）
 
 **验收**：不碰任何文件、时钟、终端，全部逻辑有测试。
 
@@ -40,14 +40,14 @@
 
 **目标**：能用假内容完整走一遍每日流程。
 
-- [ ] 加载内容包 + 校验 schema_version
-- [ ] 事件日志读写（逐条 append + 落盘）
-- [ ] pager 呈现正文 + 进出计时（含无 pager 时的降级）
-- [ ] 答题交互（数字键选择）
-- [ ] 打卡热力图
-- [ ] 进度呈现（小节 + 整章百分比）
-- [ ] 每日时长目标可调
-- [ ] 导入导出
+- [x] 加载内容包 + 校验 schema_version
+- [x] 事件日志读写（逐条 append + 落盘）
+- [x] pager 呈现正文 + 进出计时（含无 pager 时的降级）
+- [x] 答题交互（数字键选择）
+- [x] 打卡热力图（2026-08 升级成全年 GitHub 风格日历，见 `core/yearCalendar.ts`）
+- [x] 进度呈现（小节 + 整章百分比，另加 `status` 的详细当前位置/目录/预计完读天数）
+- [x] 每日时长目标可调
+- [x] 导入导出
 
 **验收**：用 3 个 block 的样例包，能完成"读 → 答题 → 打卡 → 看热力图"，中途 Ctrl-C 后重启能续上且记录不丢。
 
@@ -59,12 +59,13 @@
 
 **目标**：SICP 第一章变成真实内容包。
 
-- [ ] `SourceAdapter` 接口 + `TexinfoHtmlAdapter`（SICP）
-- [ ] 机械切分：第一章 → 各小节
-- [ ] 每小节单次 LLM 调用 → 块边界索引 + est_seconds + recap + 知识点 + 选择题
-- [ ] 脚本按边界索引切割原文（LLM 不复述原文）
-- [ ] 中间产物落盘，支持增量重跑与失败重试
-- [ ] 输出通过 schema 校验
+- [x] `SourceAdapter` 接口 + `TexinfoHtmlAdapter`（SICP）
+- [x] 机械切分：第一章 → 各小节
+- [x] 每小节单次 LLM 调用 → 块边界索引 + est_seconds + recap + 知识点 + 选择题
+  （目前是人工按同一份规格手写，还没接真正的 API，见 `pack-gen/generator/section_prompt.md`）
+- [x] 脚本按边界索引切割原文（LLM 不复述原文）
+- [x] 中间产物落盘，支持增量重跑与失败重试
+- [x] 输出通过 schema 校验
 
 **验收**：生成 SICP 1.1 的包，人工抽查 10 道题——干扰项是否为常见误解，代码片段是否与原文逐字一致。
 
@@ -72,12 +73,16 @@
 
 ## M4 — 上线自用
 
-- [ ] 生成 SICP 第一章完整包
-- [ ] `.gitignore` 与 pre-commit hook（防私有包误推）
-- [ ] README（自己三个月后还能看懂怎么用）
-- [ ] 开始连续 21 天打卡
+- [x] 生成 SICP 第一章完整包
+- [x] `.gitignore` 与 pre-commit hook（防私有包误推）
+- [x] README（自己三个月后还能看懂怎么用）
+- [ ] 开始连续 21 天打卡 —— **进行中**，还没到 21 天，不要提前打勾
 
 **验收**：成功指标本身。
+
+> **版本号提醒**：M0-M4 的代码/内容部分做完 ≠ 自动升到 `1.0.0`。大版本号什么时候
+> 从 `0.y.z` 升到 `1.0.0`（对应"CLI 基本可用"）由 Qian 自己判断和宣布，
+> 完整规则见 `CLAUDE.md`「版本号规则」。
 
 ---
 
