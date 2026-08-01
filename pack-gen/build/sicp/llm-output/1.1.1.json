@@ -4,91 +4,83 @@
       "start_paragraph_index": 0,
       "end_paragraph_index": 3,
       "est_seconds": 150,
-      "recap_md": "编程语言的三种基本机制：基本表达式、组合、抽象；本章聚焦纯数值数据上的过程构造规则。"
+      "recap_md": "Every powerful language has three mechanisms: primitive expressions, means of combination, and means of abstraction; this chapter focuses on building procedures over simple numerical data."
     },
     {
       "start_paragraph_index": 4,
       "end_paragraph_index": 10,
       "est_seconds": 170,
-      "recap_md": "Scheme 解释器以数字为例展示基本表达式与求值；组合式把运算符作用于运算对象的值上。"
+      "recap_md": "The Scheme interpreter evaluates primitive number expressions; a combination applies an operator to the values of its operands."
     },
     {
       "start_paragraph_index": 11,
       "end_paragraph_index": 13,
       "est_seconds": 150,
-      "recap_md": "组合式由运算符和运算对象构成；前缀记法把运算符放在最左边，天然支持任意数量的运算对象。"
+      "recap_md": "A combination consists of an operator and operands; prefix notation places the operator first, naturally supporting an arbitrary number of operands."
     },
     {
       "start_paragraph_index": 14,
       "end_paragraph_index": 18,
       "est_seconds": 160,
-      "recap_md": "前缀记法的第二个优势是可以无歧义地嵌套组合式，构造任意复杂的表达式。"
+      "recap_md": "Prefix notation's second advantage is that it extends straightforwardly to nested combinations of arbitrary complexity."
     },
     {
       "start_paragraph_index": 19,
       "end_paragraph_index": 22,
       "est_seconds": 150,
-      "recap_md": "用 pretty-printing 让复杂嵌套表达式的结构一目了然；解释器以 read-eval-print loop 方式自动求值并打印结果。"
+      "recap_md": "Pretty-printing makes the structure of deeply nested expressions clear; the interpreter runs a read-eval-print loop, evaluating and printing automatically."
     }
   ],
   "knowledge_items": [
     {
-      "statement": "组合式求值时，解释器先递归求值运算符和每个运算对象，再把求值结果传给运算符对应的过程。",
-      "block_indices": [
-        1,
-        2
-      ]
+      "statement": "When evaluating a combination, the interpreter first recursively evaluates the operator and each operand, then applies the resulting procedure to the argument values.",
+      "block_indices": [1, 2]
     },
     {
-      "statement": "前缀记法把运算符写在最左边，因此天然支持任意数量的运算对象，并且可以无歧义地嵌套。",
-      "block_indices": [
-        2,
-        3
-      ]
+      "statement": "Prefix notation places the operator to the left of the operands, so it naturally accommodates an arbitrary number of arguments and allows unambiguous nesting.",
+      "block_indices": [2, 3]
     },
     {
-      "statement": "Scheme 解释器以 read-eval-print loop 的方式工作：读取表达式、求值、自动打印结果，用户不需要显式要求打印。",
-      "block_indices": [
-        4
-      ]
+      "statement": "The Scheme interpreter runs a read-eval-print loop: it reads an expression, evaluates it, and automatically prints the result - the user never has to explicitly ask for the value to be printed.",
+      "block_indices": [4]
     }
   ],
   "questions": [
     {
       "item_index": 0,
-      "prompt": "对组合式 (+ (* 2 3) 4) 求值时，解释器实际的求值顺序是什么？",
+      "prompt": "When evaluating the combination (+ (* 2 3) 4), what is the actual order of evaluation the interpreter follows?",
       "options": [
-        "先递归求值运算符和每个运算对象（这里是 (* 2 3) 和 4），再把求值结果传给运算符对应的过程",
-        "从左到右逐个字符解析后直接输出，不做递归求值",
-        "先对整个表达式做字符串替换展开，再一次性求值",
-        "只求值最外层运算符，运算对象原样传入，由运算符内部决定何时对运算对象求值"
+        "It recursively evaluates the operator and each operand (here, (* 2 3) and 4), then applies the resulting procedure to those values",
+        "It scans the expression character by character from left to right and prints it directly, without recursive evaluation",
+        "It performs a string-substitution expansion of the whole expression first, then evaluates it all at once",
+        "It only evaluates the outermost operator; operands are passed in unevaluated, and the operator decides internally when to evaluate them"
       ],
       "answer_index": 0,
-      "explanation": "SICP 强调组合式的求值遵循先求值再应用的规则：递归求值每个子表达式（运算符和各运算对象），再将得到的过程作用到参数值上。"
+      "explanation": "SICP emphasizes that evaluating a combination follows the rule of evaluate-then-apply: recursively evaluate each subexpression (the operator and each operand), then apply the resulting procedure to the argument values."
     },
     {
       "item_index": 1,
-      "prompt": "前缀记法（如 (+ 1 2 3)）相比中缀记法（如 1 + 2 + 3）的主要优势是什么？",
+      "prompt": "What is the main advantage of prefix notation (like (+ 1 2 3)) over infix notation (like 1 + 2 + 3)?",
       "options": [
-        "运算符总在最左边，因此能自然支持任意数量的运算对象，并且组合可以无歧义地嵌套",
-        "前缀记法比中缀记法计算得更快",
-        "前缀记法可以省略括号，写起来更简短",
-        "前缀记法只是 Lisp 特有的语法糖，不影响表达能力，纯粹是历史习惯"
+        "The operator is always leftmost, so it naturally supports an arbitrary number of operands and combinations can nest without ambiguity",
+        "Prefix notation evaluates faster than infix notation",
+        "Prefix notation lets you omit parentheses, making expressions shorter",
+        "Prefix notation is just a Lisp-specific syntactic convention with no effect on expressive power, purely historical habit"
       ],
       "answer_index": 0,
-      "explanation": "书中明确指出前缀记法的两个优势：可以容纳任意数量的参数，以及可以无歧义地嵌套；这与运算速度、括号数量无关。"
+      "explanation": "The text explicitly names two advantages of prefix notation: it accommodates an arbitrary number of arguments, and it nests without ambiguity - neither is about evaluation speed or parenthesis count."
     },
     {
       "item_index": 2,
-      "prompt": "在 Scheme 解释器的 read-eval-print loop 中，用户需要显式地告诉解释器打印表达式的值吗？",
+      "prompt": "In the Scheme interpreter's read-eval-print loop, does the user need to explicitly tell the interpreter to print the value of an expression?",
       "options": [
-        "不需要，read-eval-print loop 本身就会在每次求值后自动打印结果",
-        "需要，必须显式调用类似 print 的过程才会显示结果",
-        "只有在交互式终端里才会自动打印，写成脚本运行时不会",
-        "只有返回值是数字时才会自动打印，其他类型需要手动打印"
+        "No - the read-eval-print loop itself automatically prints the result after every evaluation",
+        "Yes, an explicit call to something like a print procedure is required to see the result",
+        "Only in an interactive terminal; running as a script wouldn't print automatically",
+        "Only when the return value is a number; other types need to be printed manually"
       ],
       "answer_index": 0,
-      "explanation": "书中特别指出：不需要显式指示解释器打印表达式的值，这正是 read-eval-print loop 本身的行为——读取、求值、打印，循环往复。"
+      "explanation": "The text specifically notes that it is not necessary to explicitly instruct the interpreter to print the value of an expression - that's exactly what the read-eval-print loop does, over and over."
     }
   ]
 }

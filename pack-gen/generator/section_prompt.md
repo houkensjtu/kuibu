@@ -30,6 +30,14 @@
    - `options` 存"未打乱"的原始顺序；运行时才会 shuffle，所以这里顺序无
      所谓，但 `answer_index` 必须和 `options` 的顺序对应
 
+## 语言
+
+**`recap_md`、`statement`、`prompt`、`options`、`explanation` 全部必须跟随源书本身的语言**
+——英文书（如 SICP）出英文内容，中文书出中文内容。这是内容语言，跟阅读器
+CLI 界面语言（固定英文，见 `cli/` 下的用户可见字符串）是两件不相关的事：
+界面语言不随书变，题目语言随书变。判断依据是输入 paragraphs 的实际语言，
+不是生成器运行环境的语言。
+
 ## 输出
 
 严格是 `SectionLLMOutput`（见 `section_llm_output.py`）的 JSON，不要额外
