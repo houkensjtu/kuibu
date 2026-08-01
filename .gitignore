@@ -15,3 +15,8 @@ pack-gen/build/sicp/sections/
 pack-gen/build/sicp/pack-parts/
 pack-gen/build/sicp/merged-pack-parts.json
 pack-gen/.env
+
+# 私有内容包（版权不允许公开分发的书）。见 CLAUDE.md/DESIGN.md §4.5：
+# 这条必须先于任何私有包文件存在——.gitignore 对已 tracked 的文件无效。
+packs-private/
+packs/private/

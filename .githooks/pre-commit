@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# 拦截私有内容包误推（CLAUDE.md/DESIGN.md §4.5）：
+# .gitignore 对已经 tracked 过的文件无效，所以光有 .gitignore 不够，
+# 还需要在真正 commit 前再检查一次 staged 文件里有没有命中私有包路径。
+set -euo pipefail
+
+blocked=$(git diff --cached --name-only | grep -E '^(packs-private/|packs/private/)' || true)
+
+if [ -n "$blocked" ]; then
+  echo "拒绝提交：以下文件命中私有内容包路径（packs-private/ 或 packs/private/），不应该进 git：" >&2
+  echo "$blocked" >&2
+  echo "如果这些文件确实该公开，先确认路径是不是放错了地方；确定要强制提交请用 git commit --no-verify（不建议）。" >&2
+  exit 1
+fi
