@@ -2,7 +2,7 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it, expect, afterEach } from "vitest";
-import { appendEvent, readEvents } from "./eventLog.js";
+import { appendEvent, readEvents, writeEvents } from "./eventLog.js";
 import type { Event } from "../schema/types/events.js";
 
 let dir: string;
@@ -73,5 +73,34 @@ describe("eventLog", () => {
     }
 
     expect(readEvents(logPath)).toHaveLength(5);
+  });
+
+  it("writeEvents overwrites the file with exactly the given events, in order", () => {
+    dir = mkdtempSync(join(tmpdir(), "kuibu-log-"));
+    const logPath = join(dir, "events.jsonl");
+
+    appendEvent(logPath, {
+      id: "stale",
+      ts: "2026-08-01T09:00:00Z",
+      type: "checkin",
+      date: "2026-08-01",
+    });
+
+    const fresh: Event[] = [
+      { id: "e1", ts: "2026-08-01T09:00:00Z", type: "checkin", date: "2026-08-01" },
+      { id: "e2", ts: "2026-08-02T09:00:00Z", type: "checkin", date: "2026-08-02" },
+    ];
+    writeEvents(logPath, fresh);
+
+    expect(readEvents(logPath)).toEqual(fresh);
+  });
+
+  it("writeEvents with an empty array leaves an empty (not missing) file", () => {
+    dir = mkdtempSync(join(tmpdir(), "kuibu-log-"));
+    const logPath = join(dir, "events.jsonl");
+
+    writeEvents(logPath, []);
+
+    expect(readEvents(logPath)).toEqual([]);
   });
 });

@@ -1,4 +1,4 @@
-import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import type { Event } from "../schema/types/events.js";
 
@@ -23,4 +23,15 @@ export function readEvents(logPath: string): Event[] {
     .map((line) => line.trim())
     .filter((line) => line.length > 0)
     .map((line) => JSON.parse(line) as Event);
+}
+
+/**
+ * 整份覆盖写入事件日志——唯一会用到它的地方是 import（合并两份日志后落盘），
+ * 这是刻意打破 append-only 的例外，日常流程（session_start/block_read/...）
+ * 一律走 appendEvent。
+ */
+export function writeEvents(logPath: string, events: readonly Event[]): void {
+  mkdirSync(dirname(logPath), { recursive: true });
+  const content = events.map((event) => JSON.stringify(event)).join("\n");
+  writeFileSync(logPath, content.length > 0 ? content + "\n" : "", "utf-8");
 }

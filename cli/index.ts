@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { createInterface } from "node:readline/promises";
 import { Command } from "commander";
 import { loadPack, PackLoadError } from "./loadPack.js";
-import { appendEvent, readEvents } from "./eventLog.js";
+import { appendEvent, readEvents, writeEvents } from "./eventLog.js";
 import { reduceEvents } from "../core/reducer.js";
 import { packSession } from "../core/sessionPacker.js";
 import { buildQuestionQueue } from "../core/questionQueue.js";
@@ -12,6 +12,7 @@ import { checkinDate } from "../core/checkinDate.js";
 import { isCheckinComplete } from "../core/checkinJudgment.js";
 import { buildHeatmap } from "../core/heatmap.js";
 import { computeProgress } from "../core/progress.js";
+import { mergeEvents } from "../core/mergeEvents.js";
 import { runReadingFlow } from "./readingFlow.js";
 import { showBlockInPagerOrFallback } from "./pager.js";
 import { runAnswerFlow } from "./answerFlow.js";
@@ -174,6 +175,28 @@ program
       }
       process.exitCode = 1;
     }
+  });
+
+program
+  .command("export")
+  .description("把事件日志导出到 stdout（配合 shell 重定向另存文件）")
+  .option("--log <path>", "事件日志文件路径", ".kuibu-events.jsonl")
+  .action((options: { log: string }) => {
+    for (const event of readEvents(options.log)) {
+      console.log(JSON.stringify(event));
+    }
+  });
+
+program
+  .command("import <file>")
+  .description("把一份导出过的事件日志合并进当前日志（按 id 去重，按 ts 排序）")
+  .option("--log <path>", "事件日志文件路径", ".kuibu-events.jsonl")
+  .action((file: string, options: { log: string }) => {
+    const incoming = readEvents(file);
+    const current = readEvents(options.log);
+    const merged = mergeEvents(current, incoming);
+    writeEvents(options.log, merged);
+    console.log(`合并完成：当前 ${current.length} 条 + 导入 ${incoming.length} 条 -> ${merged.length} 条`);
   });
 
 await program.parseAsync();
