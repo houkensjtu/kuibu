@@ -1,4 +1,5 @@
 import type { LineReader } from "./lineReader.js";
+import { readLineOrQuit } from "./readLineOrQuit.js";
 import type { Question } from "../schema/types/pack.js";
 import type { ShuffledOptions } from "../core/questionQueue.js";
 
@@ -19,8 +20,8 @@ export async function askInTerminal(
   shuffled.options.forEach((option, i) => console.log(`  ${i + 1}. ${option}`));
 
   for (;;) {
-    process.stdout.write("Your choice (enter a number): ");
-    const raw = (await lineReader.readLine()).trim();
+    process.stdout.write("Your choice (enter a number, or 'q' to quit): ");
+    const raw = (await readLineOrQuit(lineReader)).trim();
     const choice = Number.parseInt(raw, 10);
     if (Number.isInteger(choice) && choice >= 1 && choice <= shuffled.options.length) {
       return choice - 1;

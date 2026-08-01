@@ -1,5 +1,6 @@
 import { spawnSync } from "node:child_process";
 import type { LineReader } from "./lineReader.js";
+import { readLineOrQuit } from "./readLineOrQuit.js";
 import type { Block } from "../schema/types/pack.js";
 
 function renderBlock(block: Block): string {
@@ -36,6 +37,6 @@ export async function showBlockInPagerOrFallback(
   if (tryPager(text, pagerCmd)) return;
 
   console.log(text);
-  process.stdout.write("(no pager found, printed directly) Press Enter when done reading...");
-  await lineReader.readLine();
+  process.stdout.write("(no pager found, printed directly) Press Enter when done reading (or 'q' to quit)...");
+  await readLineOrQuit(lineReader);
 }

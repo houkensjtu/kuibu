@@ -20,6 +20,8 @@ import { renderHeatmap } from "./renderHeatmap.js";
 import { askDailyTargetMinutes, classifyTimeSpent, askAdjustTarget } from "./targetPrompt.js";
 import { askReviewOrAhead } from "./reviewOrAheadPrompt.js";
 import { createLineReader } from "./lineReader.js";
+import { UserQuit } from "./readLineOrQuit.js";
+import { printGoodbye } from "./goodbye.js";
 
 const DEFAULT_TARGET_MINUTES = 12;
 
@@ -37,6 +39,14 @@ program
   .option("--log <path>", "event log file path", ".kuibu-events.jsonl")
   .option("--minutes <n>", "adjust daily reading target (minutes); remembered for next run", (v) => Number.parseInt(v, 10))
   .action(async (options: { pack: string; log: string; minutes?: number }) => {
+    // Ctrl-C is one of only two accepted ways to quit (the other is typing "q" at
+    // any prompt, see readLineOrQuit.ts) - both print a goodbye instead of dying
+    // with a raw stack trace/no message.
+    process.on("SIGINT", () => {
+      printGoodbye(options.log);
+      process.exit(0);
+    });
+
     try {
       const pack = loadPack(options.pack);
       console.log(pack.manifest.title);
@@ -46,10 +56,11 @@ program
       const priorEvents = readEvents(options.log);
       const state = reduceEvents(priorEvents, questionItemMap);
       const today = checkinDate(new Date());
+      const checkedInToday = state.checkinDates.has(today);
 
       const lineReader = createLineReader();
       try {
-        if (state.checkinDates.has(today)) {
+        if (checkedInToday) {
           const choice = await askReviewOrAhead(lineReader);
           if (choice === "review") {
             const readTodayIds = blockIdsReadOnDate(priorEvents, today);
@@ -104,9 +115,22 @@ program
           target_seconds: targetSeconds,
         });
 
+        // If today isn't checked in yet, don't let any of today's own already-recorded
+        // block_read events (from a session that was quit/interrupted before checkin)
+        // shrink what gets packed - today's reading restarts from the same original
+        // list rather than resuming mid-way. Once checked in, read-ahead should of
+        // course keep advancing normally, so the exclusion only applies pre-checkin.
+        const readBlockIdsForPacking = checkedInToday
+          ? state.readBlockIds
+          : new Set(
+              [...state.readBlockIds].filter(
+                (id) => !blockIdsReadOnDate(priorEvents, today).has(id),
+              ),
+            );
+
         const todaysBlocks = packSession({
           blocks: pack.blocks,
-          readBlockIds: state.readBlockIds,
+          readBlockIds: readBlockIdsForPacking,
           targetSeconds,
         });
 
@@ -245,12 +269,15 @@ program
         lineReader.close();
       }
     } catch (err) {
-      if (err instanceof PackLoadError) {
+      if (err instanceof UserQuit) {
+        printGoodbye(options.log);
+      } else if (err instanceof PackLoadError) {
         console.error(err.message);
+        process.exitCode = 1;
       } else {
         console.error(err);
+        process.exitCode = 1;
       }
-      process.exitCode = 1;
     }
   });
 

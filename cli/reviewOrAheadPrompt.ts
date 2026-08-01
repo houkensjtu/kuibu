@@ -1,4 +1,5 @@
 import type { LineReader } from "./lineReader.js";
+import { readLineOrQuit } from "./readLineOrQuit.js";
 
 export type ReopenChoice = "review" | "ahead";
 
@@ -10,8 +11,8 @@ export type ReopenChoice = "review" | "ahead";
  */
 export async function askReviewOrAhead(lineReader: LineReader): Promise<ReopenChoice> {
   process.stdout.write(
-    "You've already checked in today. [1] Review today's content again  [2] Read ahead (tomorrow's content)\nChoice (default 1): ",
+    "You've already checked in today. [1] Review today's content again  [2] Read ahead (tomorrow's content)\nChoice (default 1, or 'q' to quit): ",
   );
-  const answer = (await lineReader.readLine()).trim();
+  const answer = (await readLineOrQuit(lineReader)).trim();
   return answer === "2" ? "ahead" : "review";
 }

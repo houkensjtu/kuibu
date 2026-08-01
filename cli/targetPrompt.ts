@@ -1,4 +1,5 @@
 import type { LineReader } from "./lineReader.js";
+import { readLineOrQuit } from "./readLineOrQuit.js";
 
 /** Parses raw user input into a positive integer number of minutes, falling back to a default. */
 export function parseMinutesInput(raw: string, defaultMinutes: number): number {
@@ -15,9 +16,9 @@ export async function askDailyTargetMinutes(
   defaultMinutes: number,
 ): Promise<number> {
   process.stdout.write(
-    `How many minutes do you want to read per day? (default ${defaultMinutes}, press Enter to accept): `,
+    `How many minutes do you want to read per day? (default ${defaultMinutes}, press Enter to accept, or 'q' to quit): `,
   );
-  const raw = await lineReader.readLine();
+  const raw = await readLineOrQuit(lineReader);
   return parseMinutesInput(raw, defaultMinutes);
 }
 
@@ -49,11 +50,11 @@ export async function askAdjustTarget(
   direction: "increase" | "decrease",
   currentMinutes: number,
 ): Promise<number | null> {
-  process.stdout.write(`Would you like to ${direction} tomorrow's reading target? (y/N): `);
-  const answer = (await lineReader.readLine()).trim().toLowerCase();
+  process.stdout.write(`Would you like to ${direction} tomorrow's reading target? (y/N, or 'q' to quit): `);
+  const answer = (await readLineOrQuit(lineReader)).trim().toLowerCase();
   if (answer !== "y" && answer !== "yes") return null;
 
   process.stdout.write(`New daily target in minutes (currently ${currentMinutes}): `);
-  const raw = await lineReader.readLine();
+  const raw = await readLineOrQuit(lineReader);
   return parseMinutesInput(raw, currentMinutes);
 }
