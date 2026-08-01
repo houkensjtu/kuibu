@@ -11,6 +11,7 @@ import { leitnerScheduler } from "../core/scheduler.js";
 import { checkinDate } from "../core/checkinDate.js";
 import { isCheckinComplete } from "../core/checkinJudgment.js";
 import { buildHeatmap } from "../core/heatmap.js";
+import { computeProgress } from "../core/progress.js";
 import { runReadingFlow } from "./readingFlow.js";
 import { showBlockInPagerOrFallback } from "./pager.js";
 import { runAnswerFlow } from "./answerFlow.js";
@@ -138,6 +139,17 @@ program
         const remaining = Math.max(0, DEFAULT_TARGET_SECONDS - totalReadSecondsToday);
         console.log(`还没打上卡：阅读时长还差 ${remaining} 秒。`);
       }
+
+      const updatedReadBlockIds = new Set([
+        ...state.readBlockIds,
+        ...todaysBlocks.map((b) => b.id),
+      ]);
+      const { lastCompletedSectionPath, percentRead } = computeProgress(
+        pack.blocks,
+        updatedReadBlockIds,
+      );
+      const sectionLabel = lastCompletedSectionPath?.at(-1) ?? "（还没读完任何小节）";
+      console.log(`${sectionLabel} 已读完 · 全书 ${percentRead}%`);
 
       console.log();
       console.log(renderHeatmap(buildHeatmap(checkinDates, today)));
