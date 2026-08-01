@@ -1,6 +1,12 @@
 import { describe, it, expect, vi } from "vitest";
-import { renderSectionHeader, printBlocks } from "./renderBlocks.js";
-import type { Block } from "../schema/types/pack.js";
+import { computeHeaderLines, printBlocks } from "./renderBlocks.js";
+import type { Block, SectionHeading } from "../schema/types/pack.js";
+
+const HEADINGS: SectionHeading[] = [
+  { path: ["1"], title: "Building Abstractions with Procedures" },
+  { path: ["1", "1.1"], title: "The Elements of Programming" },
+  { path: ["1", "1.2"], title: "Procedures and the Processes They Generate" },
+];
 
 function block(id: string, section_path: [string, ...string[]], content_md: string): Block {
   return {
@@ -14,41 +20,91 @@ function block(id: string, section_path: [string, ...string[]], content_md: stri
   };
 }
 
-describe("renderSectionHeader", () => {
-  it("puts 'Chapter N' first, then the rest of the path, then the title", () => {
-    expect(renderSectionHeader(["1", "1.1", "1.1.3"], "Evaluating Combinations")).toBe(
-      "Chapter 1 › 1.1 › 1.1.3  Evaluating Combinations",
-    );
+describe("computeHeaderLines", () => {
+  it("prints the full chapter/section/subsection chain when previousPath is empty", () => {
+    const lines = computeHeaderLines([], block("b1", ["1", "1.1", "1.1.1"], "x"), HEADINGS);
+    expect(lines).toEqual([
+      "Chapter 1  Building Abstractions with Procedures",
+      "  1.1  The Elements of Programming",
+      "    1.1.1  Title of 1.1.1",
+    ]);
   });
 
-  it("handles a bare chapter-only path", () => {
-    expect(renderSectionHeader(["1"], "Intro")).toBe("Chapter 1  Intro");
+  it("prints nothing when the section path is unchanged from the previous block", () => {
+    const lines = computeHeaderLines(["1", "1.1", "1.1.1"], block("b2", ["1", "1.1", "1.1.1"], "x"), HEADINGS);
+    expect(lines).toEqual([]);
+  });
+
+  it("only prints the subsection line when just the leaf changes within the same section", () => {
+    const lines = computeHeaderLines(["1", "1.1", "1.1.1"], block("b2", ["1", "1.1", "1.1.2"], "x"), HEADINGS);
+    expect(lines).toEqual(["    1.1.2  Title of 1.1.2"]);
+  });
+
+  it("prints section + subsection but not chapter when only the section changes", () => {
+    const lines = computeHeaderLines(["1", "1.1", "1.1.3"], block("b2", ["1", "1.2", "1.2.1"], "x"), HEADINGS);
+    expect(lines).toEqual([
+      "  1.2  Procedures and the Processes They Generate",
+      "    1.2.1  Title of 1.2.1",
+    ]);
+  });
+
+  it("skips a heading line when the prefix has no title (synthetic path like chapter intro)", () => {
+    const lines = computeHeaderLines([], block("b1", ["1", "1.0", "1.0.1"], "x"), HEADINGS);
+    expect(lines).toEqual([
+      "Chapter 1  Building Abstractions with Procedures",
+      "    1.0.1  Title of 1.0.1",
+    ]);
   });
 });
 
 describe("printBlocks", () => {
-  it("prints every block's header and content, in order", () => {
+  it("prints headers only when the section changes, and content for every block", () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
     const blocks = [
       block("b0001", ["1", "1.1", "1.1.1"], "first content"),
-      block("b0002", ["1", "1.1", "1.1.2"], "second content"),
+      block("b0002", ["1", "1.1", "1.1.1"], "second content"),
+      block("b0003", ["1", "1.1", "1.1.2"], "third content"),
     ];
 
-    printBlocks(blocks);
+    printBlocks(blocks, HEADINGS);
 
     const output = logSpy.mock.calls.map((args) => args.join(" ")).join("\n");
-    expect(output).toContain("Chapter 1 › 1.1 › 1.1.1  Title of 1.1.1");
+    expect(output).toContain("Chapter 1  Building Abstractions with Procedures");
+    expect(output).toContain("1.1.1  Title of 1.1.1");
     expect(output).toContain("first content");
-    expect(output).toContain("Chapter 1 › 1.1 › 1.1.2  Title of 1.1.2");
     expect(output).toContain("second content");
-    expect(output.indexOf("first content")).toBeLessThan(output.indexOf("Title of 1.1.2"));
+    expect(output).toContain("1.1.2  Title of 1.1.2");
+    expect(output).toContain("third content");
+    // second block shares b0001's section, so its header must not repeat
+    expect(output.match(/Title of 1\.1\.1/g)).toHaveLength(1);
 
+    logSpy.mockRestore();
+  });
+
+  it("inserts a '...' line under the first block's header when resuming mid-section", () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    printBlocks([block("b0001", ["1", "1.1", "1.1.1"], "content")], HEADINGS, {
+      resumingMidSection: true,
+    });
+
+    const output = logSpy.mock.calls.map((args) => args.join(" ")).join("\n");
+    expect(output).toContain("      ...");
+    expect(output.indexOf("...")).toBeLessThan(output.indexOf("content"));
+
+    logSpy.mockRestore();
+  });
+
+  it("does not insert '...' when not resuming mid-section", () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    printBlocks([block("b0001", ["1", "1.1", "1.1.1"], "content")], HEADINGS);
+    const output = logSpy.mock.calls.map((args) => args.join(" ")).join("\n");
+    expect(output).not.toContain("...");
     logSpy.mockRestore();
   });
 
   it("does nothing when given an empty block list", () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-    printBlocks([]);
+    printBlocks([], HEADINGS);
     expect(logSpy).not.toHaveBeenCalled();
     logSpy.mockRestore();
   });

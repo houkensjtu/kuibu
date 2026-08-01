@@ -79,7 +79,7 @@ program
               console.log("No reading recorded for today yet - nothing to review.");
             } else {
               printSectionDivider("Reading (review)");
-              printBlocks(reviewBlocks);
+              printBlocks(reviewBlocks, pack.section_headings);
               console.log("Review complete.");
             }
             return;
@@ -157,6 +157,14 @@ program
           );
           if (checkpoint !== null) {
             printSectionDivider("Recap");
+            const currentPosition = computeCurrentPosition(pack.blocks, state.readBlockIds);
+            console.log(
+              renderTableOfContents(
+                buildTableOfContents(pack.blocks, pack.section_headings),
+                currentPosition?.sectionPath ?? null,
+              ),
+            );
+            console.log();
             console.log(checkpoint.recap_md);
             console.log();
             const recapStartedAt = Date.now();
@@ -169,9 +177,20 @@ program
         if (todaysBlocks.length === 0) {
           console.log("You've finished this book - just review questions today.");
         } else {
+          // 今天第一个 block 所在的小节，是不是之前某天已经读过一部分（断在
+          // 小节中间，而不是正好断在小节边界）——是的话正文头部要补一个 "..."
+          // 提示这里之前还有内容，而不是让读者误以为从头开始，见用户反馈。
+          const firstBlock = todaysBlocks[0];
+          const resumingMidSection = pack.blocks.some(
+            (b) =>
+              b.id !== firstBlock.id &&
+              b.section_path.join("/") === firstBlock.section_path.join("/") &&
+              readBlockIdsForPacking.has(b.id),
+          );
+
           printSectionDivider("Reading");
           await runReadingFlow(todaysBlocks, {
-            showBlocks: (blocks) => printBlocks(blocks),
+            showBlocks: (blocks) => printBlocks(blocks, pack.section_headings, { resumingMidSection }),
             waitUntilDone: async () => {
               process.stdout.write("Press Enter to continue to review questions (or 'q' to quit): ");
               await readLineOrQuit(lineReader);
