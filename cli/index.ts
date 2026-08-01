@@ -13,6 +13,8 @@ import { computeCurrentStreak } from "../core/streak.js";
 import { buildYearCalendar } from "../core/yearCalendar.js";
 import { computeProgress, computeCurrentPosition } from "../core/progress.js";
 import { estimateDaysRemaining } from "../core/completionEstimate.js";
+import { buildTableOfContents } from "../core/tableOfContents.js";
+import { renderTableOfContents } from "./renderTableOfContents.js";
 import { mergeEvents } from "../core/mergeEvents.js";
 import { runReadingFlow } from "./readingFlow.js";
 import { showBlockInPagerOrFallback } from "./pager.js";
@@ -310,13 +312,18 @@ program
       console.log(`${sectionLabel} done · ${percentRead}% of the book`);
 
       const currentPosition = computeCurrentPosition(pack.blocks, state.readBlockIds);
+      console.log();
+      console.log("Table of contents:");
+      console.log(
+        renderTableOfContents(
+          buildTableOfContents(pack.blocks),
+          currentPosition?.sectionPath ?? null,
+        ),
+      );
+
       if (currentPosition === null) {
         console.log("You've read every block in this pack - nothing left!");
       } else {
-        console.log(
-          `Currently at: ${currentPosition.sectionPath.join(" / ")} — ${currentPosition.sectionTitle}`,
-        );
-
         // status 是只读命令、不问用户任何问题，所以从来没设置过目标时就借用
         // today 首次运行时的同一个默认值，只是要老实说明这只是个假设，不是
         // 用户真正定过的目标。
