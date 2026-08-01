@@ -4,6 +4,71 @@
     "seq": 1,
     "section_path": [
       "1",
+      "1.0",
+      "1.0.1"
+    ],
+    "section_title": "Building Abstractions with Procedures",
+    "content_md": "The acts of the mind, wherein it exerts its power over simple ideas, are chiefly these three: 1. Combining several simple ideas into one compound one, and thus all complex ideas are made. 2. The second is bringing two ideas, whether simple or complex, together, and setting them by one another so as to take a view of them at once, without uniting them into one, by which it gets all its ideas of relations. 3. The third is separating them from all other ideas that accompany them in their real existence: this is called abstraction, and thus all its general ideas are made.\n\n—John Locke, An Essay Concerning Human Understanding (1690)",
+    "est_seconds": 130,
+    "recap_md": "The chapter opens with Locke's epigraph on the mind's three acts: combining, comparing, and abstracting simple ideas into complex ones."
+  },
+  {
+    "id": "b0002",
+    "seq": 2,
+    "section_path": [
+      "1",
+      "1.0",
+      "1.0.1"
+    ],
+    "section_title": "Building Abstractions with Procedures",
+    "content_md": "We are about to study the idea of a *computational process*. Computational processes are abstract beings that inhabit computers. As they evolve, processes manipulate other abstract things called *data*. The evolution of a process is directed by a pattern of rules called a *program*. People create programs to direct processes. In effect, we conjure the spirits of the computer with our spells.\n\nA computational process is indeed much like a sorcerer’s idea of a spirit. It cannot be seen or touched. It is not composed of matter at all. However, it is very real. It can perform intellectual work. It can answer questions. It can affect the world by disbursing money at a bank or by controlling a robot arm in a factory. The programs we use to conjure processes are like a sorcerer’s spells. They are carefully composed from symbolic expressions in arcane and esoteric *programming languages* that prescribe the tasks we want our processes to perform.\n\nA computational process, in a correctly working computer, executes programs precisely and accurately. Thus, like the sorcerer’s apprentice, novice programmers must learn to understand and to anticipate the consequences of their conjuring. Even small errors (usually called *bugs* or *glitches*) in programs can have complex and unanticipated consequences.",
+    "est_seconds": 150,
+    "recap_md": "Programs are framed as 'spells' that conjure computational processes, like a sorcerer's spirit - precise and powerful, but small bugs can have large, unanticipated consequences."
+  },
+  {
+    "id": "b0003",
+    "seq": 3,
+    "section_path": [
+      "1",
+      "1.0",
+      "1.0.1"
+    ],
+    "section_title": "Building Abstractions with Procedures",
+    "content_md": "Fortunately, learning to program is considerably less dangerous than learning sorcery, because the spirits we deal with are conveniently contained in a secure way. Real-world programming, however, requires care, expertise, and wisdom. A small bug in a computer-aided design program, for example, can lead to the catastrophic collapse of an airplane or a dam or the self-destruction of an industrial robot.\n\nMaster software engineers have the ability to organize programs so that they can be reasonably sure that the resulting processes will perform the tasks intended. They can visualize the behavior of their systems in advance. They know how to structure programs so that unanticipated problems do not lead to catastrophic consequences, and when problems do arise, they can *debug* their programs. Well-designed computational systems, like well-designed automobiles or nuclear reactors, are designed in a modular manner, so that the parts can be constructed, replaced, and debugged separately.",
+    "est_seconds": 140,
+    "recap_md": "Real-world programming demands care and expertise; master engineers build systems modularly, so parts can be constructed, replaced, and debugged separately."
+  },
+  {
+    "id": "b0004",
+    "seq": 4,
+    "section_path": [
+      "1",
+      "1.0",
+      "1.0.2"
+    ],
+    "section_title": "Programming in Lisp",
+    "content_md": "We need an appropriate language for describing processes, and we will use for this purpose the programming language Lisp. Just as our everyday thoughts are usually expressed in our natural language (such as English, French, or Japanese), and descriptions of quantitative phenomena are expressed with mathematical notations, our procedural thoughts will be expressed in Lisp. Lisp was invented in the late 1950s as a formalism for reasoning about the use of certain kinds of logical expressions, called *recursion equations*, as a model for computation. The language was conceived by John McCarthy and is based on his paper “Recursive Functions of Symbolic Expressions and Their Computation by Machine” (McCarthy 1960).\n\nDespite its inception as a mathematical formalism, Lisp is a practical programming language. A Lisp *interpreter* is a machine that carries out processes described in the Lisp language. The first Lisp interpreter was implemented by McCarthy with the help of colleagues and students in the Artificial Intelligence Group of the MIT Research Laboratory of Electronics and in the MIT Computation Center. Lisp, whose name is an acronym for LISt Processing, was designed to provide symbol-manipulating capabilities for attacking programming problems such as the symbolic differentiation and integration of algebraic expressions. It included for this purpose new data objects known as atoms and lists, which most strikingly set it apart from all other languages of the period.\n\nLisp was not the product of a concerted design effort. Instead, it evolved informally in an experimental manner in response to users’ needs and to pragmatic implementation considerations. Lisp’s informal evolution has continued through the years, and the community of Lisp users has traditionally resisted attempts to promulgate any “official” definition of the language. This evolution, together with the flexibility and elegance of the initial conception, has enabled Lisp, which is the second oldest language in widespread use today (only Fortran is older), to continually adapt to encompass the most modern ideas about program design. Thus, Lisp is by now a family of dialects, which, while sharing most of the original features, may differ from one another in significant ways. The dialect of Lisp used in this book is called Scheme.",
+    "est_seconds": 170,
+    "recap_md": "Lisp began as McCarthy's formalism for recursion equations in the late 1950s but evolved informally into a family of dialects; the dialect used in this book is Scheme."
+  },
+  {
+    "id": "b0005",
+    "seq": 5,
+    "section_path": [
+      "1",
+      "1.0",
+      "1.0.2"
+    ],
+    "section_title": "Programming in Lisp",
+    "content_md": "Because of its experimental character and its emphasis on symbol manipulation, Lisp was at first very inefficient for numerical computations, at least in comparison with Fortran. Over the years, however, Lisp compilers have been developed that translate programs into machine code that can perform numerical computations reasonably efficiently. And for special applications, Lisp has been used with great effectiveness. Although Lisp has not yet overcome its old reputation as hopelessly inefficient, Lisp is now used in many applications where efficiency is not the central concern. For example, Lisp has become a language of choice for operating-system shell languages and for extension languages for editors and computer-aided design systems.\n\nIf Lisp is not a mainstream language, why are we using it as the framework for our discussion of programming? Because the language possesses unique features that make it an excellent medium for studying important programming constructs and data structures and for relating them to the linguistic features that support them. The most significant of these features is the fact that Lisp descriptions of processes, called *procedures*, can themselves be represented and manipulated as Lisp data. The importance of this is that there are powerful program-design techniques that rely on the ability to blur the traditional distinction between “passive” data and “active” processes. As we shall discover, Lisp’s flexibility in handling procedures as data makes it one of the most convenient languages in existence for exploring these techniques. The ability to represent procedures as data also makes Lisp an excellent language for writing programs that must manipulate other programs as data, such as the interpreters and compilers that support computer languages. Above and beyond these considerations, programming in Lisp is great fun.",
+    "est_seconds": 160,
+    "recap_md": "Lisp was historically inefficient for numerical computation but is used here because procedures can themselves be represented and manipulated as data."
+  },
+  {
+    "id": "b0006",
+    "seq": 6,
+    "section_path": [
+      "1",
       "1.1",
       "1.1.1"
     ],
@@ -13,8 +78,8 @@
     "recap_md": "Every powerful language has three mechanisms: primitive expressions, means of combination, and means of abstraction; this chapter focuses on building procedures over simple numerical data."
   },
   {
-    "id": "b0002",
-    "seq": 2,
+    "id": "b0007",
+    "seq": 7,
     "section_path": [
       "1",
       "1.1",
@@ -26,8 +91,8 @@
     "recap_md": "The Scheme interpreter evaluates primitive number expressions; a combination applies an operator to the values of its operands."
   },
   {
-    "id": "b0003",
-    "seq": 3,
+    "id": "b0008",
+    "seq": 8,
     "section_path": [
       "1",
       "1.1",
@@ -39,8 +104,8 @@
     "recap_md": "A combination consists of an operator and operands; prefix notation places the operator first, naturally supporting an arbitrary number of operands."
   },
   {
-    "id": "b0004",
-    "seq": 4,
+    "id": "b0009",
+    "seq": 9,
     "section_path": [
       "1",
       "1.1",
@@ -52,8 +117,8 @@
     "recap_md": "Prefix notation's second advantage is that it extends straightforwardly to nested combinations of arbitrary complexity."
   },
   {
-    "id": "b0005",
-    "seq": 5,
+    "id": "b0010",
+    "seq": 10,
     "section_path": [
       "1",
       "1.1",
@@ -65,8 +130,8 @@
     "recap_md": "Pretty-printing makes the structure of deeply nested expressions clear; the interpreter runs a read-eval-print loop, evaluating and printing automatically."
   },
   {
-    "id": "b0006",
-    "seq": 6,
+    "id": "b0011",
+    "seq": 11,
     "section_path": [
       "1",
       "1.1",
@@ -78,8 +143,8 @@
     "recap_md": "Names identify variables; `define` associates a name with a value (e.g. `size` with 2), and afterward the name can be used in place of the value."
   },
   {
-    "id": "b0007",
-    "seq": 7,
+    "id": "b0012",
+    "seq": 12,
     "section_path": [
       "1",
       "1.1",
@@ -91,8 +156,8 @@
     "recap_md": "More `define` examples build up `circumference`; `define` is Lisp's simplest means of abstraction, and the interpreter's memory of name-value pairs is called the environment."
   },
   {
-    "id": "b0008",
-    "seq": 8,
+    "id": "b0013",
+    "seq": 13,
     "section_path": [
       "1",
       "1.1",
@@ -104,8 +169,8 @@
     "recap_md": "The interpreter itself follows a procedure to evaluate a combination: evaluate the subexpressions, then apply the operator's procedure to the operand values."
   },
   {
-    "id": "b0009",
-    "seq": 9,
+    "id": "b0014",
+    "seq": 14,
     "section_path": [
       "1",
       "1.1",
@@ -117,8 +182,8 @@
     "recap_md": "The evaluation rule is recursive; a deeply nested combination can be pictured as a tree, with values percolating upward from the leaves - an example of tree accumulation."
   },
   {
-    "id": "b0010",
-    "seq": 10,
+    "id": "b0015",
+    "seq": 15,
     "section_path": [
       "1",
       "1.1",
@@ -130,8 +195,8 @@
     "recap_md": "Primitive expressions are the base case: numerals name numbers, built-in operators name machine instructions, and other names get their value from the environment."
   },
   {
-    "id": "b0011",
-    "seq": 11,
+    "id": "b0016",
+    "seq": 16,
     "section_path": [
       "1",
       "1.1",
@@ -143,8 +208,8 @@
     "recap_md": "`define` is a special form, not a combination - its whole purpose is to create a name-value association, so it doesn't fit the general evaluate-then-apply rule."
   },
   {
-    "id": "b0012",
-    "seq": 12,
+    "id": "b0017",
+    "seq": 17,
     "section_path": [
       "1",
       "1.1",
@@ -156,8 +221,8 @@
     "recap_md": "A procedure definition like `(define (square x) (* x x))` creates a compound procedure named `square`, where `x` is a formal parameter standing for whatever argument it's applied to."
   },
   {
-    "id": "b0013",
-    "seq": 13,
+    "id": "b0018",
+    "seq": 18,
     "section_path": [
       "1",
       "1.1",
@@ -169,8 +234,8 @@
     "recap_md": "The general form is `(define (⟨name⟩ ⟨formal parameters⟩) ⟨body⟩)`; the body yields the procedure's value once the formal parameters are replaced by actual arguments."
   },
   {
-    "id": "b0014",
-    "seq": 14,
+    "id": "b0019",
+    "seq": 19,
     "section_path": [
       "1",
       "1.1",
@@ -182,8 +247,8 @@
     "recap_md": "`square` is used to build `sum-of-squares` (x^2 + y^2), showing how a compound procedure becomes a building block for another."
   },
   {
-    "id": "b0015",
-    "seq": 15,
+    "id": "b0020",
+    "seq": 20,
     "section_path": [
       "1",
       "1.1",
@@ -195,8 +260,8 @@
     "recap_md": "`sum-of-squares` in turn becomes a building block for `f`; compound procedures are used exactly like primitive ones, indistinguishably."
   },
   {
-    "id": "b0016",
-    "seq": 16,
+    "id": "b0021",
+    "seq": 21,
     "section_path": [
       "1",
       "1.1",
@@ -208,8 +273,8 @@
     "recap_md": "To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument - the substitution rule."
   },
   {
-    "id": "b0017",
-    "seq": 17,
+    "id": "b0022",
+    "seq": 22,
     "section_path": [
       "1",
       "1.1",
@@ -221,8 +286,8 @@
     "recap_md": "Worked example: substituting 5 for `a` in `f`'s body reduces `(f 5)` down to `(sum-of-squares 6 10)`."
   },
   {
-    "id": "b0018",
-    "seq": 18,
+    "id": "b0023",
+    "seq": 23,
     "section_path": [
       "1",
       "1.1",
@@ -234,8 +299,8 @@
     "recap_md": "Continuing the reduction through `square`'s definition and arithmetic, `(sum-of-squares 6 10)` reduces step by step to 136."
   },
   {
-    "id": "b0019",
-    "seq": 19,
+    "id": "b0024",
+    "seq": 24,
     "section_path": [
       "1",
       "1.1",
@@ -247,8 +312,8 @@
     "recap_md": "This process is the substitution model - a way to think about procedure application, not a description of how a real interpreter works, and it will eventually be replaced by more refined models."
   },
   {
-    "id": "b0020",
-    "seq": 20,
+    "id": "b0025",
+    "seq": 25,
     "section_path": [
       "1",
       "1.1",
@@ -260,8 +325,8 @@
     "recap_md": "An alternative model - fully expand operand expressions first, then reduce - reaches the same answer for `(f 5)` but re-evaluates some subexpressions more than once."
   },
   {
-    "id": "b0021",
-    "seq": 21,
+    "id": "b0026",
+    "seq": 26,
     "section_path": [
       "1",
       "1.1",
@@ -273,8 +338,8 @@
     "recap_md": "The 'expand then reduce' method is normal-order evaluation; Lisp actually uses applicative-order evaluation (evaluate arguments, then apply) for efficiency and simplicity."
   },
   {
-    "id": "b0022",
-    "seq": 22,
+    "id": "b0027",
+    "seq": 27,
     "section_path": [
       "1",
       "1.1",
@@ -286,8 +351,8 @@
     "recap_md": "Case analysis needs a new special form: `cond` tries clauses of the form `(⟨predicate⟩ ⟨expression⟩)` in order."
   },
   {
-    "id": "b0023",
-    "seq": 23,
+    "id": "b0028",
+    "seq": 28,
     "section_path": [
       "1",
       "1.1",
@@ -299,8 +364,8 @@
     "recap_md": "`cond` evaluates predicates left to right and returns the consequent of the first true one; `abs` uses the primitive predicates `>`, `<`, `=`."
   },
   {
-    "id": "b0024",
-    "seq": 24,
+    "id": "b0029",
+    "seq": 29,
     "section_path": [
       "1",
       "1.1",
@@ -312,8 +377,8 @@
     "recap_md": "`else` can replace the predicate in a `cond`'s final clause, matching whenever every earlier clause was bypassed."
   },
   {
-    "id": "b0025",
-    "seq": 25,
+    "id": "b0030",
+    "seq": 30,
     "section_path": [
       "1",
       "1.1",
@@ -325,8 +390,8 @@
     "recap_md": "`if` is a restricted two-case conditional: `(if ⟨predicate⟩ ⟨consequent⟩ ⟨alternative⟩)` evaluates exactly one of consequent/alternative based on the predicate."
   },
   {
-    "id": "b0026",
-    "seq": 26,
+    "id": "b0031",
+    "seq": 31,
     "section_path": [
       "1",
       "1.1",
@@ -338,8 +403,8 @@
     "recap_md": "`and`, `or`, and `not` let you build compound predicates; `and`/`or` are special forms (they short-circuit), while `not` is an ordinary procedure."
   },
   {
-    "id": "b0027",
-    "seq": 27,
+    "id": "b0032",
+    "seq": 32,
     "section_path": [
       "1",
       "1.1",
@@ -351,8 +416,8 @@
     "recap_md": "A range check uses `and`; `>=` can be defined either via `or` or via `not`, two equivalent formulations of the same predicate."
   },
   {
-    "id": "b0028",
-    "seq": 28,
+    "id": "b0033",
+    "seq": 33,
     "section_path": [
       "1",
       "1.1",
@@ -364,8 +429,8 @@
     "recap_md": "Exercises 1.1 and 1.2: evaluating a sequence of expressions by hand, and translating an arithmetic expression into prefix form."
   },
   {
-    "id": "b0029",
-    "seq": 29,
+    "id": "b0034",
+    "seq": 34,
     "section_path": [
       "1",
       "1.1",
@@ -377,8 +442,8 @@
     "recap_md": "Exercises 1.3-1.5: sum of squares of the two larger of three numbers, a procedure whose operator is itself a compound expression, and Ben Bitdiddle's applicative-order-vs-normal-order test."
   },
   {
-    "id": "b0030",
-    "seq": 30,
+    "id": "b0035",
+    "seq": 35,
     "section_path": [
       "1",
       "1.1",
@@ -390,8 +455,8 @@
     "recap_md": "Procedures must be effective, unlike declarative mathematical definitions; defining square root as 'the y such that y^2=x' begs the question of how to actually compute it - the declarative-vs-imperative-knowledge distinction."
   },
   {
-    "id": "b0031",
-    "seq": 31,
+    "id": "b0036",
+    "seq": 36,
     "section_path": [
       "1",
       "1.1",
@@ -403,8 +468,8 @@
     "recap_md": "Newton's method improves a guess by averaging it with x/guess; a worked table shows successive guesses converging toward the square root of 2."
   },
   {
-    "id": "b0032",
-    "seq": 32,
+    "id": "b0037",
+    "seq": 37,
     "section_path": [
       "1",
       "1.1",
@@ -416,8 +481,8 @@
     "recap_md": "Formalized as procedures: `sqrt-iter` repeats until `good-enough?`, `improve` averages the guess with x/guess, `average` is a small helper."
   },
   {
-    "id": "b0033",
-    "seq": 33,
+    "id": "b0038",
+    "seq": 38,
     "section_path": [
       "1",
       "1.1",
@@ -429,8 +494,8 @@
     "recap_md": "`good-enough?` checks the guess's square against a tolerance; `sqrt` kicks off `sqrt-iter` with an initial guess of 1.0, and works like any other procedure."
   },
   {
-    "id": "b0034",
-    "seq": 34,
+    "id": "b0039",
+    "seq": 39,
     "section_path": [
       "1",
       "1.1",
@@ -442,8 +507,8 @@
     "recap_md": "The language introduced so far - with no special looping construct - is already sufficient for any numerical program; `sqrt-iter` achieves iteration purely via an ordinary procedure call."
   },
   {
-    "id": "b0035",
-    "seq": 35,
+    "id": "b0040",
+    "seq": 40,
     "section_path": [
       "1",
       "1.1",
@@ -455,8 +520,8 @@
     "recap_md": "Exercise 1.6: Alyssa rewrites `if` as an ordinary procedure `new-if` using `cond`, then uses it in `sqrt-iter` - with surprising consequences."
   },
   {
-    "id": "b0036",
-    "seq": 36,
+    "id": "b0041",
+    "seq": 41,
     "section_path": [
       "1",
       "1.1",
@@ -468,8 +533,8 @@
     "recap_md": "Exercises 1.7 and 1.8: why `good-enough?` fails for very small/large numbers, and adapting Newton's method to cube roots."
   },
   {
-    "id": "b0037",
-    "seq": 37,
+    "id": "b0042",
+    "seq": 42,
     "section_path": [
       "1",
       "1.1",
@@ -481,8 +546,8 @@
     "recap_md": "`sqrt-iter`'s recursive definition will be explained properly in 1.2; the square-root program decomposes into subproblems, each its own procedure - a cluster mirroring the problem's decomposition, each usable as a black box."
   },
   {
-    "id": "b0038",
-    "seq": 38,
+    "id": "b0043",
+    "seq": 43,
     "section_path": [
       "1",
       "1.1",
@@ -494,8 +559,8 @@
     "recap_md": "Two completely different implementations of `square` are indistinguishable to a caller like `good-enough?` - only the returned value matters, not the internal mechanism (procedural abstraction)."
   },
   {
-    "id": "b0039",
-    "seq": 39,
+    "id": "b0044",
+    "seq": 44,
     "section_path": [
       "1",
       "1.1",
@@ -507,8 +572,8 @@
     "recap_md": "A parameter's name shouldn't matter to callers either - `(define (square x) ...)` and `(define (square y) ...)` must be indistinguishable."
   },
   {
-    "id": "b0040",
-    "seq": 40,
+    "id": "b0045",
+    "seq": 45,
     "section_path": [
       "1",
       "1.1",
@@ -520,8 +585,8 @@
     "recap_md": "`good-enough?`'s `x` and `square`'s `x` must be different variables - if parameter names weren't local, running `square` could corrupt the `x` that `good-enough?` still needs."
   },
   {
-    "id": "b0041",
-    "seq": 41,
+    "id": "b0046",
+    "seq": 46,
     "section_path": [
       "1",
       "1.1",
@@ -533,8 +598,8 @@
     "recap_md": "A formal parameter is a bound variable, scoped to its procedure's body; names not bound anywhere are free. Renaming a bound variable to collide with a free one (capture) introduces a bug."
   },
   {
-    "id": "b0042",
-    "seq": 42,
+    "id": "b0047",
+    "seq": 47,
     "section_path": [
       "1",
       "1.1",
@@ -546,8 +611,8 @@
     "recap_md": "sqrt's helper procedures (sqrt-iter, good-enough?, improve) clutter the top-level namespace and could collide with someone else's same-named procedures - we'd like to hide them inside sqrt."
   },
   {
-    "id": "b0043",
-    "seq": 43,
+    "id": "b0048",
+    "seq": 48,
     "section_path": [
       "1",
       "1.1",
@@ -559,8 +624,8 @@
     "recap_md": "Block structure nests the helper definitions inside `sqrt`; since `x` is already bound by `sqrt`, the internal procedures can treat `x` as a free variable instead of an explicit parameter - lexical scoping."
   },
   {
-    "id": "b0044",
-    "seq": 44,
+    "id": "b0049",
+    "seq": 49,
     "section_path": [
       "1",
       "1.1",

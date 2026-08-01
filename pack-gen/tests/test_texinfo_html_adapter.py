@@ -38,10 +38,35 @@ FIXTURE_HTML = """<?xml version="1.0" encoding="utf-8"?>
 """
 
 
+CHAPTER_INTRO_FIXTURE_HTML = """<?xml version="1.0" encoding="utf-8"?>
+<html><body>
+<section>
+<h2 class="chapter"><span class="chapnum">1</span><span class="chaptitle">Building Abstractions with Procedures</span></h2>
+<blockquote>
+<p>The acts of the mind... three: 1. Combining<!-- /@w --> several simple ideas.</p>
+<p>&#8212;John Locke, <cite>An Essay</cite> (1690)</p>
+</blockquote>
+<p>We are about to study the idea of a computational process.</p>
+<h5 class="subsubheading">Programming in Lisp</h5>
+<p>Lisp was invented in the late 1950s.</p>
+<h4 class="footnotes-heading">Footnotes</h4>
+<p>this should never appear, it's past the footnotes heading</p>
+</section>
+</body></html>
+"""
+
+
 @pytest.fixture
 def fixture_path(tmp_path: Path) -> str:
     path = tmp_path / "1.1.xhtml"
     path.write_text(FIXTURE_HTML, encoding="utf-8")
+    return str(path)
+
+
+@pytest.fixture
+def chapter_intro_fixture_path(tmp_path: Path) -> str:
+    path = tmp_path / "Chapter-1.xhtml"
+    path.write_text(CHAPTER_INTRO_FIXTURE_HTML, encoding="utf-8")
     return str(path)
 
 
@@ -125,3 +150,45 @@ def test_stops_at_footnotes_heading(fixture_path):
     subsections = TexinfoHtmlAdapter().parse([fixture_path])
     all_text = " ".join(p.text for s in subsections for p in s.paragraphs)
     assert "never appear" not in all_text
+
+
+def test_chapter_intro_file_is_parsed_not_ignored(chapter_intro_fixture_path):
+    # Each chapter has its own intro file (e.g. Chapter-1.xhtml) with a completely
+    # different structure - <h2 class="chapter"> instead of <h3 class="section">,
+    # no numbered subsections. This content (SICP's Locke epigraph, the "sorcerer's
+    # apprentice" essay, "Programming in Lisp") was never being parsed at all -
+    # only the numbered 1.1/1.2/1.3-style files were ever fed to the adapter.
+    subsections = TexinfoHtmlAdapter().parse([chapter_intro_fixture_path])
+    assert len(subsections) == 2
+
+
+def test_chapter_intro_uses_fake_section_path_ordered_before_the_first_real_section(
+    chapter_intro_fixture_path,
+):
+    subsections = TexinfoHtmlAdapter().parse([chapter_intro_fixture_path])
+    assert subsections[0].section_path == ["1", "1.0", "1.0.1"]
+    assert subsections[1].section_path == ["1", "1.0", "1.0.2"]
+    # lexicographically, "1.0" sorts before "1.1", so reading order is preserved
+    assert subsections[0].section_path[1] < "1.1"
+
+
+def test_chapter_intro_content_before_first_subsubheading_uses_the_chapter_title(
+    chapter_intro_fixture_path,
+):
+    subsections = TexinfoHtmlAdapter().parse([chapter_intro_fixture_path])
+    assert subsections[0].section_title == "Building Abstractions with Procedures"
+    texts = [p.text for p in subsections[0].paragraphs]
+    assert any("computational process" in t for t in texts)
+
+
+def test_chapter_intro_subsubheading_starts_a_new_pseudo_subsection(chapter_intro_fixture_path):
+    subsections = TexinfoHtmlAdapter().parse([chapter_intro_fixture_path])
+    assert subsections[1].section_title == "Programming in Lisp"
+    assert any("Lisp was invented" in p.text for p in subsections[1].paragraphs)
+
+
+def test_chapter_intro_blockquote_and_comment_stripping_still_apply(chapter_intro_fixture_path):
+    subsections = TexinfoHtmlAdapter().parse([chapter_intro_fixture_path])
+    all_text = " ".join(p.text for p in subsections[0].paragraphs)
+    assert "Combining several simple ideas" in all_text
+    assert "/@w" not in all_text

@@ -1,0 +1,58 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 1,
+      "est_seconds": 130,
+      "recap_md": "The chapter opens with Locke's epigraph on the mind's three acts: combining, comparing, and abstracting simple ideas into complex ones."
+    },
+    {
+      "start_paragraph_index": 2,
+      "end_paragraph_index": 4,
+      "est_seconds": 150,
+      "recap_md": "Programs are framed as 'spells' that conjure computational processes, like a sorcerer's spirit - precise and powerful, but small bugs can have large, unanticipated consequences."
+    },
+    {
+      "start_paragraph_index": 5,
+      "end_paragraph_index": 6,
+      "est_seconds": 140,
+      "recap_md": "Real-world programming demands care and expertise; master engineers build systems modularly, so parts can be constructed, replaced, and debugged separately."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "The chapter frames programs as 'spells' that conjure computational processes (like a sorcerer's spirit) to manipulate data - vivid language for the fact that a process executes its program precisely and mechanically, so small bugs can have significant, unanticipated consequences.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "Well-designed computational systems, like well-designed physical systems, are built in a modular manner so that parts can be constructed, replaced, and debugged separately - managing complexity through this kind of structure is a central theme of the book.",
+      "block_indices": [2]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "The chapter's opening compares programs to a sorcerer's spells and computational processes to the spirits they conjure. What is this analogy mainly meant to convey?",
+      "options": [
+        "That a computational process executes the program that directs it precisely and mechanically, so small errors (bugs) can have significant, unanticipated real-world consequences",
+        "That programming is inherently more dangerous than any other engineering discipline",
+        "That computers are literally unpredictable and cannot be reasoned about in advance",
+        "That only expert 'sorcerers' should be allowed to write programs"
+      ],
+      "answer_index": 0,
+      "explanation": "The text draws the parallel to make exactly this point: a computational process executes its program precisely and accurately, so even small bugs can have complex, unanticipated consequences - which is why real-world programming demands care, expertise, and wisdom."
+    },
+    {
+      "item_index": 1,
+      "prompt": "According to the text, why do master software engineers design computational systems in a modular manner?",
+      "options": [
+        "So that the parts can be constructed, replaced, and debugged separately, similar to well-designed automobiles or nuclear reactors",
+        "Because modular programs always run faster than non-modular ones",
+        "Because most programming languages require modularity as a syntax rule",
+        "So that only one engineer ever needs to understand the whole system"
+      ],
+      "answer_index": 0,
+      "explanation": "The text draws a direct analogy to well-designed physical systems: modularity lets the parts of a program be constructed, replaced, and debugged separately - a hallmark of being able to visualize and control a system's behavior in advance."
+    }
+  ]
+}

@@ -3,6 +3,62 @@
     "id": "q0001",
     "item_id": "k0001",
     "type": "single_choice",
+    "prompt": "The chapter's opening compares programs to a sorcerer's spells and computational processes to the spirits they conjure. What is this analogy mainly meant to convey?",
+    "options": [
+      "That a computational process executes the program that directs it precisely and mechanically, so small errors (bugs) can have significant, unanticipated real-world consequences",
+      "That programming is inherently more dangerous than any other engineering discipline",
+      "That computers are literally unpredictable and cannot be reasoned about in advance",
+      "That only expert 'sorcerers' should be allowed to write programs"
+    ],
+    "answer_index": 0,
+    "explanation": "The text draws the parallel to make exactly this point: a computational process executes its program precisely and accurately, so even small bugs can have complex, unanticipated consequences - which is why real-world programming demands care, expertise, and wisdom."
+  },
+  {
+    "id": "q0002",
+    "item_id": "k0002",
+    "type": "single_choice",
+    "prompt": "According to the text, why do master software engineers design computational systems in a modular manner?",
+    "options": [
+      "So that the parts can be constructed, replaced, and debugged separately, similar to well-designed automobiles or nuclear reactors",
+      "Because modular programs always run faster than non-modular ones",
+      "Because most programming languages require modularity as a syntax rule",
+      "So that only one engineer ever needs to understand the whole system"
+    ],
+    "answer_index": 0,
+    "explanation": "The text draws a direct analogy to well-designed physical systems: modularity lets the parts of a program be constructed, replaced, and debugged separately - a hallmark of being able to visualize and control a system's behavior in advance."
+  },
+  {
+    "id": "q0003",
+    "item_id": "k0003",
+    "type": "single_choice",
+    "prompt": "Which specific dialect of Lisp does this book (SICP) use?",
+    "options": [
+      "Scheme",
+      "Common Lisp",
+      "MacLisp",
+      "Interlisp"
+    ],
+    "answer_index": 0,
+    "explanation": "The text states directly: Lisp is by now a family of dialects, and the dialect of Lisp used in this book is called Scheme."
+  },
+  {
+    "id": "q0004",
+    "item_id": "k0004",
+    "type": "single_choice",
+    "prompt": "What key property of Lisp does the text say makes it especially well-suited for the book's discussion of programming?",
+    "options": [
+      "Lisp procedures (descriptions of processes) can themselves be represented and manipulated as Lisp data, blurring the usual distinction between passive data and active processes",
+      "Lisp historically had the fastest numerical performance of any programming language",
+      "Lisp requires no punctuation of any kind, making programs easier to type",
+      "Lisp was the very first programming language ever created, predating Fortran"
+    ],
+    "answer_index": 0,
+    "explanation": "The text names this as the most significant feature: Lisp descriptions of processes (procedures) can themselves be represented and manipulated as data - not raw performance (Lisp was historically slower than Fortran for numerics) and not being the oldest language (Fortran is older)."
+  },
+  {
+    "id": "q0005",
+    "item_id": "k0005",
+    "type": "single_choice",
     "prompt": "When evaluating the combination (+ (* 2 3) 4), what is the actual order of evaluation the interpreter follows?",
     "options": [
       "It recursively evaluates the operator and each operand (here, (* 2 3) and 4), then applies the resulting procedure to those values",
@@ -14,8 +70,8 @@
     "explanation": "SICP emphasizes that evaluating a combination follows the rule of evaluate-then-apply: recursively evaluate each subexpression (the operator and each operand), then apply the resulting procedure to the argument values."
   },
   {
-    "id": "q0002",
-    "item_id": "k0002",
+    "id": "q0006",
+    "item_id": "k0006",
     "type": "single_choice",
     "prompt": "What is the main advantage of prefix notation (like (+ 1 2 3)) over infix notation (like 1 + 2 + 3)?",
     "options": [
@@ -28,8 +84,8 @@
     "explanation": "The text explicitly names two advantages of prefix notation: it accommodates an arbitrary number of arguments, and it nests without ambiguity - neither is about evaluation speed or parenthesis count."
   },
   {
-    "id": "q0003",
-    "item_id": "k0003",
+    "id": "q0007",
+    "item_id": "k0007",
     "type": "single_choice",
     "prompt": "In the Scheme interpreter's read-eval-print loop, does the user need to explicitly tell the interpreter to print the value of an expression?",
     "options": [
@@ -42,8 +98,8 @@
     "explanation": "The text specifically notes that it is not necessary to explicitly instruct the interpreter to print the value of an expression - that's exactly what the read-eval-print loop does, over and over."
   },
   {
-    "id": "q0004",
-    "item_id": "k0004",
+    "id": "q0008",
+    "item_id": "k0008",
     "type": "single_choice",
     "prompt": "What does `(define circumference (* 2 pi radius))` actually do?",
     "options": [
@@ -56,8 +112,8 @@
     "explanation": "`define` is a naming operation: it creates an association between a name and a value in the environment. `circumference` afterward just refers to that already-computed value, the same way `size` refers to 2 in the section's first example - it does not create a procedure or print anything by itself."
   },
   {
-    "id": "q0005",
-    "item_id": "k0005",
+    "id": "q0009",
+    "item_id": "k0009",
     "type": "single_choice",
     "prompt": "According to the evaluation rule given for combinations, what must happen before a procedure can be applied?",
     "options": [
@@ -70,8 +126,8 @@
     "explanation": "The rule is explicitly two steps: evaluate the subexpressions of the combination, then apply the procedure (the value of the leftmost subexpression) to the values of the operands. Evaluation always comes first for every subexpression."
   },
   {
-    "id": "q0006",
-    "item_id": "k0006",
+    "id": "q0010",
+    "item_id": "k0010",
     "type": "single_choice",
     "prompt": "When the recursive evaluation rule bottoms out at a primitive expression that is a plain name (not a numeral or a built-in operator), what is that name's value?",
     "options": [
@@ -84,8 +140,8 @@
     "explanation": "The text stipulates that the value of a name (other than a built-in operator) is the object associated with that name in the environment - this is exactly why an expression like (+ x 1) is meaningless without an environment that gives x a value."
   },
   {
-    "id": "q0007",
-    "item_id": "k0007",
+    "id": "q0011",
+    "item_id": "k0011",
     "type": "single_choice",
     "prompt": "Why doesn't `(define x 3)` fit the general evaluate-then-apply rule for combinations?",
     "options": [
@@ -98,8 +154,8 @@
     "explanation": "The text is explicit: (define x 3) does not apply define to the value of x and to 3, since the purpose of define is precisely to associate x with a value - that's why define is a special form rather than an ordinary combination, and special forms each get their own evaluation rule."
   },
   {
-    "id": "q0008",
-    "item_id": "k0008",
+    "id": "q0012",
+    "item_id": "k0012",
     "type": "single_choice",
     "prompt": "In `(define (square x) (* x x))`, what role does `x` play?",
     "options": [
@@ -112,8 +168,8 @@
     "explanation": "The text compares the formal parameter to a pronoun in natural language: `x` names 'the thing to be multiplied' generically, and gets replaced by the actual argument each time `square` is applied - it isn't a global variable or a constant."
   },
   {
-    "id": "q0009",
-    "item_id": "k0009",
+    "id": "q0013",
+    "item_id": "k0013",
     "type": "single_choice",
     "prompt": "In the general form `(define (⟨name⟩ ⟨formal parameters⟩) ⟨body⟩)`, when does the body's expression actually get evaluated to produce a value?",
     "options": [
@@ -126,8 +182,8 @@
     "explanation": "Defining a procedure just creates and names it; the body is an expression that yields the procedure application's value once the formal parameters are replaced by the actual arguments of a specific call - evaluating `define` itself doesn't run the body."
   },
   {
-    "id": "q0010",
-    "item_id": "k0010",
+    "id": "q0014",
+    "item_id": "k0014",
     "type": "single_choice",
     "prompt": "Looking only at the definition of `sum-of-squares`, which calls `square`, can you tell whether `square` is a primitive built into the interpreter or a compound procedure the user defined?",
     "options": [
@@ -140,8 +196,8 @@
     "explanation": "The text says exactly this: one could not tell by looking at the definition of sum-of-squares whether square was built into the interpreter or defined as a compound procedure - compound and primitive procedures are indistinguishable in use."
   },
   {
-    "id": "q0011",
-    "item_id": "k0011",
+    "id": "q0015",
+    "item_id": "k0015",
     "type": "single_choice",
     "prompt": "To apply the compound procedure `f` (whose body is `(sum-of-squares (+ a 1) (* a 2))`) to the argument 5 under the substitution model, what's the first step?",
     "options": [
@@ -154,8 +210,8 @@
     "explanation": "The substitution model applies a compound procedure by evaluating its body with each formal parameter replaced by the corresponding argument - here, replacing `a` with 5 throughout `f`'s body."
   },
   {
-    "id": "q0012",
-    "item_id": "k0012",
+    "id": "q0016",
+    "item_id": "k0016",
     "type": "single_choice",
     "prompt": "According to the text, is the substitution model an accurate description of how a real Lisp interpreter evaluates procedure applications internally?",
     "options": [
@@ -168,8 +224,8 @@
     "explanation": "The text explicitly stresses that the purpose of substitution is to help us think about procedure application, not to describe how the interpreter really works - actual implementations use a local environment, as later chapters explain."
   },
   {
-    "id": "q0013",
-    "item_id": "k0013",
+    "id": "q0017",
+    "item_id": "k0017",
     "type": "single_choice",
     "prompt": "Under normal-order evaluation (fully expand, then reduce) applied to `(f 5)`, what actually happens to subexpressions like `(+ 5 1)` compared to applicative-order evaluation?",
     "options": [
@@ -182,8 +238,8 @@
     "explanation": "The text shows `(+ 5 1)` and `(* 5 2)` each get evaluated twice under normal-order evaluation, because `square`'s body `(* x x)` uses its parameter twice, duplicating whatever expression was substituted in - this repeated work is part of why Lisp uses applicative-order evaluation instead."
   },
   {
-    "id": "q0014",
-    "item_id": "k0014",
+    "id": "q0018",
+    "item_id": "k0018",
     "type": "single_choice",
     "prompt": "In `(cond ((> x 0) x) ((= x 0) 0) ((< x 0) (- x)))`, if x is 0, what value does the `cond` expression return?",
     "options": [
@@ -196,8 +252,8 @@
     "explanation": "cond tries each clause's predicate in order and returns the consequent of the first one that's true; here `(> x 0)` is false when x=0, but `(= x 0)` is true, so 0 is returned."
   },
   {
-    "id": "q0015",
-    "item_id": "k0015",
+    "id": "q0019",
+    "item_id": "k0019",
     "type": "single_choice",
     "prompt": "For `(if (< x 0) (- x) x)`, if the predicate `(< x 0)` evaluates to false, what does the interpreter do?",
     "options": [
@@ -210,8 +266,8 @@
     "explanation": "if evaluates exactly one of consequent/alternative depending on the predicate's truth value - here, since the predicate is false, only the alternative `x` is evaluated and returned; `(- x)` is never touched."
   },
   {
-    "id": "q0016",
-    "item_id": "k0016",
+    "id": "q0020",
+    "item_id": "k0020",
     "type": "single_choice",
     "prompt": "Why are `and` and `or` special forms rather than ordinary procedures?",
     "options": [
@@ -224,8 +280,8 @@
     "explanation": "The text notes `and`/`or` are special forms precisely because their subexpressions aren't necessarily all evaluated (short-circuiting), unlike ordinary procedures (like `not`) which always evaluate all their arguments."
   },
   {
-    "id": "q0017",
-    "item_id": "k0017",
+    "id": "q0021",
+    "item_id": "k0021",
     "type": "single_choice",
     "prompt": "In Newton's method for computing square roots, how is a guess `y` improved into a better guess for the square root of `x`?",
     "options": [
@@ -238,8 +294,8 @@
     "explanation": "The text states the key manipulation: average the current guess y with the quotient x/y to get a guess closer to the actual square root - that's exactly what the `improve` procedure computes."
   },
   {
-    "id": "q0018",
-    "item_id": "k0018",
+    "id": "q0022",
+    "item_id": "k0022",
     "type": "single_choice",
     "prompt": "The `sqrt` example is used to illustrate that the simple procedural language introduced so far (define, if, ordinary procedure calls) is already sufficient to express what?",
     "options": [
@@ -252,8 +308,8 @@
     "explanation": "The text explicitly makes this point: the language has no special iterative construct, yet sqrt-iter demonstrates that iteration can be accomplished using nothing more than the ordinary ability to call a procedure."
   },
   {
-    "id": "q0019",
-    "item_id": "k0019",
+    "id": "q0023",
+    "item_id": "k0023",
     "type": "single_choice",
     "prompt": "In Exercise 1.6, Alyssa rewrites `sqrt-iter` to use `new-if` (an ordinary procedure built from `cond`) instead of the special form `if`. What actually happens when she tries to compute a square root this way?",
     "options": [
@@ -266,8 +322,8 @@
     "explanation": "Because new-if is an ordinary procedure, applying it evaluates all of its arguments first (applicative order) - including the recursive `(sqrt-iter (improve guess x) x)` argument - so the recursion never gets a chance to stop, even after good-enough? becomes true. A special form like if avoids this by only evaluating the branch it actually needs."
   },
   {
-    "id": "q0020",
-    "item_id": "k0020",
+    "id": "q0024",
+    "item_id": "k0024",
     "type": "single_choice",
     "prompt": "Why are `(define (square x) (* x x))` and `(define (square x) (exp (double (log x))))` considered indistinguishable, even though they compute the square completely differently internally?",
     "options": [
@@ -280,8 +336,8 @@
     "explanation": "The text's point is procedural abstraction: as far as any caller (like good-enough?) is concerned, square is a black box - any implementation that returns the correct squared value is equally good, regardless of internal mechanism."
   },
   {
-    "id": "q0021",
-    "item_id": "k0021",
+    "id": "q0025",
+    "item_id": "k0025",
     "type": "single_choice",
     "prompt": "Why must a procedure's formal parameter names be local to that procedure's own body?",
     "options": [
@@ -294,8 +350,8 @@
     "explanation": "The text traces through exactly this scenario: good-enough?'s x and square's x must be different x's, or running square would risk disturbing the x that good-enough? still needs - keeping parameter names local to their own procedure body is what prevents this collision."
   },
   {
-    "id": "q0022",
-    "item_id": "k0022",
+    "id": "q0026",
+    "item_id": "k0026",
     "type": "single_choice",
     "prompt": "In the definition of `good-enough?`, which names are bound variables and which are free variables?",
     "options": [
@@ -308,8 +364,8 @@
     "explanation": "The text states this directly: guess and x are bound variables (they're good-enough?'s formal parameters, scoped to its body), while <, -, abs, and square are free - their meaning comes from outside this particular definition, e.g. from the global environment."
   },
   {
-    "id": "q0023",
-    "item_id": "k0023",
+    "id": "q0027",
+    "item_id": "k0027",
     "type": "single_choice",
     "prompt": "What problem does giving `sqrt` internal (nested) definitions of `good-enough?`, `improve`, and `sqrt-iter` solve?",
     "options": [

@@ -1,0 +1,52 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 2,
+      "est_seconds": 170,
+      "recap_md": "Lisp began as McCarthy's formalism for recursion equations in the late 1950s but evolved informally into a family of dialects; the dialect used in this book is Scheme."
+    },
+    {
+      "start_paragraph_index": 3,
+      "end_paragraph_index": 4,
+      "est_seconds": 160,
+      "recap_md": "Lisp was historically inefficient for numerical computation but is used here because procedures can themselves be represented and manipulated as data."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Lisp began as a mathematical formalism (McCarthy, late 1950s) but became a practical, informally-evolved family of dialects; the dialect used in this book is Scheme.",
+      "block_indices": [0]
+    },
+    {
+      "statement": "The book uses Lisp because Lisp procedures can themselves be represented and manipulated as data, blurring the usual distinction between 'passive' data and 'active' processes - a capability central to techniques explored later in the book.",
+      "block_indices": [1]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "Which specific dialect of Lisp does this book (SICP) use?",
+      "options": [
+        "Scheme",
+        "Common Lisp",
+        "MacLisp",
+        "Interlisp"
+      ],
+      "answer_index": 0,
+      "explanation": "The text states directly: Lisp is by now a family of dialects, and the dialect of Lisp used in this book is called Scheme."
+    },
+    {
+      "item_index": 1,
+      "prompt": "What key property of Lisp does the text say makes it especially well-suited for the book's discussion of programming?",
+      "options": [
+        "Lisp procedures (descriptions of processes) can themselves be represented and manipulated as Lisp data, blurring the usual distinction between passive data and active processes",
+        "Lisp historically had the fastest numerical performance of any programming language",
+        "Lisp requires no punctuation of any kind, making programs easier to type",
+        "Lisp was the very first programming language ever created, predating Fortran"
+      ],
+      "answer_index": 0,
+      "explanation": "The text names this as the most significant feature: Lisp descriptions of processes (procedures) can themselves be represented and manipulated as data - not raw performance (Lisp was historically slower than Fortran for numerics) and not being the oldest language (Fortran is older)."
+    }
+  ]
+}

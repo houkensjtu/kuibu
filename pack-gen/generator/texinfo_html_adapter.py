@@ -11,6 +11,15 @@ sarabander 维护的 Unofficial Texinfo Format 版本在 mitpress.mit.edu 原版
   代码/示意图（ASCII 对齐图也在 example 里，同样对空白敏感）。
 - <div class="footnote"> 是脚注定义，<h4 class="footnotes-heading"> 之后是脚注区
   ——都不算正文，直接跳过。
+- 每章还有一个独立的"引言"文件（如 Chapter-1.xhtml），结构不一样：顶层是
+  <h2 class="chapter">（chapnum/chaptitle span，不是 secnum/sectitle），
+  没有编号小节，只有零个或多个 <h5 class="subsubheading">（纯文本，无
+  编号）充当"引言内部的分段标题"，比如 SICP 第一章引言里的"Programming
+  in Lisp"。这部分内容（Locke 引文、"sorcerer's apprentice"那段essay、
+  Lisp 历史）之前完全没被抓取——只处理了 1.1/1.2/1.3 这些编号小节的文件，
+  引言文件根本没拿来解析过。用 "{chapter_num}.0.{i}" 这种人为编号（i 从 1
+  开始，每遇到一个 subsubheading 就 +1）把引言内容也纳入 section_path 体系，
+  排在 "{chapter_num}.1"（如 1.1）之前，保证阅读顺序仍然正确。
 """
 
 import warnings
@@ -117,8 +126,67 @@ class TexinfoHtmlAdapter:
             soup = BeautifulSoup(f.read(), "lxml")
 
         section_el = soup.body.find("section")
+
         section_h3 = section_el.find("h3", class_="section")
-        section_num = section_h3.find("span", class_="secnum").get_text(strip=True)
+        if section_h3 is not None:
+            return self._parse_numbered_section(section_el, section_h3)
+
+        chapter_h2 = section_el.find("h2", class_="chapter")
+        if chapter_h2 is not None:
+            return self._parse_chapter_intro(section_el, chapter_h2)
+
+        raise ValueError(
+            f"{path}: 既没找到 <h3 class=\"section\"> 也没找到 <h2 class=\"chapter\">，"
+            "不认识这个文件的结构"
+        )
+
+    def _parse_chapter_intro(self, section_el: Tag, chapter_h2: Tag) -> List[Subsection]:
+        chapter_num = _clean_text(_render_inline(chapter_h2.find("span", class_="chapnum")))
+        chapter_title = _clean_text(_render_inline(chapter_h2.find("span", class_="chaptitle")))
+        fake_section_num = f"{chapter_num}.0"
+
+        subsections: List[Subsection] = []
+        sub_index = 1
+        current_path = [chapter_num, fake_section_num, f"{fake_section_num}.{sub_index}"]
+        current_title = chapter_title
+        current_paragraphs: List[Paragraph] = []
+
+        def flush() -> None:
+            if current_paragraphs:
+                subsections.append(
+                    Subsection(
+                        section_path=current_path,
+                        section_title=current_title,
+                        paragraphs=current_paragraphs,
+                    )
+                )
+
+        for el in section_el.find_all(recursive=False):
+            if not isinstance(el, Tag):
+                continue
+
+            classes = el.get("class") or []
+            if el.name == "h2" and "chapter" in classes:
+                continue  # 已经在上面读过 chapnum/chaptitle 了
+
+            if "subsubheading" in classes:
+                flush()
+                sub_index += 1
+                current_path = [chapter_num, fake_section_num, f"{fake_section_num}.{sub_index}"]
+                current_title = _clean_text(_render_inline(el))
+                current_paragraphs = []
+                continue
+
+            if el.name == "h4" and "footnotes-heading" in classes:
+                break  # 正文结束，后面是脚注区
+
+            current_paragraphs.extend(_paragraphs_from_element(el))
+
+        flush()
+        return subsections
+
+    def _parse_numbered_section(self, section_el: Tag, section_h3: Tag) -> List[Subsection]:
+        section_num = _clean_text(_render_inline(section_h3.find("span", class_="secnum")))
         chapter_num = section_num.split(".")[0]
 
         subsections: List[Subsection] = []

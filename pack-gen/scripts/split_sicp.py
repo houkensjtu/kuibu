@@ -15,7 +15,9 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 SOURCE_DIR = Path("sources/sicp")
 OUTPUT_DIR = Path("build/sicp/sections")
-SOURCE_FILES = ["1.1.xhtml", "1.2.xhtml", "1.3.xhtml"]
+# Chapter-1.xhtml must come first: it has no numbered section, so it produces
+# the "1.0.*" pseudo-subsections that should be read before 1.1 starts.
+SOURCE_FILES = ["Chapter-1.xhtml", "1.1.xhtml", "1.2.xhtml", "1.3.xhtml"]
 
 
 def main() -> None:
