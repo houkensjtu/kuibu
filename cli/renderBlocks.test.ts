@@ -66,14 +66,24 @@ describe("indentContent", () => {
     expect(indentContent("para one\n\npara two", "  ")).toBe("  para one\n\n  para two");
   });
 
-  it("replaces the opening fence with a plain-text label naming the language, and drops the closing fence", () => {
+  it("replaces the fences with a label and a border sized to the widest code line", () => {
     const code = "```scheme\n(+ 1 2)\n```";
-    expect(indentContent(code, "  ")).toBe("  Code (scheme):\n  (+ 1 2)");
+    expect(indentContent(code, "  ")).toBe(
+      "  Code (scheme):\n  -------\n  (+ 1 2)\n  -------",
+    );
   });
 
   it("uses a bare 'Code:' label when the fence has no language tag", () => {
     const code = "```\n(+ 1 2)\n```";
-    expect(indentContent(code, "  ")).toBe("  Code:\n  (+ 1 2)");
+    expect(indentContent(code, "  ")).toBe("  Code:\n  -------\n  (+ 1 2)\n  -------");
+  });
+
+  it("sizes the border to the longest line when a code block has multiple lines", () => {
+    const code = "```scheme\n(+ 1 2)\n(display \"hello world\")\n```";
+    const result = indentContent(code, "  ");
+    const lines = result.split("\n");
+    expect(lines[1]).toBe(`  ${"-".repeat("(display \"hello world\")".length)}`);
+    expect(lines[1]).toBe(lines[4]);
   });
 
   it("word-wraps a long paragraph to fit the width, indenting every wrapped line", () => {
@@ -87,8 +97,9 @@ describe("indentContent", () => {
   it("does not word-wrap content inside a fenced code block, even past the width", () => {
     const code = "```scheme\n(define (very-long-procedure-name x) (+ x 1))\n```";
     const result = indentContent(code, "  ", 20);
+    const border = `  ${"-".repeat("(define (very-long-procedure-name x) (+ x 1))".length)}`;
     expect(result).toBe(
-      "  Code (scheme):\n  (define (very-long-procedure-name x) (+ x 1))",
+      `  Code (scheme):\n${border}\n  (define (very-long-procedure-name x) (+ x 1))\n${border}`,
     );
   });
 });

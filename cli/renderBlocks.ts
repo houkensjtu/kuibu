@@ -69,26 +69,40 @@ function wordWrap(text: string, maxWidth: number): string[] {
  * 这两行光秃秃地杵在那里既不高亮也不成框，只是噪音（2026-08 用户反馈）。
  * 开头围栏换成一行明说"接下来是代码"的纯文本提示（有语言标注就带上，如
  * "Code (scheme):"），兼容任何终端/字体，不依赖 ANSI 颜色或 Unicode 画框；
- * 结尾围栏直接省略，代码结束后原有的空行本身就足够当作分隔。空行不加
- * 前缀，避免留下没意义的行尾空白。
+ * 代码本身上下各加一条 `---` 边界线，宽度跟着代码内容本身走（取代码块里
+ * 最长一行的长度），不拉满整个屏幕宽度——太宽会跟分页/分节的横线混淆
+ * （2026-08 用户反馈）。空行不加前缀，避免留下没意义的行尾空白。
  */
 export function indentContent(content: string, indent: string, width = 80): string {
   const wrapWidth = Math.max(20, width - indent.length);
   let inCodeFence = false;
+  let codeLabel = "";
+  let codeLines: string[] = [];
   const output: string[] = [];
+
+  const flushCodeBlock = () => {
+    const codeWidth = codeLines.reduce((max, line) => Math.max(max, line.length), 1);
+    const border = indent + "-".repeat(codeWidth);
+    output.push(indent + codeLabel);
+    output.push(border);
+    for (const line of codeLines) output.push(indent + line);
+    output.push(border);
+    codeLines = [];
+  };
 
   for (const line of content.split("\n")) {
     const fenceMatch = line.trim().match(/^```(\w+)?/);
     if (fenceMatch) {
-      if (!inCodeFence) {
-        const label = fenceMatch[1] ? `Code (${fenceMatch[1]}):` : "Code:";
-        output.push(indent + label);
+      if (inCodeFence) {
+        flushCodeBlock();
+      } else {
+        codeLabel = fenceMatch[1] ? `Code (${fenceMatch[1]}):` : "Code:";
       }
       inCodeFence = !inCodeFence;
+    } else if (inCodeFence) {
+      codeLines.push(line);
     } else if (line === "") {
       output.push(line);
-    } else if (inCodeFence) {
-      output.push(indent + line);
     } else {
       for (const wrapped of wordWrap(line, wrapWidth)) {
         output.push(indent + wrapped);
