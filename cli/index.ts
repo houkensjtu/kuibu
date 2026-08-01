@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { randomUUID } from "node:crypto";
-import { createInterface } from "node:readline/promises";
 import { Command } from "commander";
 import { loadPack, PackLoadError } from "./loadPack.js";
 import { appendEvent, readEvents, writeEvents } from "./eventLog.js";
@@ -19,6 +18,7 @@ import { runAnswerFlow } from "./answerFlow.js";
 import { askInTerminal } from "./answerPrompt.js";
 import { renderHeatmap } from "./renderHeatmap.js";
 import { askDailyTargetMinutes } from "./targetPrompt.js";
+import { createLineReader } from "./lineReader.js";
 
 const DEFAULT_TARGET_MINUTES = 12;
 
@@ -45,7 +45,7 @@ program
       const priorEvents = readEvents(options.log);
       const state = reduceEvents(priorEvents, questionItemMap);
 
-      const rl = createInterface({ input: process.stdin, output: process.stdout });
+      const lineReader = createLineReader();
       try {
         let targetSeconds: number;
         let persistTargetChange = false;
@@ -58,7 +58,7 @@ program
         } else {
           // First run ever (no --minutes, nothing recorded before): ask instead
           // of silently picking a number the user never agreed to.
-          const minutes = await askDailyTargetMinutes(rl, DEFAULT_TARGET_MINUTES);
+          const minutes = await askDailyTargetMinutes(lineReader, DEFAULT_TARGET_MINUTES);
           targetSeconds = minutes * 60;
           persistTargetChange = true;
         }
@@ -93,7 +93,7 @@ program
           console.log("You've finished this book - just review questions today.");
         } else {
           await runReadingFlow(todaysBlocks, {
-            showBlock: showBlockInPagerOrFallback,
+            showBlock: (block) => showBlockInPagerOrFallback(block, lineReader),
             onBlockRead: (blockId, seconds) => {
               totalReadSecondsToday += seconds;
               appendEvent(options.log, {
@@ -121,7 +121,7 @@ program
         const answeredQuestionIds = new Set<string>();
 
         await runAnswerFlow(queue, questionsById, {
-          ask: (question, shuffled) => askInTerminal(rl, question, shuffled),
+          ask: (question, shuffled) => askInTerminal(lineReader, question, shuffled),
           onAnswered: (_entry, question, shuffled, _chosenIndex, correct) => {
             answeredQuestionIds.add(question.id);
 
@@ -179,7 +179,7 @@ program
         console.log();
         console.log(renderHeatmap(buildHeatmap(checkinDates, today)));
       } finally {
-        rl.close();
+        lineReader.close();
       }
     } catch (err) {
       if (err instanceof PackLoadError) {

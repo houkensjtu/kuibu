@@ -1,4 +1,4 @@
-import type { Interface } from "node:readline/promises";
+import type { LineReader } from "./lineReader.js";
 
 /** Parses raw user input into a positive integer number of minutes, falling back to a default. */
 export function parseMinutesInput(raw: string, defaultMinutes: number): number {
@@ -11,11 +11,12 @@ export function parseMinutesInput(raw: string, defaultMinutes: number): number {
 
 /** Asks the user for their daily reading target in minutes, defaulting on empty/invalid input. */
 export async function askDailyTargetMinutes(
-  rl: Interface,
+  lineReader: LineReader,
   defaultMinutes: number,
 ): Promise<number> {
-  const raw = await rl.question(
+  process.stdout.write(
     `How many minutes do you want to read per day? (default ${defaultMinutes}, press Enter to accept): `,
   );
+  const raw = await lineReader.readLine();
   return parseMinutesInput(raw, defaultMinutes);
 }
