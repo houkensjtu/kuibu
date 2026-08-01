@@ -82,6 +82,18 @@ packs/public/             公开内容包，进 git
 
 ---
 
+## 踩过的坑 —— 已经修过一次，不要再犯
+
+- **`readline.Interface.question()` 在同一个 Interface 上连续调用两次，第二次会误判 stdin 已结束**，导致进程在用户还没输入任何东西时直接退出。`tsx` 和编译后的纯 node 下都会复现，不是 `tsx` 专属问题；`for await (const line of rl)` 提前 `return` 也有类似的"再调用就死"问题。**结论：终端交互一律不用 `readline`**，走手写的 `cli/lineReader.ts`（自己缓冲 stdin、按换行符切分）。
+- **Windows 下 Python 默认 stdout 编码是 cp1252**，打印中文会 `UnicodeEncodeError`。`pack-gen/` 下的脚本文件头一律 `sys.stdout.reconfigure(encoding="utf-8")`；`datamodel-code-generator` 同理必须带 `--encoding utf-8`。
+- **pydantic v2 配合 `from __future__ import annotations` 时，字段名不能和它引用的类型名相同**（如字段 `date: date` 会冲突）。改字段名解决不了——schema 定死了字段名——用 `from datetime import date as _date` 起别名绕开。
+- **`ajv`/`ajv-formats` 在 `moduleResolution: nodenext` 下默认导入的类型推断不对**：`Ajv` 要用具名导入，`ajv-formats` 的默认导出要显式 cast；`ajv.compile()` 不给显式类型参数（`ajv.compile<T>(...)`）会推出没用的类型。
+- **`<blockquote>` 曾被 HTML 适配器整段丢弃**（没在允许的顶层标签列表里）；bs4 的 `Comment` 是 `NavigableString` 的子类，不显式排除会把 HTML 注释当正文渲染出来。两处都在 `texinfo_html_adapter.py`，改这个文件时留意。
+- **章节引言文件（如 `Chapter-1.xhtml`）曾经整个没被解析**——只把编号小节文件喂给了适配器，导致引语/导论这类章节开篇内容整体缺失。加新章节时不能假设"编号小节文件"就是全部输入，引言文件要单独发现并走 `_parse_chapter_intro` 分支。
+- **构建产物的缓存可能比源头"新"却内容更旧**：`merged-pack-parts.json` 曾经留着一处早就在别的文件里修好的编码问题（因为它是上一次构建生成的，之后没跟着重新合并）。内容包里出现乱码或过期内容，先重跑合并脚本（`build_all_sections.py`）再怀疑是不是新 bug。
+
+---
+
 ## 当前里程碑
 
 见 `docs/MILESTONES.md`。一次只做一个里程碑，做完让我实际用一天再继续。
