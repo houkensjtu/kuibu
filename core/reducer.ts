@@ -14,6 +14,8 @@ export interface ReducedState {
   wrongQuestionIdByItemId: Map<string, string>;
   /** 当前生效的每日阅读时长目标（秒），取 session_start / settings_change 里最新的一条。 */
   dailyTargetSeconds?: number;
+  /** 出现过 exercise_attempt 事件的 exercise id 集合——习题是可选做的，这里只记"碰过"，不记对错（本来就不判分）。 */
+  attemptedExerciseIds: Set<string>;
 }
 
 function emptyState(): ReducedState {
@@ -22,6 +24,7 @@ function emptyState(): ReducedState {
     itemStates: new Map(),
     checkinDates: new Set(),
     wrongQuestionIdByItemId: new Map(),
+    attemptedExerciseIds: new Set(),
   };
 }
 
@@ -79,6 +82,10 @@ export function reduceEvents(
         ) {
           state.dailyTargetSeconds = event.value;
         }
+        break;
+
+      case "exercise_attempt":
+        state.attemptedExerciseIds.add(event.exercise_id);
         break;
     }
   }

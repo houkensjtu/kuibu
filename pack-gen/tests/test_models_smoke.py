@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from models.pack import ContentPack, Manifest, Block, KnowledgeItem, Question, Type
+from models.pack import ContentPack, Manifest, Block, KnowledgeItem, Question, Exercise, Type
 from models.events import Event, SessionStart
 
 
@@ -44,6 +44,15 @@ def test_content_pack_round_trip():
                 options=["求值各子表达式", "打印结果", "跳过求值", "报错"],
                 answer_index=0,
                 explanation="求值组合式先递归求值运算符和运算对象。",
+            )
+        ],
+        exercises=[
+            Exercise(
+                id="x0001",
+                block_id="b0001",
+                number="1.1",
+                prompt_md="以下每个表达式的结果是什么？",
+                hint_md="先确定每个子表达式的类型，再套用先求值再应用的规则。",
             )
         ],
     )

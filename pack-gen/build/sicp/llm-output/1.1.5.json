@@ -40,15 +40,24 @@
   "knowledge_items": [
     {
       "statement": "To apply a compound procedure, evaluate its body with each formal parameter replaced by the corresponding argument - this is the substitution model for procedure application.",
-      "block_indices": [0, 1, 2]
+      "block_indices": [
+        0,
+        1,
+        2
+      ]
     },
     {
       "statement": "The substitution model is a way to think about what procedure application means, not a description of how a real interpreter works internally (which actually uses a local environment, not literal text substitution) - and it eventually breaks down once mutable data is introduced later in the book.",
-      "block_indices": [3]
+      "block_indices": [
+        3
+      ]
     },
     {
       "statement": "Normal-order evaluation ('fully expand, then reduce') and applicative-order evaluation ('evaluate arguments, then apply') give the same answer for substitution-model-compatible procedures, but normal-order can re-evaluate the same subexpression multiple times; Lisp uses applicative-order for efficiency and simplicity.",
-      "block_indices": [4, 5]
+      "block_indices": [
+        4,
+        5
+      ]
     }
   ],
   "questions": [
@@ -88,5 +97,6 @@
       "answer_index": 0,
       "explanation": "The text shows `(+ 5 1)` and `(* 5 2)` each get evaluated twice under normal-order evaluation, because `square`'s body `(* x x)` uses its parameter twice, duplicating whatever expression was substituted in - this repeated work is part of why Lisp uses applicative-order evaluation instead."
     }
-  ]
+  ],
+  "exercises": []
 }

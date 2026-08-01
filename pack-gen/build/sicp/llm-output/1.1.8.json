@@ -52,19 +52,31 @@
   "knowledge_items": [
     {
       "statement": "A procedure is a 'black box' / procedural abstraction: what matters to a caller is only what result it computes, not how it's implemented internally - so two different implementations that compute the same values are indistinguishable to any caller.",
-      "block_indices": [1, 2]
+      "block_indices": [
+        1,
+        2
+      ]
     },
     {
       "statement": "A formal parameter's name shouldn't matter to callers either; parameter names must therefore be local to the procedure's own body, or two procedures using the same parameter name (like two different uses of `x`) could interfere with each other.",
-      "block_indices": [2, 3]
+      "block_indices": [
+        2,
+        3
+      ]
     },
     {
       "statement": "A formal parameter is a bound variable, scoped to the procedure's body; a name that isn't bound by any enclosing definition is free. Renaming a bound variable to collide with a free variable's name (variable capture) introduces a bug by changing that name's meaning.",
-      "block_indices": [4]
+      "block_indices": [
+        4
+      ]
     },
     {
       "statement": "Block structure lets you nest auxiliary procedure definitions inside the procedure that uses them, hiding names that would otherwise clutter the caller's namespace; going further, lexical scoping lets an inner definition treat the enclosing procedure's parameter as a free variable, so it doesn't need to be passed explicitly to every internal helper.",
-      "block_indices": [5, 6, 7]
+      "block_indices": [
+        5,
+        6,
+        7
+      ]
     }
   ],
   "questions": [
@@ -116,5 +128,6 @@
       "answer_index": 0,
       "explanation": "The text's motivation is namespace hygiene: only sqrt itself matters to sqrt's callers, while good-enough?/improve/sqrt-iter are implementation clutter that could collide with someone else's same-named procedures - block structure (nested definitions) hides them inside sqrt instead of leaving them at top level."
     }
-  ]
+  ],
+  "exercises": []
 }

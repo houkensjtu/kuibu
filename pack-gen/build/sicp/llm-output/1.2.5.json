@@ -43,10 +43,6 @@
     {
       "statement": "Lamé's theorem connects Euclid's Algorithm to the Fibonacci numbers: if the algorithm takes k steps, the smaller of the two original numbers must be at least Fib(k). Since Fibonacci numbers grow exponentially (roughly φ^k), the number of steps k must grow only logarithmically in n - giving Euclid's Algorithm an order of growth of Θ(log n), a case where an iterative process still has logarithmic rather than linear growth.",
       "block_indices": [3]
-    },
-    {
-      "statement": "Exercise 1.20 shows that the process an algorithm actually generates depends on the evaluation rule: under normal-order evaluation, argument expressions are substituted unevaluated and only forced when needed, so a `remainder` sub-expression can be re-expanded and recomputed many times over, making normal-order evaluation of `(gcd 206 40)` perform far more `remainder` operations than applicative-order evaluation, which reduces each argument to a value once before proceeding.",
-      "block_indices": [4]
     }
   ],
   "questions": [
@@ -85,18 +81,14 @@
       ],
       "answer_index": 0,
       "explanation": "Lamé's theorem gives n ≥ Fib(k), and since Fib(k) grows roughly like φ^k, solving for k gives k growing as the logarithm (base φ) of n - that is exactly the Θ(log n) order of growth for the number of steps."
-    },
+    }
+  ],
+  "exercises": [
     {
-      "item_index": 3,
-      "prompt": "In Exercise 1.20's normal-order trace of `(gcd 206 40)`, why does normal-order evaluation end up performing more `remainder` operations than applicative-order evaluation, even though both eventually produce the same answer?",
-      "options": [
-        "Normal order substitutes argument expressions unevaluated and only forces them when actually needed (e.g., inside `=` or the final result), so the same `remainder` expression can be re-expanded and recomputed several times instead of being reduced to a value once",
-        "Normal order and applicative order actually perform exactly the same number of remainder operations, since both must reach the same final value",
-        "Normal order performs more operations because it evaluates `remainder` before checking whether `b` is 0, while applicative order checks first and skips the computation",
-        "Normal order performs more operations because it recomputes the `gcd` call itself twice as many times as applicative order does"
-      ],
-      "answer_index": 0,
-      "explanation": "Under normal-order evaluation, an argument expression is passed along unevaluated and only reduced when its value is actually demanded; because `remainder a b` reappears nested inside later, deferred expressions, forcing it repeatedly recomputes the same remainder many times, unlike applicative order, which evaluates each argument to a value exactly once before the call proceeds."
+      "number": "1.20",
+      "start_paragraph_index": 12,
+      "end_paragraph_index": 12,
+      "hint_md": "Trace `(gcd 206 40)` the way Exercise 1.5 traced normal-order `if`: substitute each argument expression as-is, without evaluating it first, and only force a value when something (like the `= b 0` test, or the final printed result) actually demands one. At each recursive call the new second argument is built by wrapping the previous, still-unevaluated `(remainder a b)` expression one level deeper - so watch how many separate `remainder` sub-expressions end up nested inside the fully expanded form by the time it's finally forced, versus how many times `remainder` is actually computed when each argument is reduced to a number immediately, as in applicative order."
     }
   ]
 }

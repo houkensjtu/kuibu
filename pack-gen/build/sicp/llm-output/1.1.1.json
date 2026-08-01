@@ -34,15 +34,23 @@
   "knowledge_items": [
     {
       "statement": "When evaluating a combination, the interpreter first recursively evaluates the operator and each operand, then applies the resulting procedure to the argument values.",
-      "block_indices": [1, 2]
+      "block_indices": [
+        1,
+        2
+      ]
     },
     {
       "statement": "Prefix notation places the operator to the left of the operands, so it naturally accommodates an arbitrary number of arguments and allows unambiguous nesting.",
-      "block_indices": [2, 3]
+      "block_indices": [
+        2,
+        3
+      ]
     },
     {
       "statement": "The Scheme interpreter runs a read-eval-print loop: it reads an expression, evaluates it, and automatically prints the result - the user never has to explicitly ask for the value to be printed.",
-      "block_indices": [4]
+      "block_indices": [
+        4
+      ]
     }
   ],
   "questions": [
@@ -82,5 +90,6 @@
       "answer_index": 0,
       "explanation": "The text specifically notes that it is not necessary to explicitly instruct the interpreter to print the value of an expression - that's exactly what the read-eval-print loop does, over and over."
     }
-  ]
+  ],
+  "exercises": []
 }

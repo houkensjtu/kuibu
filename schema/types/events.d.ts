@@ -8,7 +8,7 @@
 /**
  * kuibu 用户状态事件日志（JSONL，每行一个 Event），按 type 区分 5 种事件
  */
-export type Event = SessionStart | BlockRead | Answer | Checkin | SettingsChange;
+export type Event = SessionStart | BlockRead | Answer | Checkin | SettingsChange | ExerciseAttempt;
 
 export interface SessionStart {
   id: string;
@@ -49,4 +49,15 @@ export interface SettingsChange {
    * 设置值，类型依 key 而定（如 daily_target_seconds 是 integer）
    */
   value: string | number | boolean;
+}
+export interface ExerciseAttempt {
+  id: string;
+  ts: string;
+  type: "exercise_attempt";
+  exercise_id: string;
+  /**
+   * 花在这道习题上的时间；计入当天阅读时长反馈，但不参与 block 切分估时
+   */
+  seconds: number;
+  used_hint: boolean;
 }

@@ -15,7 +15,7 @@ from typing import List, Tuple
 
 from generator.section_llm_output import SectionLLMOutput
 from generator.source_adapter import Paragraph, ParagraphKind, Subsection
-from models.pack import Block, KnowledgeItem, Question, Type
+from models.pack import Block, Exercise, KnowledgeItem, Question, Type
 
 
 @dataclass
@@ -24,6 +24,7 @@ class IdCounters:
     block: int = 0
     item: int = 0
     question: int = 0
+    exercise: int = 0
 
 
 def _render_content_md(paragraphs: List[Paragraph]) -> str:
@@ -40,7 +41,7 @@ def slice_section(
     subsection: Subsection,
     llm_output: SectionLLMOutput,
     counters: IdCounters,
-) -> Tuple[List[Block], List[KnowledgeItem], List[Question]]:
+) -> Tuple[List[Block], List[KnowledgeItem], List[Question], List[Exercise]]:
     blocks: List[Block] = []
     for spec in llm_output.blocks:
         counters.seq += 1
@@ -99,4 +100,27 @@ def slice_section(
             )
         )
 
-    return blocks, items, questions
+    exercises: List[Exercise] = []
+    for espec in llm_output.exercises:
+        counters.exercise += 1
+        paragraphs = subsection.paragraphs[
+            espec.start_paragraph_index : espec.end_paragraph_index + 1
+        ]
+        # 习题解锁的 block = 覆盖了这道习题起始段落的那个 block——不要求
+        # LLM 手动指定 block_id，避免它跟 block 边界的另一份真相来源脱节。
+        owning_block = next(
+            b
+            for bspec, b in zip(llm_output.blocks, blocks)
+            if bspec.start_paragraph_index <= espec.start_paragraph_index <= bspec.end_paragraph_index
+        )
+        exercises.append(
+            Exercise(
+                id=f"x{counters.exercise:04d}",
+                block_id=owning_block.id,
+                number=espec.number,
+                prompt_md=_render_content_md(paragraphs),
+                hint_md=espec.hint_md,
+            )
+        )
+
+    return blocks, items, questions, exercises

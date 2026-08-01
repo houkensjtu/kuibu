@@ -43,6 +43,15 @@ function samplePack() {
         explanation: "求值组合式先递归求值运算符和运算对象。",
       },
     ],
+    exercises: [
+      {
+        id: "x0001",
+        block_id: "b0001",
+        number: "1.1",
+        prompt_md: "以下每个表达式的结果是什么？",
+        hint_md: "先确定每个子表达式的类型，再套用先求值再应用的规则。",
+      },
+    ],
   };
 }
 

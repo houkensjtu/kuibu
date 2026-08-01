@@ -194,5 +194,49 @@
       "answer_index": 0,
       "explanation": "The text lists four rights of first-class elements: being named by variables, passed as arguments, returned as results, and included in data structures; being returnable as a procedure's result is exactly one of these, and Lisp grants procedures all four."
     }
+  ],
+  "exercises": [
+    {
+      "number": "1.40",
+      "start_paragraph_index": 35,
+      "end_paragraph_index": 37,
+      "hint_md": "`newtons-method` expects a procedure of one argument (the function whose zero you're looking for), not the cubic's coefficients themselves. So `cubic` shouldn't compute a value directly - it needs to return a lambda of one argument `x` that evaluates x^3 + a*x^2 + b*x + c, closing over `a`, `b`, and `c` the same way `average-damp`'s returned lambda closes over `f`."
+    },
+    {
+      "number": "1.41",
+      "start_paragraph_index": 38,
+      "end_paragraph_index": 39,
+      "hint_md": "Think about what `double` must return: not a number, but a procedure - one that applies the original procedure's effect twice in a row, the same way `average-damp`'s lambda wraps a single application of `f`. Once `double` works on one procedure, trace `(double (double double))` step by step rather than guessing: doubling the doubling operation itself compounds how many times the innermost procedure ends up applied."
+    },
+    {
+      "number": "1.42",
+      "start_paragraph_index": 40,
+      "end_paragraph_index": 41,
+      "hint_md": "`compose` should mirror the shape of `average-damp` and `deriv`: it takes two procedures and returns a new one-argument lambda. That lambda's body needs to call `g` first on its argument, then feed the result into `f` - nothing more."
+    },
+    {
+      "number": "1.43",
+      "start_paragraph_index": 42,
+      "end_paragraph_index": 44,
+      "hint_md": "The text's own aside points the way: build `repeated` in terms of `compose`. Think recursively - applying `f` n times is the same as composing `f` with the result of applying it n-1 times, bottoming out when n reaches 1."
+    },
+    {
+      "number": "1.44",
+      "start_paragraph_index": 45,
+      "end_paragraph_index": 45,
+      "hint_md": "Model `smooth` on `average-damp`'s structure, but instead of averaging just x and f(x), average three samples of f taken around x using a small step (the same kind of `dx` defined earlier in this section). For the n-fold version, consider what `repeated` applied to `smooth` itself would give you."
+    },
+    {
+      "number": "1.45",
+      "start_paragraph_index": 46,
+      "end_paragraph_index": 46,
+      "hint_md": "Experiment directly in the interpreter: for y -> x/y^(n-1) with increasing n, wrap the transform in one, two, three... nested average-damps and see how many are needed before `fixed-point` converges. Look for a pattern relating n to that count, then use `repeated` (Exercise 1.43) to apply `average-damp` that many times to the base transform automatically."
+    },
+    {
+      "number": "1.46",
+      "start_paragraph_index": 47,
+      "end_paragraph_index": 47,
+      "hint_md": "Compare the `sqrt` loop from 1.1.7 and `fixed-point` from 1.3.3 side by side: both repeat a 'guess -> improved guess' step until some 'close enough' test passes. `iterative-improve` should take exactly those two pieces - the good-enough? test and the improve step - as its two procedure arguments, and return a procedure that loops guess -> improve(guess) until good-enough? holds."
+    }
   ]
 }

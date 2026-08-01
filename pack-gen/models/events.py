@@ -67,8 +67,29 @@ class SettingsChange(BaseModel):
     )
 
 
-class Event(RootModel[Union[SessionStart, BlockRead, Answer, Checkin, SettingsChange]]):
-    root: Union[SessionStart, BlockRead, Answer, Checkin, SettingsChange] = Field(
+class ExerciseAttempt(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: constr(min_length=1)
+    ts: datetime
+    type: Literal['exercise_attempt']
+    exercise_id: constr(min_length=1)
+    seconds: conint(ge=0) = Field(
+        ...,
+        description='花在这道习题上的时间；计入当天阅读时长反馈，但不参与 block 切分估时',
+    )
+    used_hint: bool
+
+
+class Event(
+    RootModel[
+        Union[SessionStart, BlockRead, Answer, Checkin, SettingsChange, ExerciseAttempt]
+    ]
+):
+    root: Union[
+        SessionStart, BlockRead, Answer, Checkin, SettingsChange, ExerciseAttempt
+    ] = Field(
         ...,
         description='kuibu 用户状态事件日志（JSONL，每行一个 Event），按 type 区分 5 种事件',
         title='Event',

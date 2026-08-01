@@ -16,11 +16,15 @@
   "knowledge_items": [
     {
       "statement": "Lisp began as a mathematical formalism (McCarthy, late 1950s) but became a practical, informally-evolved family of dialects; the dialect used in this book is Scheme.",
-      "block_indices": [0]
+      "block_indices": [
+        0
+      ]
     },
     {
       "statement": "The book uses Lisp because Lisp procedures can themselves be represented and manipulated as data, blurring the usual distinction between 'passive' data and 'active' processes - a capability central to techniques explored later in the book.",
-      "block_indices": [1]
+      "block_indices": [
+        1
+      ]
     }
   ],
   "questions": [
@@ -48,5 +52,6 @@
       "answer_index": 0,
       "explanation": "The text names this as the most significant feature: Lisp descriptions of processes (procedures) can themselves be represented and manipulated as data - not raw performance (Lisp was historically slower than Fortran for numerics) and not being the oldest language (Fortran is older)."
     }
-  ]
+  ],
+  "exercises": []
 }

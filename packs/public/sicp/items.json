@@ -233,9 +233,10 @@
   {
     "id": "k0023",
     "block_ids": [
-      "b0040"
+      "b0043",
+      "b0044"
     ],
-    "statement": "If `if` were defined as an ordinary procedure (like `new-if`, built from `cond`) instead of a special form, applying it under applicative-order evaluation would require evaluating every argument - including the recursive call - before `new-if` could even be applied, so a recursive procedure like `sqrt-iter` written with `new-if` would never terminate, even once the base case is already true.",
+    "statement": "A procedure is a 'black box' / procedural abstraction: what matters to a caller is only what result it computes, not how it's implemented internally - so two different implementations that compute the same values are indistinguishable to any caller.",
     "question_ids": [
       "q0023"
     ]
@@ -243,10 +244,10 @@
   {
     "id": "k0024",
     "block_ids": [
-      "b0043",
-      "b0044"
+      "b0044",
+      "b0045"
     ],
-    "statement": "A procedure is a 'black box' / procedural abstraction: what matters to a caller is only what result it computes, not how it's implemented internally - so two different implementations that compute the same values are indistinguishable to any caller.",
+    "statement": "A formal parameter's name shouldn't matter to callers either; parameter names must therefore be local to the procedure's own body, or two procedures using the same parameter name (like two different uses of `x`) could interfere with each other.",
     "question_ids": [
       "q0024"
     ]
@@ -254,10 +255,9 @@
   {
     "id": "k0025",
     "block_ids": [
-      "b0044",
-      "b0045"
+      "b0046"
     ],
-    "statement": "A formal parameter's name shouldn't matter to callers either; parameter names must therefore be local to the procedure's own body, or two procedures using the same parameter name (like two different uses of `x`) could interfere with each other.",
+    "statement": "A formal parameter is a bound variable, scoped to the procedure's body; a name that isn't bound by any enclosing definition is free. Renaming a bound variable to collide with a free variable's name (variable capture) introduces a bug by changing that name's meaning.",
     "question_ids": [
       "q0025"
     ]
@@ -265,9 +265,11 @@
   {
     "id": "k0026",
     "block_ids": [
-      "b0046"
+      "b0047",
+      "b0048",
+      "b0049"
     ],
-    "statement": "A formal parameter is a bound variable, scoped to the procedure's body; a name that isn't bound by any enclosing definition is free. Renaming a bound variable to collide with a free variable's name (variable capture) introduces a bug by changing that name's meaning.",
+    "statement": "Block structure lets you nest auxiliary procedure definitions inside the procedure that uses them, hiding names that would otherwise clutter the caller's namespace; going further, lexical scoping lets an inner definition treat the enclosing procedure's parameter as a free variable, so it doesn't need to be passed explicitly to every internal helper.",
     "question_ids": [
       "q0026"
     ]
@@ -275,11 +277,11 @@
   {
     "id": "k0027",
     "block_ids": [
-      "b0047",
-      "b0048",
-      "b0049"
+      "b0051",
+      "b0052",
+      "b0053"
     ],
-    "statement": "Block structure lets you nest auxiliary procedure definitions inside the procedure that uses them, hiding names that would otherwise clutter the caller's namespace; going further, lexical scoping lets an inner definition treat the enclosing procedure's parameter as a free variable, so it doesn't need to be passed explicitly to every internal helper.",
+    "statement": "The factorial function can be computed either recursively (n! = n * (n-1)!), generating a chain of deferred multiplications, or iteratively via a running product and counter updated step by step - two different procedures that carry out the same sequence of multiplications to reach the same result.",
     "question_ids": [
       "q0027"
     ]
@@ -287,11 +289,9 @@
   {
     "id": "k0028",
     "block_ids": [
-      "b0051",
-      "b0052",
-      "b0053"
+      "b0054"
     ],
-    "statement": "The factorial function can be computed either recursively (n! = n * (n-1)!), generating a chain of deferred multiplications, or iteratively via a running product and counter updated step by step - two different procedures that carry out the same sequence of multiplications to reach the same result.",
+    "statement": "A linear recursive process is characterized by a chain of deferred operations that first expands and then contracts as those operations are carried out; the amount of information the interpreter must maintain to track that chain grows linearly with the size of the input.",
     "question_ids": [
       "q0028"
     ]
@@ -299,9 +299,10 @@
   {
     "id": "k0029",
     "block_ids": [
-      "b0054"
+      "b0054",
+      "b0055"
     ],
-    "statement": "A linear recursive process is characterized by a chain of deferred operations that first expands and then contracts as those operations are carried out; the amount of information the interpreter must maintain to track that chain grows linearly with the size of the input.",
+    "statement": "A linear iterative process is one whose entire state at any point is summarized by a fixed number of state variables plus a fixed update rule (and an optional end test); it does not grow or shrink as the computation proceeds.",
     "question_ids": [
       "q0029"
     ]
@@ -309,10 +310,9 @@
   {
     "id": "k0030",
     "block_ids": [
-      "b0054",
       "b0055"
     ],
-    "statement": "A linear iterative process is one whose entire state at any point is summarized by a fixed number of state variables plus a fixed update rule (and an optional end test); it does not grow or shrink as the computation proceeds.",
+    "statement": "The distinction between a recursive process and a recursive procedure is about evolution versus syntax: a procedure is 'recursive' if its definition refers to itself, but the process it generates can still be iterative (as with fact-iter) if its state is fully captured by a fixed set of variables rather than by growing hidden bookkeeping.",
     "question_ids": [
       "q0030"
     ]
@@ -320,9 +320,9 @@
   {
     "id": "k0031",
     "block_ids": [
-      "b0055"
+      "b0056"
     ],
-    "statement": "The distinction between a recursive process and a recursive procedure is about evolution versus syntax: a procedure is 'recursive' if its definition refers to itself, but the process it generates can still be iterative (as with fact-iter) if its state is fully captured by a fixed set of variables rather than by growing hidden bookkeeping.",
+    "statement": "A tail-recursive implementation (such as Scheme's) can execute an iterative process in constant space even when that process is expressed via a recursive procedure call, unlike most conventional language implementations, which consume memory proportional to the number of recursive calls regardless of whether the underlying process is iterative.",
     "question_ids": [
       "q0031"
     ]
@@ -330,9 +330,10 @@
   {
     "id": "k0032",
     "block_ids": [
-      "b0056"
+      "b0060",
+      "b0061"
     ],
-    "statement": "A tail-recursive implementation (such as Scheme's) can execute an iterative process in constant space even when that process is expressed via a recursive procedure call, unlike most conventional language implementations, which consume memory proportional to the number of recursive calls regardless of whether the underlying process is iterative.",
+    "statement": "Tree recursion is exemplified by the naive recursive Fibonacci procedure, translated directly from its two-case mathematical definition: evaluating (fib n) (for n > 1) triggers two further recursive calls, so the shape of the resulting computation is a tree that branches into two at every level except at the base cases.",
     "question_ids": [
       "q0032"
     ]
@@ -340,37 +341,16 @@
   {
     "id": "k0033",
     "block_ids": [
-      "b0057"
+      "b0061",
+      "b0062"
     ],
-    "statement": "Applying the process/procedure distinction to Exercise 1.9's two recursive definitions of addition: the version that wraps the recursive call in an outer `inc` defers that increment, building a chain of deferred operations and so generating a linear recursive process, while the version that threads the accumulated sum forward as an argument keeps all needed information in its arguments at every step, generating a linear iterative process instead.",
+    "statement": "The naive tree-recursive fib procedure does a huge amount of redundant computation (whole subtrees get recomputed many times), so its number of steps grows exponentially with n, even though the space it needs grows only linearly with n (proportional to the tree's maximum depth rather than its number of nodes) - in sharp contrast to the linear-step, constant-space iterative fib-iter formulation of the same function.",
     "question_ids": [
       "q0033"
     ]
   },
   {
     "id": "k0034",
-    "block_ids": [
-      "b0060",
-      "b0061"
-    ],
-    "statement": "Tree recursion is exemplified by the naive recursive Fibonacci procedure, translated directly from its two-case mathematical definition: evaluating (fib n) (for n > 1) triggers two further recursive calls, so the shape of the resulting computation is a tree that branches into two at every level except at the base cases.",
-    "question_ids": [
-      "q0034"
-    ]
-  },
-  {
-    "id": "k0035",
-    "block_ids": [
-      "b0061",
-      "b0062"
-    ],
-    "statement": "The naive tree-recursive fib procedure does a huge amount of redundant computation (whole subtrees get recomputed many times), so its number of steps grows exponentially with n, even though the space it needs grows only linearly with n (proportional to the tree's maximum depth rather than its number of nodes) - in sharp contrast to the linear-step, constant-space iterative fib-iter formulation of the same function.",
-    "question_ids": [
-      "q0035"
-    ]
-  },
-  {
-    "id": "k0036",
     "block_ids": [
       "b0063",
       "b0064",
@@ -379,65 +359,65 @@
     ],
     "statement": "The counting-change problem (how many ways to make change for a given amount using given coin denominations) is a second natural example of tree recursion: the number of ways to change amount a with n kinds of coins reduces to (ways not using the first kind of coin) plus (ways to change the reduced amount a-d using all n kinds), and evaluating it produces a similarly redundant, tree-shaped computation.",
     "question_ids": [
-      "q0036"
+      "q0034"
     ]
   },
   {
-    "id": "k0037",
+    "id": "k0035",
     "block_ids": [
       "b0063",
       "b0066"
     ],
     "statement": "Tree-recursive processes, though often far less efficient than an iterative equivalent, can be considerably easier to derive and understand: the direct fib procedure is little more than a transcription of the Fibonacci definition, while finding the linear fib-iter took extra cleverness, and no comparably obvious efficient algorithm for count-change is given either.",
     "question_ids": [
-      "q0037"
+      "q0035"
     ]
   },
   {
-    "id": "k0038",
+    "id": "k0036",
     "block_ids": [
       "b0068",
       "b0069"
     ],
     "statement": "Order of growth Θ(f(n)) is a coarse measure of how a process's required resources R(n) (steps or storage) scale as the problem size n grows: R(n) = Θ(f(n)) means there exist positive constants k1, k2 such that k1·f(n) ≤ R(n) ≤ k2·f(n) for all sufficiently large n. Because this only pins R(n) down up to constant factors, very different exact step counts (e.g. n², 1000n², 3n²+10n+17) can share the same order of growth, so Θ deliberately discards constant factors and lower-order terms while still predicting how resource use changes as the problem size changes (e.g. doubling n roughly doubles resources for a linear process, but multiplies them by a constant factor for an exponential process).",
     "question_ids": [
-      "q0038",
-      "q0039"
+      "q0036",
+      "q0037"
     ]
   },
   {
-    "id": "k0039",
+    "id": "k0037",
     "block_ids": [
       "b0069"
     ],
     "statement": "Applying order-of-growth analysis to the earlier examples: the linear recursive factorial process takes Θ(n) steps and Θ(n) space (it must keep a chain of deferred multiplications, one per recursive call); the linear iterative factorial process also takes Θ(n) steps but only Θ(1) space (it uses a fixed set of state variables regardless of n); and the tree-recursive Fibonacci process takes Θ(φ^n) steps (exponential) but only Θ(n) space (its space is bounded by the deepest single path down the recursion tree, not by the whole tree).",
     "question_ids": [
-      "q0040",
-      "q0041"
+      "q0038",
+      "q0039"
     ]
   },
   {
-    "id": "k0040",
+    "id": "k0038",
     "block_ids": [
       "b0071"
     ],
     "statement": "Computing b^n via the direct recursive definition b^n = b · b^(n-1) (the `expt` procedure) produces a linear recursive process: Θ(n) steps and Θ(n) space, because each pending multiplication has to wait for the recursive call beneath it to return.",
     "question_ids": [
-      "q0042"
+      "q0040"
     ]
   },
   {
-    "id": "k0041",
+    "id": "k0039",
     "block_ids": [
       "b0072"
     ],
     "statement": "Reformulating exponentiation as an iterative process (`expt-iter`, carrying a counter and a running product) keeps the same Θ(n) number of steps but reduces space to Θ(1), since there's no growing chain of deferred operations - directly analogous to the linear-recursive-vs-linear-iterative factorial comparison.",
     "question_ids": [
-      "q0043"
+      "q0041"
     ]
   },
   {
-    "id": "k0042",
+    "id": "k0040",
     "block_ids": [
       "b0073",
       "b0074",
@@ -445,19 +425,36 @@
     ],
     "statement": "Successive squaring - using b^n = (b^(n/2))^2 when n is even, and b^n = b · b^(n-1) when n is odd - lets `fast-expt` compute b^n in only Θ(log n) steps and Θ(log n) space, because each extra multiplication allowed roughly doubles the exponent that can be reached.",
     "question_ids": [
+      "q0042"
+    ]
+  },
+  {
+    "id": "k0041",
+    "block_ids": [
+      "b0080",
+      "b0081"
+    ],
+    "statement": "Euclid's Algorithm rests on the fact that the common divisors of a and b are exactly the common divisors of b and r (the remainder of a divided by b), so GCD(a,b) = GCD(b,r); repeating this reduction on smaller and smaller pairs eventually reaches a pair whose second element is 0, and the other element of that pair is the GCD.",
+    "question_ids": [
+      "q0043"
+    ]
+  },
+  {
+    "id": "k0042",
+    "block_ids": [
+      "b0082"
+    ],
+    "statement": "Euclid's Algorithm translates directly into the Scheme procedure `(define (gcd a b) (if (= b 0) a (gcd b (remainder a b))))`. Even though it is written as a recursive call to itself, it generates an iterative process (no deferred operations pile up around the recursive call), and the number of steps it takes grows as the logarithm of the inputs.",
+    "question_ids": [
       "q0044"
     ]
   },
   {
     "id": "k0043",
     "block_ids": [
-      "b0075",
-      "b0076",
-      "b0077",
-      "b0078",
-      "b0079"
+      "b0083"
     ],
-    "statement": "The successive-squaring trick illustrates a general principle: recognizing exploitable structure in a problem can turn an apparently linear-growth computation into one with logarithmic growth - the same idea reapplies to iterative exponentiation (Exercise 1.16), multiplication via doubling and halving (Exercises 1.17-1.18), and even computing Fibonacci numbers by squaring a state transformation (Exercise 1.19).",
+    "statement": "Lamé's theorem connects Euclid's Algorithm to the Fibonacci numbers: if the algorithm takes k steps, the smaller of the two original numbers must be at least Fib(k). Since Fibonacci numbers grow exponentially (roughly φ^k), the number of steps k must grow only logarithmically in n - giving Euclid's Algorithm an order of growth of Θ(log n), a case where an iterative process still has logarithmic rather than linear growth.",
     "question_ids": [
       "q0045"
     ]
@@ -465,10 +462,10 @@
   {
     "id": "k0044",
     "block_ids": [
-      "b0080",
-      "b0081"
+      "b0085",
+      "b0086"
     ],
-    "statement": "Euclid's Algorithm rests on the fact that the common divisors of a and b are exactly the common divisors of b and r (the remainder of a divided by b), so GCD(a,b) = GCD(b,r); repeating this reduction on smaller and smaller pairs eventually reaches a pair whose second element is 0, and the other element of that pair is the GCD.",
+    "statement": "Finding a number's smallest divisor via trial division only needs to test candidate divisors up to √n, since any non-prime n must have a divisor no larger than √n; this gives `find-divisor`/`smallest-divisor`/`prime?` an order of growth of Θ(√n) rather than Θ(n).",
     "question_ids": [
       "q0046"
     ]
@@ -476,9 +473,9 @@
   {
     "id": "k0045",
     "block_ids": [
-      "b0082"
+      "b0087"
     ],
-    "statement": "Euclid's Algorithm translates directly into the Scheme procedure `(define (gcd a b) (if (= b 0) a (gcd b (remainder a b))))`. Even though it is written as a recursive call to itself, it generates an iterative process (no deferred operations pile up around the recursive call), and the number of steps it takes grows as the logarithm of the inputs.",
+    "statement": "Fermat's Little Theorem states that if n is prime and a is any positive integer less than n, then a raised to the n-th power is congruent to a modulo n.",
     "question_ids": [
       "q0047"
     ]
@@ -486,123 +483,69 @@
   {
     "id": "k0046",
     "block_ids": [
-      "b0083"
-    ],
-    "statement": "Lamé's theorem connects Euclid's Algorithm to the Fibonacci numbers: if the algorithm takes k steps, the smaller of the two original numbers must be at least Fib(k). Since Fibonacci numbers grow exponentially (roughly φ^k), the number of steps k must grow only logarithmically in n - giving Euclid's Algorithm an order of growth of Θ(log n), a case where an iterative process still has logarithmic rather than linear growth.",
-    "question_ids": [
-      "q0048"
-    ]
-  },
-  {
-    "id": "k0047",
-    "block_ids": [
-      "b0084"
-    ],
-    "statement": "Exercise 1.20 shows that the process an algorithm actually generates depends on the evaluation rule: under normal-order evaluation, argument expressions are substituted unevaluated and only forced when needed, so a `remainder` sub-expression can be re-expanded and recomputed many times over, making normal-order evaluation of `(gcd 206 40)` perform far more `remainder` operations than applicative-order evaluation, which reduces each argument to a value once before proceeding.",
-    "question_ids": [
-      "q0049"
-    ]
-  },
-  {
-    "id": "k0048",
-    "block_ids": [
-      "b0085",
-      "b0086"
-    ],
-    "statement": "Finding a number's smallest divisor via trial division only needs to test candidate divisors up to √n, since any non-prime n must have a divisor no larger than √n; this gives `find-divisor`/`smallest-divisor`/`prime?` an order of growth of Θ(√n) rather than Θ(n).",
-    "question_ids": [
-      "q0050"
-    ]
-  },
-  {
-    "id": "k0049",
-    "block_ids": [
-      "b0091",
-      "b0092"
-    ],
-    "statement": "Order of growth is a rough asymptotic description of how step count scales with input size, not a promise about exact measured runtime; whether real timings actually track a predicted order of growth (e.g. Θ(√n) vs Θ(log n)) has to be checked empirically, since constant factors and system overhead can obscure the theoretical trend.",
-    "question_ids": [
-      "q0051"
-    ]
-  },
-  {
-    "id": "k0050",
-    "block_ids": [
-      "b0087"
-    ],
-    "statement": "Fermat's Little Theorem states that if n is prime and a is any positive integer less than n, then a raised to the n-th power is congruent to a modulo n.",
-    "question_ids": [
-      "q0052"
-    ]
-  },
-  {
-    "id": "k0051",
-    "block_ids": [
       "b0087",
       "b0088",
       "b0089"
     ],
     "statement": "The Fermat test exploits Fermat's Little Theorem probabilistically: it picks a random a < n and checks the congruence using `expmod`, which runs in Θ(log n) steps via successive squaring; `fast-prime?` repeats this trial several times, declaring n prime only if every trial passes.",
     "question_ids": [
-      "q0053",
-      "q0054"
+      "q0048",
+      "q0049"
     ]
   },
   {
-    "id": "k0052",
+    "id": "k0047",
     "block_ids": [
       "b0090"
     ],
     "statement": "The Fermat test is a genuinely different kind of algorithm from the deterministic ones seen so far: failing the test proves n is not prime, but passing it - even many times - is never a certainty, only very strong evidence, because rare numbers (Carmichael numbers) satisfy the congruence for every base despite not being prime.",
     "question_ids": [
-      "q0055"
+      "q0050"
     ]
   },
   {
-    "id": "k0053",
+    "id": "k0048",
     "block_ids": [
-      "b0090",
-      "b0094"
+      "b0090"
     ],
-    "statement": "Unfoolable variants of the Fermat test (like Miller-Rabin) can have their error probability driven arbitrarily close to zero by running more independent trials, because one can prove the failure condition holds for most bases whenever n is composite; separately, a superficially equivalent rewrite of `expmod`'s squaring step (computing the same recursive call twice instead of squaring one computed value) silently changes its order of growth from Θ(log n) to Θ(n), since order of growth depends on the actual computational process generated, not just the mathematical expression being evaluated.",
+    "statement": "Unfoolable variants of the Fermat test (like Miller-Rabin) can have their error probability driven arbitrarily close to zero by running more independent trials, because one can prove the failure condition holds for most bases whenever n is composite - a guarantee the plain Fermat test lacks, since rare numbers (Carmichael numbers) satisfy its congruence for every base despite being composite.",
     "question_ids": [
-      "q0056",
-      "q0057"
+      "q0051"
     ]
   },
   {
-    "id": "k0054",
+    "id": "k0049",
     "block_ids": [
       "b0096",
       "b0104"
     ],
     "statement": "Procedures that accept other procedures as arguments, or return procedures as values, are called higher-order procedures; they let a language capture common programming patterns as explicit, nameable, reusable abstractions rather than leaving them implicit in repeated code.",
     "question_ids": [
-      "q0058"
+      "q0052"
     ]
   },
   {
-    "id": "k0055",
+    "id": "k0050",
     "block_ids": [
       "b0097"
     ],
     "statement": "sum-integers, sum-cubes, and pi-sum are three superficially different procedures that are actually the same pattern in disguise: each recursively sums a term across a range, differing only in which function computes the term from `a` and which function computes the next `a`.",
     "question_ids": [
-      "q0059"
+      "q0053"
     ]
   },
   {
-    "id": "k0056",
+    "id": "k0051",
     "block_ids": [
       "b0098"
     ],
     "statement": "That shared pattern is an instance of the mathematical concept of summation of a series (sigma notation); recognizing it as a named abstraction - rather than three unrelated procedures - is what motivates turning the template's slots into explicit formal parameters.",
     "question_ids": [
-      "q0060"
+      "q0054"
     ]
   },
   {
-    "id": "k0057",
+    "id": "k0052",
     "block_ids": [
       "b0099",
       "b0100",
@@ -610,63 +553,52 @@
     ],
     "statement": "Turning the template into a general `sum` procedure with `term` and `next` as parameters means sum-cubes, sum-integers, and pi-sum can all be rebuilt as simple calls to `sum`, passing in just the right term/next procedures instead of duplicating the recursive summing logic each time.",
     "question_ids": [
-      "q0061"
+      "q0055"
     ]
   },
   {
-    "id": "k0058",
+    "id": "k0053",
     "block_ids": [
       "b0102"
     ],
     "statement": "Once `sum` exists as a building block, it can support still higher abstractions built on top of it, such as approximating a definite integral by summing many small rectangle-strip evaluations of a function - showing how higher-order procedures compose into increasingly powerful abstractions.",
     "question_ids": [
-      "q0062"
+      "q0056"
     ]
   },
   {
-    "id": "k0059",
-    "block_ids": [
-      "b0104",
-      "b0105"
-    ],
-    "statement": "`sum` is just the simplest case of a broader family of higher-order combining abstractions: `product` generalizes it to multiplication, `accumulate` generalizes both `sum` and `product` under one combining function and base value, and `filtered-accumulate` generalizes further by only combining terms that pass a filter predicate.",
-    "question_ids": [
-      "q0063"
-    ]
-  },
-  {
-    "id": "k0060",
+    "id": "k0054",
     "block_ids": [
       "b0106",
       "b0107"
     ],
     "statement": "`lambda` creates an anonymous procedure directly, without needing to define and name a separate procedure - useful when a one-off procedure is only needed as an argument to a higher-order procedure like `sum`.",
     "question_ids": [
-      "q0064"
+      "q0057"
     ]
   },
   {
-    "id": "k0061",
+    "id": "k0055",
     "block_ids": [
       "b0108"
     ],
     "statement": "A `lambda` expression constructs a procedure in exactly the same way a `define` does; in fact, defining a named procedure with `define` is really just syntactic sugar for binding a name to the procedure produced by an equivalent `lambda` expression.",
     "question_ids": [
-      "q0065"
+      "q0058"
     ]
   },
   {
-    "id": "k0062",
+    "id": "k0056",
     "block_ids": [
       "b0109"
     ],
     "statement": "Because a `lambda` expression's value is itself a procedure, it can be used directly as the operator of a combination, immediately applying it to some arguments, without ever binding it to a name first.",
     "question_ids": [
-      "q0066"
+      "q0059"
     ]
   },
   {
-    "id": "k0063",
+    "id": "k0057",
     "block_ids": [
       "b0110",
       "b0111",
@@ -674,32 +606,32 @@
     ],
     "statement": "`let` is used to create local variables and intermediate quantities inside a procedure body; it is not a fundamental new mechanism but syntactic sugar for immediately applying a `lambda` expression (whose parameters are the let-bound variables) to the corresponding value expressions.",
     "question_ids": [
-      "q0067"
+      "q0060"
     ]
   },
   {
-    "id": "k0064",
+    "id": "k0058",
     "block_ids": [
       "b0112",
       "b0113"
     ],
     "statement": "Because `let` expands into an immediately-applied `lambda`, the scope of a variable bound by `let` is only the body of that `let` - it does not affect, and is not affected by, any outer binding of the same name; the value expressions for the let's bindings are themselves evaluated outside the `let`, using the outer meaning of any same-named variable.",
     "question_ids": [
-      "q0068"
+      "q0061"
     ]
   },
   {
-    "id": "k0065",
+    "id": "k0059",
     "block_ids": [
       "b0114"
     ],
     "statement": "Style preference: use `let` to introduce local variables, and reserve internal (nested) `define` for defining auxiliary procedures inside another procedure.",
     "question_ids": [
-      "q0069"
+      "q0062"
     ]
   },
   {
-    "id": "k0066",
+    "id": "k0060",
     "block_ids": [
       "b0116",
       "b0117",
@@ -707,11 +639,11 @@
     ],
     "statement": "Higher-order procedures let you express a general method of computation - such as root-finding or iterative approximation - as a single procedure parameterized by an arbitrary function, so the same code works unchanged for many different specific functions.",
     "question_ids": [
-      "q0070"
+      "q0063"
     ]
   },
   {
-    "id": "k0067",
+    "id": "k0061",
     "block_ids": [
       "b0116",
       "b0117",
@@ -720,66 +652,66 @@
     ],
     "statement": "The half-interval method finds a root of a continuous function f by starting from two points a and b where f(a) and f(b) have opposite signs (guaranteeing a zero lies between them), then repeatedly bisecting the interval and keeping whichever half still brackets a sign change, until the interval is smaller than a given tolerance.",
     "question_ids": [
-      "q0071"
+      "q0064"
     ]
   },
   {
-    "id": "k0068",
+    "id": "k0062",
     "block_ids": [
       "b0120",
       "b0121"
     ],
     "statement": "A number x is a fixed point of a function f if f(x) = x; the `fixed-point` procedure searches for one by starting from an initial guess and repeatedly applying f to the current value, stopping once two successive values differ by less than a small tolerance.",
     "question_ids": [
-      "q0072"
+      "q0065"
     ]
   },
   {
-    "id": "k0069",
+    "id": "k0063",
     "block_ids": [
       "b0122",
       "b0123"
     ],
     "statement": "Reformulating square-root computation as a fixed-point search for y -> x/y does not converge because it oscillates between two guesses; averaging each guess with the previous one before continuing (average damping) - i.e. searching for a fixed point of y -> the average of y and x/y - damps the oscillation and makes the search converge.",
     "question_ids": [
-      "q0073"
+      "q0066"
     ]
   },
   {
-    "id": "k0070",
+    "id": "k0064",
     "block_ids": [
       "b0126",
       "b0127"
     ],
     "statement": "`average-damp` is a higher-order procedure: given a procedure `f`, it returns a new procedure that, applied to `x`, produces the average of `x` and `(f x)` - a reusable transform for taming fixed-point iterations that would otherwise oscillate or fail to converge.",
     "question_ids": [
-      "q0074"
+      "q0067"
     ]
   },
   {
-    "id": "k0071",
+    "id": "k0065",
     "block_ids": [
       "b0127",
       "b0134"
     ],
     "statement": "`sqrt` and `cube-root` can both be derived as fixed-point searches of an average-damped transform, differing only in which function of y is being damped (y -> x/y for square root, y -> x/y^2 for cube root) - making the shared structure explicit and reusable.",
     "question_ids": [
-      "q0075"
+      "q0068"
     ]
   },
   {
-    "id": "k0072",
+    "id": "k0066",
     "block_ids": [
       "b0129",
       "b0130"
     ],
     "statement": "`deriv` approximates the derivative of a function g at a point by computing (g(x+dx) - g(x))/dx for a small constant dx; like `average-damp`, it takes a procedure as argument and returns a procedure as its value.",
     "question_ids": [
-      "q0076"
+      "q0069"
     ]
   },
   {
-    "id": "k0073",
+    "id": "k0067",
     "block_ids": [
       "b0128",
       "b0131",
@@ -787,38 +719,38 @@
     ],
     "statement": "Newton's method finds a zero of g by treating it as a fixed-point search of the transform x -> x - g(x)/Dg(x); `newton-transform` builds this transform using `deriv`, and `newtons-method` is just `fixed-point` applied to that transform - yielding a third formulation of `sqrt`.",
     "question_ids": [
-      "q0077"
+      "q0070"
     ]
   },
   {
-    "id": "k0074",
+    "id": "k0068",
     "block_ids": [
       "b0133",
       "b0134"
     ],
     "statement": "Since both the average-damping route and the Newton's-method route to `sqrt` share the same shape (transform a function, then find its fixed point), that shape is abstracted into `fixed-point-of-transform`, so the two `sqrt` definitions become two instantiations of one general procedure differing only in the transform argument passed.",
     "question_ids": [
-      "q0078"
+      "q0071"
     ]
   },
   {
-    "id": "k0075",
+    "id": "k0069",
     "block_ids": [
       "b0135"
     ],
     "statement": "Higher-order procedures like `average-damp`, `deriv`, and `fixed-point-of-transform` let a programmer name and manipulate entire general methods of computation as explicit elements of the language, not just parameterize over ordinary numeric values.",
     "question_ids": [
-      "q0079"
+      "q0072"
     ]
   },
   {
-    "id": "k0076",
+    "id": "k0070",
     "block_ids": [
       "b0135"
     ],
     "statement": "An element has first-class status if it may be named by variables, passed as an argument, returned as a result, and included in data structures; Lisp grants procedures full first-class status, unlike many other common programming languages, which greatly increases expressive power at some implementation cost.",
     "question_ids": [
-      "q0080"
+      "q0073"
     ]
   }
 ]

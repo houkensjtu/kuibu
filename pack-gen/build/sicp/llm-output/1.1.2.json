@@ -16,7 +16,10 @@
   "knowledge_items": [
     {
       "statement": "`define` is Lisp's simplest means of abstraction: it associates a name with a value in the environment (the interpreter's memory of name-object pairs), letting you refer to a complex result by a simple name instead of repeating its computation.",
-      "block_indices": [0, 1]
+      "block_indices": [
+        0,
+        1
+      ]
     }
   ],
   "questions": [
@@ -32,5 +35,6 @@
       "answer_index": 0,
       "explanation": "`define` is a naming operation: it creates an association between a name and a value in the environment. `circumference` afterward just refers to that already-computed value, the same way `size` refers to 2 in the section's first example - it does not create a procedure or print anything by itself."
     }
-  ]
+  ],
+  "exercises": []
 }

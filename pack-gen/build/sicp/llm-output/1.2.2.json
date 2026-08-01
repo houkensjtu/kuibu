@@ -116,5 +116,25 @@
       "answer_index": 0,
       "explanation": "The direct fib procedure is presented as little more than a transcription of the mathematical definition, while arriving at fib-iter required noticing a less obvious reformulation with extra state variables; similarly, no comparably simple efficient count-change algorithm is given, illustrating that easy-to-derive and efficient are not the same thing."
     }
+  ],
+  "exercises": [
+    {
+      "number": "1.11",
+      "start_paragraph_index": 22,
+      "end_paragraph_index": 22,
+      "hint_md": "f(n) depends on three preceding values instead of two, so it's a direct three-term generalization of the fib pattern you just saw. For the recursive version, translate the piecewise rule almost verbatim, the same way `fib` was translated from its two-case definition. For the iterative version, think about what `fib-iter` carried forward at each step (a running pair) and what you'd need to carry forward here so that each step only needs to look at the current state, not re-derive earlier values."
+    },
+    {
+      "number": "1.12",
+      "start_paragraph_index": 23,
+      "end_paragraph_index": 25,
+      "hint_md": "Each interior entry is defined in terms of two entries from the row above it, which is itself a tree-recursive shape, much like `fib` branching into two smaller calls. Think about what the natural base cases are (which positions in a row are always 1), and how you'd index an entry so the recursive call refers to the two entries it's built from."
+    },
+    {
+      "number": "1.13",
+      "start_paragraph_index": 26,
+      "end_paragraph_index": 26,
+      "hint_md": "Follow the hint given in the text: define psi and show that both phi and psi satisfy x^2 = x + 1, which is what lets you turn a claim about Fib(n+1) and Fib(n) into a claim about Fib(n+2) when you do the induction step. Check the claimed formula against the base cases Fib(0) = 0 and Fib(1) = 1 first, then use the recurrence Fib(n) = Fib(n-1) + Fib(n-2) together with the phi/psi identity to carry the inductive hypothesis forward."
+    }
   ]
 }

@@ -16,6 +16,7 @@ function loadSamplePack() {
     blocks: readJson("blocks.json"),
     items: readJson("items.json"),
     questions: readJson("questions.json"),
+    exercises: readJson("exercises.json"),
   };
 }
 
@@ -26,6 +27,7 @@ describe("sample-pack fixture", () => {
     expect(result.data.blocks).toHaveLength(3);
     expect(result.data.items).toHaveLength(2);
     expect(result.data.questions).toHaveLength(2);
+    expect(result.data.exercises).toHaveLength(1);
   });
 
   it("rejects the fixture once a field is corrupted", () => {

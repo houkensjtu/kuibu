@@ -51,10 +51,6 @@
     {
       "statement": "This simple procedural language (define, if/cond, procedure calls) is sufficient to express iteration without any special looping construct - `sqrt-iter` achieves repetition purely through an ordinary (recursive) procedure call.",
       "block_indices": [4]
-    },
-    {
-      "statement": "If `if` were defined as an ordinary procedure (like `new-if`, built from `cond`) instead of a special form, applying it under applicative-order evaluation would require evaluating every argument - including the recursive call - before `new-if` could even be applied, so a recursive procedure like `sqrt-iter` written with `new-if` would never terminate, even once the base case is already true.",
-      "block_indices": [5]
     }
   ],
   "questions": [
@@ -81,18 +77,26 @@
       ],
       "answer_index": 0,
       "explanation": "The text explicitly makes this point: the language has no special iterative construct, yet sqrt-iter demonstrates that iteration can be accomplished using nothing more than the ordinary ability to call a procedure."
+    }
+  ],
+  "exercises": [
+    {
+      "number": "1.6",
+      "start_paragraph_index": 21,
+      "end_paragraph_index": 27,
+      "hint_md": "Think about *when* arguments get evaluated for an ordinary procedure versus a special form. Under applicative-order evaluation, all of a procedure's operands are evaluated before the procedure is applied. Ask yourself which operand `new-if` receives that `if` would have been careful never to touch in this particular call."
     },
     {
-      "item_index": 2,
-      "prompt": "In Exercise 1.6, Alyssa rewrites `sqrt-iter` to use `new-if` (an ordinary procedure built from `cond`) instead of the special form `if`. What actually happens when she tries to compute a square root this way?",
-      "options": [
-        "It never terminates: since `new-if` is an ordinary procedure, applicative-order evaluation must evaluate all of its arguments - including the recursive call to `sqrt-iter` - before `new-if` can even be applied, regardless of whether `good-enough?` is already true",
-        "It works exactly the same as before, since `new-if` and `if` behave identically in every situation",
-        "It immediately signals a syntax error, since `cond` cannot appear inside a procedure definition",
-        "It returns the wrong numeric answer, but still terminates in the same number of steps as before"
-      ],
-      "answer_index": 0,
-      "explanation": "Because new-if is an ordinary procedure, applying it evaluates all of its arguments first (applicative order) - including the recursive `(sqrt-iter (improve guess x) x)` argument - so the recursion never gets a chance to stop, even after good-enough? becomes true. A special form like if avoids this by only evaluating the branch it actually needs."
+      "number": "1.7",
+      "start_paragraph_index": 28,
+      "end_paragraph_index": 28,
+      "hint_md": "Try tracing `good-enough?` by hand on a very small radicand (say 0.0001) and a very large one (say a number with many significant digits) - what does a fixed absolute tolerance of 0.001 mean relative to each answer? For the alternative design, consider tracking how much `guess` moves between one iteration and the next, rather than comparing `guess*guess` to `x`."
+    },
+    {
+      "number": "1.8",
+      "start_paragraph_index": 29,
+      "end_paragraph_index": 29,
+      "hint_md": "You already have a working template in `sqrt-iter`/`improve`/`good-enough?` from this section. Only the improvement formula needs to change to match the cube-root update rule given here - the overall recursive structure (guess, test, repeat with an improved guess) can stay the same."
     }
   ]
 }

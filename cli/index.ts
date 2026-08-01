@@ -16,15 +16,18 @@ import { estimateDaysRemaining } from "../core/completionEstimate.js";
 import { buildTableOfContents } from "../core/tableOfContents.js";
 import { renderTableOfContents } from "./renderTableOfContents.js";
 import { mergeEvents } from "../core/mergeEvents.js";
+import { buildExerciseQueue } from "../core/exerciseQueue.js";
 import { runReadingFlow } from "./readingFlow.js";
 import { showBlockInPagerOrFallback } from "./pager.js";
 import { runAnswerFlow } from "./answerFlow.js";
 import { askInTerminal } from "./answerPrompt.js";
+import { runExerciseFlow } from "./exerciseFlow.js";
+import { attemptExercise } from "./exercisePrompt.js";
 import { renderYearCalendar } from "./renderYearCalendar.js";
 import { askDailyTargetMinutes, classifyTimeSpent, askAdjustTarget } from "./targetPrompt.js";
 import { askReviewOrAhead } from "./reviewOrAheadPrompt.js";
 import { createLineReader } from "./lineReader.js";
-import { UserQuit } from "./readLineOrQuit.js";
+import { UserQuit, readLineOrQuit } from "./readLineOrQuit.js";
 import { printGoodbye } from "./goodbye.js";
 
 const DEFAULT_TARGET_MINUTES = 12;
@@ -191,6 +194,37 @@ program
             });
           },
         });
+
+        // 习题是可选做的，跟上面的复习题是两种不同的东西：不影响打卡判定，
+        // 只在用户主动要求时才进入。花在习题上的时间计入今天的阅读时长反馈
+        // （下面的 classifyTimeSpent），但不影响 est_seconds/block 切分——
+        // 切分本来就只按文字量估算，跟做题要花多久无关，这是用户自己的事。
+        const todaysExercises = buildExerciseQueue(
+          pack.exercises,
+          new Set(todaysBlocks.map((b) => b.id)),
+        );
+        if (todaysExercises.length > 0) {
+          process.stdout.write(
+            `There ${todaysExercises.length === 1 ? "is" : "are"} ${todaysExercises.length} optional exercise${todaysExercises.length === 1 ? "" : "s"} from today's reading. Try them? (y/N, or 'q' to quit): `,
+          );
+          const wantsExercises = (await readLineOrQuit(lineReader)).trim().toLowerCase();
+          if (wantsExercises === "y" || wantsExercises === "yes") {
+            await runExerciseFlow(todaysExercises, {
+              attempt: (exercise) => attemptExercise(lineReader, exercise),
+              onAttempted: (exercise, outcome) => {
+                totalReadSecondsToday += outcome.seconds;
+                appendEvent(options.log, {
+                  id: randomUUID(),
+                  ts: new Date().toISOString(),
+                  type: "exercise_attempt",
+                  exercise_id: exercise.id,
+                  seconds: outcome.seconds,
+                  used_hint: outcome.usedHint,
+                });
+              },
+            });
+          }
+        }
 
         const passed = isCheckinComplete({
           assignedBlockIds: todaysBlocks.map((b) => b.id),

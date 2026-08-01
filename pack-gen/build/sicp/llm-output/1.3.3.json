@@ -122,5 +122,37 @@
       "answer_index": 0,
       "explanation": "Starting from y1, the next guess is y2 = x/y1, and the guess after that is x/y2 = x/(x/y1) = y1 again, so the process oscillates between y1 and y2 without ever settling; replacing x/y with the average of y and x/y as the next guess breaks this back-and-forth and lets the sequence converge, which is exactly what average damping means here - it is not about overflow, speed alone, or invalid syntax."
     }
+  ],
+  "exercises": [
+    {
+      "number": "1.35",
+      "start_paragraph_index": 25,
+      "end_paragraph_index": 25,
+      "hint_md": "Recall the defining equation for the golden ratio from 1.2.2 (phi^2 = phi + 1). Divide both sides by phi and see what equation of the form phi = f(phi) falls out - that tells you which transformation to hand to `fixed-point`, and any reasonable positive initial guess should converge."
+    },
+    {
+      "number": "1.36",
+      "start_paragraph_index": 26,
+      "end_paragraph_index": 26,
+      "hint_md": "Look at where `try` computes `next` inside `fixed-point` - that's the one place you need to add a printing side effect before recursing. For the x^x = 1000 case, think about why an initial guess of 1 is invalid (what happens to log(x) there), and pick a different starting guess. To compare with/without average damping, try the same equation both as a plain fixed-point search and as one wrapped with the averaging transform from earlier in this section, and just count how many printed lines each takes."
+    },
+    {
+      "number": "1.37",
+      "start_paragraph_index": 27,
+      "end_paragraph_index": 28,
+      "hint_md": "Build the k-term continued fraction from the innermost term outward: the innermost fraction is just N_k/D_k, and each step out wraps the previous result as N_i/(D_i + previous). Decide whether it's more natural to compute that starting from i=k counting down, or i=1 counting up - one direction falls out as a recursive process, the other as an iterative one, and the second part of the exercise asks you to produce whichever one your first version isn't. Use the phi-related continued fraction mentioned earlier in this section as your test case."
+    },
+    {
+      "number": "1.38",
+      "start_paragraph_index": 29,
+      "end_paragraph_index": 29,
+      "hint_md": "You just need to write the `d` procedure to hand to your `cont-frac` from Exercise 1.37 - `n` is trivial since every N_i is 1. Look at the pattern 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, ... and notice it repeats in groups of three; figure out which position within each group of three holds the growing even number, and what arithmetic on the index (1-based i) produces that number only at that position."
+    },
+    {
+      "number": "1.39",
+      "start_paragraph_index": 30,
+      "end_paragraph_index": 30,
+      "hint_md": "This one doesn't reuse `cont-frac` as-is, since the numerators here aren't all 1: the first numerator is x itself, and every numerator after that is -x^2 while the denominators are the successive odd numbers 1, 3, 5, .... Write `n` and `d` procedures capturing that pattern (careful with the i=1 case, whose numerator is x rather than -x^2), and combine them the same way you combined `n` and `d` in Exercise 1.37."
+    }
   ]
 }

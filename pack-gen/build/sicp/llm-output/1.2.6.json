@@ -73,10 +73,6 @@
       "block_indices": [0, 1]
     },
     {
-      "statement": "Order of growth is a rough asymptotic description of how step count scales with input size, not a promise about exact measured runtime; whether real timings actually track a predicted order of growth (e.g. Θ(√n) vs Θ(log n)) has to be checked empirically, since constant factors and system overhead can obscure the theoretical trend.",
-      "block_indices": [6, 7]
-    },
-    {
       "statement": "Fermat's Little Theorem states that if n is prime and a is any positive integer less than n, then a raised to the n-th power is congruent to a modulo n.",
       "block_indices": [2]
     },
@@ -89,8 +85,8 @@
       "block_indices": [5]
     },
     {
-      "statement": "Unfoolable variants of the Fermat test (like Miller-Rabin) can have their error probability driven arbitrarily close to zero by running more independent trials, because one can prove the failure condition holds for most bases whenever n is composite; separately, a superficially equivalent rewrite of `expmod`'s squaring step (computing the same recursive call twice instead of squaring one computed value) silently changes its order of growth from Θ(log n) to Θ(n), since order of growth depends on the actual computational process generated, not just the mathematical expression being evaluated.",
-      "block_indices": [5, 9]
+      "statement": "Unfoolable variants of the Fermat test (like Miller-Rabin) can have their error probability driven arbitrarily close to zero by running more independent trials, because one can prove the failure condition holds for most bases whenever n is composite - a guarantee the plain Fermat test lacks, since rare numbers (Carmichael numbers) satisfy its congruence for every base despite being composite.",
+      "block_indices": [5]
     }
   ],
   "questions": [
@@ -108,18 +104,6 @@
     },
     {
       "item_index": 1,
-      "prompt": "Exercise 1.22's `timed-prime-test` is meant to empirically check the Θ(√n) prediction for `prime?`. Suppose measured runtimes for primes near 10,000 don't come out cleanly around √10 times those near 1,000. What's the best interpretation?",
-      "options": [
-        "Order of growth describes asymptotic step-count scaling, not a guarantee about exact measured time, so constant factors and system overhead can make real timings deviate from the predicted ratio without the growth analysis itself being wrong",
-        "The Θ(√n) analysis must be mistaken, and the algorithm's real order of growth is something else entirely",
-        "The `runtime` primitive is unreliable and cannot be used to measure any algorithm's performance",
-        "Since the two measured times don't match exactly, the implementation cannot actually be running the algorithm described in the text"
-      ],
-      "answer_index": 0,
-      "explanation": "Order of growth is an asymptotic, rough measure of how step count scales with n; it says nothing about the exact constant of proportionality or about machine-level overhead, so real measured times can deviate from the predicted ratio even when the underlying algorithm truly is Θ(√n)."
-    },
-    {
-      "item_index": 2,
       "prompt": "According to Fermat's Little Theorem as stated in this section, if n is prime and a is any positive integer less than n, which relation must hold?",
       "options": [
         "a raised to the n-th power is congruent to a modulo n",
@@ -131,7 +115,7 @@
       "explanation": "The theorem as introduced here is: a^n is congruent to a modulo n. (The exponent n-1 with result 1 is a different, equivalent-looking form used later for Miller-Rabin - it's easy to mix the two up, but this section's statement uses exponent n and result a.)"
     },
     {
-      "item_index": 3,
+      "item_index": 2,
       "prompt": "Why does `expmod` compute a^n mod m in Θ(log n) steps instead of Θ(n)?",
       "options": [
         "It uses successive squaring: whenever the exponent is even, it makes one recursive call on half the exponent and squares that single result, so the exponent roughly halves at each step",
@@ -143,7 +127,7 @@
       "explanation": "Just like `fast-expt` in 1.2.4, halving the exponent at each even step means the number of recursive calls is proportional to log2(exponent), giving Θ(log n) growth instead of the Θ(n) growth of a straightforward repeated-multiplication approach."
     },
     {
-      "item_index": 3,
+      "item_index": 2,
       "prompt": "What does `fast-prime?` (called with n and a trial count `times`) actually return, and why?",
       "options": [
         "True only if `fermat-test` succeeds on every one of the `times` independent random trials - a single failed trial is enough to make it return false",
@@ -155,7 +139,7 @@
       "explanation": "`fast-prime?` recurses only as long as `fermat-test` keeps succeeding, and returns false the moment a single trial fails, or true once all `times` trials have passed - matching the Fermat test's asymmetry where any single failure is decisive but successes only accumulate confidence."
     },
     {
-      "item_index": 4,
+      "item_index": 3,
       "prompt": "Why is the Fermat test described as differing 'in character' from most familiar algorithms studied so far in the book?",
       "options": [
         "Because failing the test proves n is not prime, but passing it - even repeatedly - is never a logical guarantee that n is prime, only very strong evidence, unlike deterministic algorithms whose answers are always exactly correct",
@@ -167,7 +151,7 @@
       "explanation": "The text's point is the asymmetry between disproof and confirmation: a failed trial is certain proof of non-primality, but passing many trials is still not an absolute guarantee, because rare Carmichael numbers satisfy the congruence for every base. (The Fermat test's own running time is perfectly well described by Θ(log n), so that isn't what makes it different.)"
     },
     {
-      "item_index": 5,
+      "item_index": 4,
       "prompt": "What is the key advantage of 'unfoolable' variants of the Fermat test (such as Miller-Rabin), compared with the plain Fermat test?",
       "options": [
         "For these variants, one can prove that for any composite n the special condition fails for at least half of all possible choices of a, so more trials strictly and provably drive the error probability toward zero - a guarantee the plain Fermat test lacks because of numbers like the Carmichael numbers that fool it on every base",
@@ -177,18 +161,56 @@
       ],
       "answer_index": 0,
       "explanation": "The text states that for these variants one can prove the condition fails for most a whenever n is composite, so each additional random trial provably increases confidence; the plain Fermat test has no such guarantee because rare numbers exist that satisfy its congruence for every base."
+    }
+  ],
+  "exercises": [
+    {
+      "number": "1.21",
+      "start_paragraph_index": 21,
+      "end_paragraph_index": 21,
+      "hint_md": "Just apply `smallest-divisor` directly to each of the three numbers. Think about what it means when the returned divisor equals the number itself, versus when it doesn't."
     },
     {
-      "item_index": 5,
-      "prompt": "Louis rewrites `expmod`'s even-exponent case to compute `(* (expmod base (/ exp 2) m) (expmod base (/ exp 2) m))` instead of `(square (expmod base (/ exp 2) m))`. Why does this turn the Θ(log n) process into a Θ(n) process?",
-      "options": [
-        "Because `expmod` is now invoked twice on the identical sub-problem instead of once, so the recursive call count doubles at every level of recursion, and repeated doubling across log n levels is equivalent to a linear number of calls in n",
-        "Because `*` is an inherently slower primitive than `square` and takes proportionally longer to run as the numbers grow large",
-        "Because `remainder` now has to be computed twice per step, tripling the step count while leaving the overall order of growth unchanged",
-        "Because Scheme's interpreter is unable to apply successive squaring to any expression written with `*` instead of `square`"
-      ],
-      "answer_index": 0,
-      "explanation": "`square` evaluates its argument expression once and reuses the resulting value, but writing the multiplication as two separate `(expmod ...)` calls duplicates the entire sub-computation each time - so instead of one call per halving of the exponent, the call count doubles at every level, turning a Θ(log n) recursion into one whose total call count grows linearly in n."
+      "number": "1.22",
+      "start_paragraph_index": 22,
+      "end_paragraph_index": 26,
+      "hint_md": "Build `search-for-primes` on top of `timed-prime-test`, walking consecutive odd integers upward from the given starting point (you can skip even candidates outright, since no even number above 2 is prime). Keep a running count of primes found so you know when to stop after three. When comparing timings across the four ranges, remember you're checking whether the *ratios* between them roughly match what Θ(√n) predicts, not the absolute numbers."
+    },
+    {
+      "number": "1.23",
+      "start_paragraph_index": 27,
+      "end_paragraph_index": 27,
+      "hint_md": "Define `next` as a small dispatch on its input (special-case 2, otherwise add 2), then thread it into `find-divisor`'s recursive call in place of `(+ test-divisor 1)`. When the measured speedup comes out less clean than exactly 2x, consider what other costs `find-divisor` pays on every step that don't scale down just because the divisor sequence got shorter."
+    },
+    {
+      "number": "1.24",
+      "start_paragraph_index": 28,
+      "end_paragraph_index": 28,
+      "hint_md": "Swap in `fast-prime?` (with a fixed trial count) wherever your timing harness currently calls `prime?`. Since Θ(log n) grows so much more slowly than Θ(√n), think about roughly how many more log-steps a million-scale n needs versus a thousand-scale n, and compare that predicted ratio to what you actually measure."
+    },
+    {
+      "number": "1.25",
+      "start_paragraph_index": 29,
+      "end_paragraph_index": 31,
+      "hint_md": "Trace through what each version of `expmod` actually computes at each recursive step, not just what it returns mathematically. Pay attention to the size of the intermediate numbers each version has to construct and operate on along the way."
+    },
+    {
+      "number": "1.26",
+      "start_paragraph_index": 32,
+      "end_paragraph_index": 34,
+      "hint_md": "Sketch the recursion tree for one call to each version of `expmod`. Count how many recursive calls get made at each successive halving of the exponent, and compare what happens to that count when a computed value is reused (via `square`) versus when the identical computation is simply issued again from scratch."
+    },
+    {
+      "number": "1.27",
+      "start_paragraph_index": 35,
+      "end_paragraph_index": 35,
+      "hint_md": "You'll need a procedure that, given n, exhaustively checks the Fermat congruence for every a from 1 up to n − 1, rather than sampling a random a the way `fermat-test` does. Run it on each Carmichael number and see what it reports."
+    },
+    {
+      "number": "1.28",
+      "start_paragraph_index": 36,
+      "end_paragraph_index": 36,
+      "hint_md": "Modify the squaring branch of `expmod` so that, before returning a squared-and-reduced value, it checks whether the value being squared is a nontrivial square root of 1 modulo n (not congruent to 1 or n − 1, yet its square is congruent to 1). The text's own suggestion is to have `expmod` signal this discovery by returning 0; build your Miller-Rabin test to watch for that signal instead of just comparing a final result to `a`."
     }
   ]
 }

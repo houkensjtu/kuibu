@@ -60,7 +60,7 @@ def _load_cached_parts(parts_path: Path, expected_hash: str) -> Optional[dict]:
 def main() -> None:
     counters = IdCounters()
     built, skipped, pending = [], [], []
-    all_blocks, all_items, all_questions = [], [], []
+    all_blocks, all_items, all_questions, all_exercises = [], [], [], []
 
     for name in SECTION_ORDER:
         section_path = SECTIONS_DIR / f"{name}.json"
@@ -82,24 +82,33 @@ def main() -> None:
 
         if cached is not None:
             blocks, items, questions = cached["blocks"], cached["items"], cached["questions"]
+            exercises = cached.get("exercises", [])
             counters.seq = max(counters.seq, max((b["seq"] for b in blocks), default=0))
             counters.block = max(counters.block, _max_numeric_suffix([b["id"] for b in blocks]))
             counters.item = max(counters.item, _max_numeric_suffix([i["id"] for i in items]))
             counters.question = max(counters.question, _max_numeric_suffix([q["id"] for q in questions]))
+            counters.exercise = max(counters.exercise, _max_numeric_suffix([e["id"] for e in exercises]))
             print(f"  {name:8s} 跳过（输入未变化）")
             skipped.append(name)
         else:
             subsection = Subsection.model_validate_json(section_path.read_text(encoding="utf-8"))
             llm_output = SectionLLMOutput.model_validate_json(llm_path.read_text(encoding="utf-8"))
-            block_models, item_models, question_models = slice_section(subsection, llm_output, counters)
+            block_models, item_models, question_models, exercise_models = slice_section(subsection, llm_output, counters)
             blocks = [b.model_dump() for b in block_models]
             items = [i.model_dump() for i in item_models]
             questions = [q.model_dump(mode="json") for q in question_models]
+            exercises = [e.model_dump() for e in exercise_models]
 
             PACK_PARTS_DIR.mkdir(parents=True, exist_ok=True)
             parts_path.write_text(
                 json.dumps(
-                    {"_input_hash": input_hash, "blocks": blocks, "items": items, "questions": questions},
+                    {
+                        "_input_hash": input_hash,
+                        "blocks": blocks,
+                        "items": items,
+                        "questions": questions,
+                        "exercises": exercises,
+                    },
                     ensure_ascii=False,
                     indent=2,
                 ),
@@ -111,6 +120,7 @@ def main() -> None:
         all_blocks.extend(blocks)
         all_items.extend(items)
         all_questions.extend(questions)
+        all_exercises.extend(exercises)
 
     print(
         f"完成：{len(built)} 节重新生成，{len(skipped)} 节跳过，"
@@ -119,10 +129,17 @@ def main() -> None:
 
     merged_path = Path("build/sicp/merged-pack-parts.json")
     merged_path.write_text(
-        json.dumps({"blocks": all_blocks, "items": all_items, "questions": all_questions}, ensure_ascii=False, indent=2),
+        json.dumps(
+            {"blocks": all_blocks, "items": all_items, "questions": all_questions, "exercises": all_exercises},
+            ensure_ascii=False,
+            indent=2,
+        ),
         encoding="utf-8",
     )
-    print(f"已生成小节合并进度写到 {merged_path}（{len(all_blocks)} blocks, {len(all_items)} items, {len(all_questions)} questions）")
+    print(
+        f"已生成小节合并进度写到 {merged_path}"
+        f"（{len(all_blocks)} blocks, {len(all_items)} items, {len(all_questions)} questions, {len(all_exercises)} exercises）"
+    )
 
 
 if __name__ == "__main__":

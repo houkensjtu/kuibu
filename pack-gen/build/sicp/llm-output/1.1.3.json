@@ -28,15 +28,21 @@
   "knowledge_items": [
     {
       "statement": "Evaluating a combination is a recursive process: first evaluate each subexpression (the operator and every operand), then apply the resulting procedure to the resulting argument values.",
-      "block_indices": [0]
+      "block_indices": [
+        0
+      ]
     },
     {
       "statement": "For primitive expressions, evaluation bottoms out directly: a numeral's value is the number it names, a built-in operator's value is its machine instructions, and any other name's value is whatever it's associated with in the environment.",
-      "block_indices": [2]
+      "block_indices": [
+        2
+      ]
     },
     {
       "statement": "`define` is a special form, not a combination - it doesn't fit the general evaluate-then-apply rule, since its purpose is precisely to create a new name-value association rather than apply a procedure to already-evaluated arguments.",
-      "block_indices": [3]
+      "block_indices": [
+        3
+      ]
     }
   ],
   "questions": [
@@ -76,5 +82,6 @@
       "answer_index": 0,
       "explanation": "The text is explicit: (define x 3) does not apply define to the value of x and to 3, since the purpose of define is precisely to associate x with a value - that's why define is a special form rather than an ordinary combination, and special forms each get their own evaluation rule."
     }
-  ]
+  ],
+  "exercises": []
 }

@@ -67,10 +67,6 @@
     {
       "statement": "Successive squaring - using b^n = (b^(n/2))^2 when n is even, and b^n = b · b^(n-1) when n is odd - lets `fast-expt` compute b^n in only Θ(log n) steps and Θ(log n) space, because each extra multiplication allowed roughly doubles the exponent that can be reached.",
       "block_indices": [2, 3, 4]
-    },
-    {
-      "statement": "The successive-squaring trick illustrates a general principle: recognizing exploitable structure in a problem can turn an apparently linear-growth computation into one with logarithmic growth - the same idea reapplies to iterative exponentiation (Exercise 1.16), multiplication via doubling and halving (Exercises 1.17-1.18), and even computing Fibonacci numbers by squaring a state transformation (Exercise 1.19).",
-      "block_indices": [4, 5, 6, 7, 8]
     }
   ],
   "questions": [
@@ -109,18 +105,32 @@
       ],
       "answer_index": 0,
       "explanation": "Each squaring step doubles the exponent handled for the cost of one multiplication, so reaching exponent n takes about log₂n doublings/multiplications rather than n individual multiplications - that's the reasoning behind fast-expt's Θ(log n) growth."
+    }
+  ],
+  "exercises": [
+    {
+      "number": "1.16",
+      "start_paragraph_index": 11,
+      "end_paragraph_index": 11,
+      "hint_md": "Think in terms of an invariant: find a quantity built from the state variables `a`, `b`, and `n` that stays exactly the same before and after every step of the loop, and that is trivially readable off once `n` reaches 0. Handle the even and odd cases for `n` the same way `fast-expt` does, but express each case as a *state update* to `(a, b, n)` rather than as a fresh recursive call."
     },
     {
-      "item_index": 3,
-      "prompt": "Beyond making exponentiation faster, what general lesson about algorithm design does successive squaring illustrate?",
-      "options": [
-        "Recognizing exploitable structure in a problem (like halving the exponent) can turn a computation that looks like it needs linear growth into one with logarithmic growth",
-        "Iterative processes are always asymptotically faster than recursive ones regardless of the algorithm used",
-        "Any problem expressible as repeated multiplication can be solved in constant time on a fast enough computer",
-        "Logarithmic-growth algorithms only exist for numeric exponentiation and don't generalize to other repeated operations"
-      ],
-      "answer_index": 0,
-      "explanation": "The chapter reuses the exact same halving/doubling structure to speed up multiplication (Exercises 1.17-1.18) and even Fibonacci computation (Exercise 1.19) - the point is not something special about exponents, but a general technique: exploiting a problem's structure to skip most of the work that a naive linear approach would do."
+      "number": "1.17",
+      "start_paragraph_index": 12,
+      "end_paragraph_index": 14,
+      "hint_md": "Look for the structural analogy to `fast-expt`: repeated addition plays the role that repeated multiplication played there, and `double`/`halve` play the role that squaring the base and halving the exponent played there. Ask what should happen to the two arguments on each step when the multiplier is even vs. odd, mirroring the even/odd cases of `fast-expt` directly."
+    },
+    {
+      "number": "1.18",
+      "start_paragraph_index": 15,
+      "end_paragraph_index": 15,
+      "hint_md": "This is a direct combination of the previous two exercises: reuse the invariant-preserving iterative structure you built for exponentiation, but substitute `double`/`halve`/`+` wherever `square`/halved-exponent/`*` appeared before."
+    },
+    {
+      "number": "1.19",
+      "start_paragraph_index": 16,
+      "end_paragraph_index": 17,
+      "hint_md": "Write out symbolically what applying T_{p,q} twice does to the pair (a, b), then compare the resulting coefficients on `a` and `b` to a single application of some T_{p',q'} to see what p' and q' must be in terms of p and q - this step is algebra/pattern-matching, not a new algorithmic idea. Once you have p' and q', the squaring structure that fills in the even-count branch is exactly `fast-expt`'s again."
     }
   ]
 }

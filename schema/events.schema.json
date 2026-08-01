@@ -8,7 +8,8 @@
     { "$ref": "#/definitions/blockRead" },
     { "$ref": "#/definitions/answer" },
     { "$ref": "#/definitions/checkin" },
-    { "$ref": "#/definitions/settingsChange" }
+    { "$ref": "#/definitions/settingsChange" },
+    { "$ref": "#/definitions/exerciseAttempt" }
   ],
   "definitions": {
     "sessionStart": {
@@ -79,6 +80,23 @@
             { "type": "boolean" }
           ]
         }
+      }
+    },
+    "exerciseAttempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "ts", "type", "exercise_id", "seconds", "used_hint"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "ts": { "type": "string", "format": "date-time" },
+        "type": { "const": "exercise_attempt" },
+        "exercise_id": { "type": "string", "minLength": 1 },
+        "seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "花在这道习题上的时间；计入当天阅读时长反馈，但不参与 block 切分估时"
+        },
+        "used_hint": { "type": "boolean" }
       }
     }
   }

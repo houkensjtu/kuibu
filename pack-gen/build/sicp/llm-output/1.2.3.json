@@ -78,5 +78,19 @@
       "answer_index": 0,
       "explanation": "Space usage tracks how deep the recursion goes at any single moment, not how many nodes the whole tree has; since the deepest path down the Fibonacci recursion tree only has n levels, space stays Θ(n) even while the total number of steps taken across the whole tree grows exponentially as Θ(φ^n)."
     }
+  ],
+  "exercises": [
+    {
+      "number": "1.14",
+      "start_paragraph_index": 5,
+      "end_paragraph_index": 5,
+      "hint_md": "Draw the recursion tree the same way you would for the tree-recursive Fibonacci process from 1.2.2: at each node, branch on the choice `count-change` makes about whether to use the largest remaining coin denomination or not. Once you have the tree, ask two separate questions - how deep can the tree go (that bounds the space), and how many nodes does it have in total (that bounds the number of steps) - as the target amount grows for a fixed set of coin denominations."
+    },
+    {
+      "number": "1.15",
+      "start_paragraph_index": 6,
+      "end_paragraph_index": 8,
+      "hint_md": "Trace what happens to `angle` on each recursive call to `sine`: it gets divided by 3.0 every time, and the recursion only bottoms out once `(not (> (abs angle) 0.1))` becomes true. So the question 'how many times is `p` applied' is really 'how many times can you divide the original angle by 3 before it falls to within 0.1'. Think about what kind of function of the original angle that count is, and connect it to the logarithmic algorithms the surrounding text just mentioned."
+    }
   ]
 }

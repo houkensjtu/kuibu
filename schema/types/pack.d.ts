@@ -6,13 +6,14 @@
  */
 
 /**
- * kuibu 内容包：manifest + blocks + items + questions 的组合视图
+ * kuibu 内容包：manifest + blocks + items + questions + exercises 的组合视图
  */
 export interface ContentPack {
   manifest: Manifest;
   blocks: Block[];
   items: KnowledgeItem[];
   questions: Question[];
+  exercises: Exercise[];
 }
 export interface Manifest {
   /**
@@ -62,4 +63,23 @@ export interface Question {
   options: [string, string, ...string[]];
   answer_index: number;
   explanation: string;
+}
+export interface Exercise {
+  id: string;
+  /**
+   * 读完这个 block 之后，这道习题才会出现在当天的可选习题列表里
+   */
+  block_id: string;
+  /**
+   * 原书自己的习题编号，如 "1.9"，纯展示用，不参与排序/调度
+   */
+  number: string;
+  /**
+   * 习题原文，逐字从原书切出来，不是复述——跟 block.content_md 是同一条铁律
+   */
+  prompt_md: string;
+  /**
+   * 提示（不是答案）。当前阶段刻意不提供答案，只给一个不透题的提示
+   */
+  hint_md: string;
 }

@@ -100,5 +100,37 @@
       "answer_index": 0,
       "explanation": "The text notes `and`/`or` are special forms precisely because their subexpressions aren't necessarily all evaluated (short-circuiting), unlike ordinary procedures (like `not`) which always evaluate all their arguments."
     }
+  ],
+  "exercises": [
+    {
+      "number": "1.1",
+      "start_paragraph_index": 26,
+      "end_paragraph_index": 27,
+      "hint_md": "Work through the expressions one at a time, in the order given, applying the evaluation rules this section just covered: ordinary arithmetic, `define` binding a name, and then the `if`/`cond` predicate-then-branch behavior for the later lines. For the `and`/`or`-style predicate inside the `if`, remember evaluation is left to right and can short-circuit. Try predicting each result before you'd run it."
+    },
+    {
+      "number": "1.2",
+      "start_paragraph_index": 28,
+      "end_paragraph_index": 28,
+      "hint_md": "Work from the innermost parenthesized subexpression outward, converting each arithmetic operation into prefix (operator-first) form one at a time, the same way `abs` was rewritten step by step earlier in this section. Watch out for the division: the big fraction bar is just another operation that needs its own `(/ ... )` form, applied to the fully-converted numerator and denominator."
+    },
+    {
+      "number": "1.3",
+      "start_paragraph_index": 29,
+      "end_paragraph_index": 29,
+      "hint_md": "You don't need to sort the three numbers - you only need to identify which one is *smallest*, since the sum of squares of the other two is what's wanted. Think about how the comparison predicates and compound-predicate forms from this section (`>`, `<`, `and`, `or`) could help you express \"is this the smallest of the three\" without writing out every possible ordering by hand."
+      },
+    {
+      "number": "1.4",
+      "start_paragraph_index": 30,
+      "end_paragraph_index": 31,
+      "hint_md": "Recall that in a combination `(⟨operator⟩ ⟨operand⟩ ⟨operand⟩)`, the operator position is itself evaluated just like the operands are. Ask yourself: what does `(if (> b 0) + -)` evaluate to, on its own, before it's ever applied to `a` and `b`? Once you know what that sub-expression's value is, the rest follows from ordinary procedure application."
+    },
+    {
+      "number": "1.5",
+      "start_paragraph_index": 32,
+      "end_paragraph_index": 36,
+      "hint_md": "Compare what applicative-order evaluation does with an argument like `(p)` before calling `test` (it evaluates arguments before applying the procedure) against what normal-order evaluation would do, combined with the note that `if`'s predicate is always evaluated first and only one of the consequent/alternative is ever evaluated. Think about what happens if you try to fully evaluate `(p)` versus never needing to."
+    }
   ]
 }

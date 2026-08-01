@@ -22,11 +22,15 @@
   "knowledge_items": [
     {
       "statement": "The chapter frames programs as 'spells' that conjure computational processes (like a sorcerer's spirit) to manipulate data - vivid language for the fact that a process executes its program precisely and mechanically, so small bugs can have significant, unanticipated consequences.",
-      "block_indices": [1]
+      "block_indices": [
+        1
+      ]
     },
     {
       "statement": "Well-designed computational systems, like well-designed physical systems, are built in a modular manner so that parts can be constructed, replaced, and debugged separately - managing complexity through this kind of structure is a central theme of the book.",
-      "block_indices": [2]
+      "block_indices": [
+        2
+      ]
     }
   ],
   "questions": [
@@ -54,5 +58,6 @@
       "answer_index": 0,
       "explanation": "The text draws a direct analogy to well-designed physical systems: modularity lets the parts of a program be constructed, replaced, and debugged separately - a hallmark of being able to visualize and control a system's behavior in advance."
     }
-  ]
+  ],
+  "exercises": []
 }

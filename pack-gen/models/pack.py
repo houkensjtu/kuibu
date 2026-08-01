@@ -66,9 +66,30 @@ class Question(BaseModel):
     explanation: str
 
 
+class Exercise(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: constr(min_length=1)
+    block_id: constr(min_length=1) = Field(
+        ..., description='读完这个 block 之后，这道习题才会出现在当天的可选习题列表里'
+    )
+    number: constr(min_length=1) = Field(
+        ..., description='原书自己的习题编号，如 "1.9"，纯展示用，不参与排序/调度'
+    )
+    prompt_md: str = Field(
+        ...,
+        description='习题原文，逐字从原书切出来，不是复述——跟 block.content_md 是同一条铁律',
+    )
+    hint_md: str = Field(
+        ...,
+        description='提示（不是答案）。当前阶段刻意不提供答案，只给一个不透题的提示',
+    )
+
+
 class ContentPack(BaseModel):
     """
-    kuibu 内容包：manifest + blocks + items + questions 的组合视图
+    kuibu 内容包：manifest + blocks + items + questions + exercises 的组合视图
     """
 
     model_config = ConfigDict(
@@ -78,3 +99,4 @@ class ContentPack(BaseModel):
     blocks: List[Block]
     items: List[KnowledgeItem]
     questions: List[Question]
+    exercises: List[Exercise]

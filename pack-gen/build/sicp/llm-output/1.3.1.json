@@ -81,10 +81,6 @@
     {
       "statement": "Once `sum` exists as a building block, it can support still higher abstractions built on top of it, such as approximating a definite integral by summing many small rectangle-strip evaluations of a function - showing how higher-order procedures compose into increasingly powerful abstractions.",
       "block_indices": [6]
-    },
-    {
-      "statement": "`sum` is just the simplest case of a broader family of higher-order combining abstractions: `product` generalizes it to multiplication, `accumulate` generalizes both `sum` and `product` under one combining function and base value, and `filtered-accumulate` generalizes further by only combining terms that pass a filter predicate.",
-      "block_indices": [8, 9]
     }
   ],
   "questions": [
@@ -147,18 +143,38 @@
       ],
       "answer_index": 0,
       "explanation": "`integral` is defined directly in terms of `sum`, passing f as the term and an add-dx helper as next, with a fractional step dx - demonstrating both that sum handles non-integer steps fine and that it serves as a building block for a genuinely new abstraction (numerical integration)."
+    }
+  ],
+  "exercises": [
+    {
+      "number": "1.29",
+      "start_paragraph_index": 32,
+      "end_paragraph_index": 32,
+      "hint_md": "You already have a general `sum` procedure parameterized by `term` and `next`. Think of Simpson's Rule as summing over k = 0..n, where the coefficient in front of y_k alternates 4, 2, 4, 2, ... except at the two endpoints - can you write a single `term` function of k that folds in the right coefficient times y_k = f(a + k·h), and a `next` that just increments k? Work out how h = (b − a)/n relates to the arguments you'd hand to `sum`, and what you multiply the sum by afterward."
     },
     {
-      "item_index": 5,
-      "prompt": "How do `product`, `accumulate`, and `filtered-accumulate` (introduced in the exercises) relate to `sum`?",
-      "options": [
-        "They are progressively more general higher-order abstractions: `product` generalizes the combining operation from addition to multiplication, `accumulate` further parameterizes the combiner and base value themselves, and `filtered-accumulate` adds a predicate to select which terms get combined at all",
-        "They are unrelated alternatives to `sum` meant to replace it entirely once defined",
-        "They only work on lists of numbers, whereas `sum` only works on ranges of integers",
-        "They remove the need for a `term` procedure, operating directly on raw numbers instead"
-      ],
-      "answer_index": 0,
-      "explanation": "The exercises build an explicit generalization chain: product mirrors sum's structure but multiplies; accumulate replaces the hardcoded + and 0 with a combiner procedure and null-value; filtered-accumulate adds a filter predicate on top of accumulate so only terms satisfying it are combined."
+      "number": "1.30",
+      "start_paragraph_index": 33,
+      "end_paragraph_index": 34,
+      "hint_md": "This has the same shape as turning a recursive process into an iterative one that you practiced in section 1.2 (think of how `fact-iter` carries a running result). `iter` needs: a test for when `a` has moved past `b`, what to return once that happens, and how to combine the current `result` with `(term a)` before recursing on `(next a)`. Figure out what the very first call to `iter` should pass in for `result`."
+    },
+    {
+      "number": "1.31",
+      "start_paragraph_index": 35,
+      "end_paragraph_index": 36,
+      "hint_md": "`product` should mirror `sum`'s structure almost exactly - ask yourself what changes if the combining operation becomes multiplication and the base case (what you return once `a` passes `b`) becomes 1 instead of 0. For the recursive-vs-iterative part, revisit the distinction from section 1.2 between a process that defers operations until a base case is reached versus one that carries all its state forward in arguments."
+    },
+    {
+      "number": "1.32",
+      "start_paragraph_index": 37,
+      "end_paragraph_index": 38,
+      "hint_md": "Look at where `+`/`0` appear in `sum` and where `*`/`1` appear in `product` - in both cases that's a two-argument combining operation plus a base value for it. If you pull those two things out as extra parameters (`combiner` and `null-value`), what's left over is one procedure that both `sum` and `product` can be defined in terms of with a single line each."
+    },
+    {
+      "number": "1.33",
+      "start_paragraph_index": 39,
+      "end_paragraph_index": 40,
+      "hint_md": "Start from the `accumulate` you wrote for Exercise 1.32 and find the single spot in its recursion where a term gets folded into the result via `combiner`. What would it mean to skip that combining step - recursing on `(next a)` without touching the accumulation - whenever a value of `a` fails a given predicate? Once you have that, think about which one-argument predicate captures 'is prime' for the first part, and which captures 'is relatively prime to n' for the second."
     }
   ]
 }

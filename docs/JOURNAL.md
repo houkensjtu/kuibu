@@ -110,3 +110,87 @@ authoring 摊开成并行（10 个小节互相独立，天然适合分发）。�
 `blockIdsReadOnDate`（按打卡日过滤 `block_read` 事件，供"复习"这条路径用，因为累计的
 `readBlockIds` 分不出"今天具体读了哪些"）和 `cli/reviewOrAheadPrompt.ts` 的选择提示。
 `docs/DESIGN.md` 加了 §3.2.1 记录这个决定。
+
+## 2026-08-01 —— 内容忠实度专项核查
+
+用户单独问了一次"手工切分的内容是否跟原文一致"。三层核查：(1) 重新机械解析源文件、
+跟当前缓存的 `sections/*.json` 逐字节 diff，确认缓存没有过期或被手改；(2) 完全绕开缓存，
+从头用边界索引重新组装一遍，跟实际发布的 `packs/public/sicp/*.json` 逐字段比对，确认
+137/76/80（当时的数字）一模一样，边界覆盖零缺口零重叠；(3) 抽查两处历史上出过问题的段落
+（blockquote 里的求值规则、`factorial` 代码块）直接对照原始 XHTML。结论：一致，铁律 6
+（LLM 不复述原文）在实际产出上确实被遵守。这次顺带确认了"目前 Exercise 完全没有特殊标记，
+混在正文里当普通内容读过去"——这条观察直接引出了后面的 Exercise 功能。
+
+## 2026-08-01 —— 打卡进度改成年历视图
+
+用户反馈"打卡进度显示比较难看，想要日历一样的显示，而且不要重复造轮子，以后网页版要能直接
+复用"。把原来的单行 30 天符号+日期两行显示（`core/heatmap.ts` 的 `buildHeatmap` +
+`cli/renderHeatmap.ts`）整个换成 GitHub 贡献图风格的全年日历：`core/yearCalendar.ts` 的
+`buildYearCalendar` 是纯计算（一年切成"每周一列、周日到周六"的网格，首尾补相邻年份的
+padding 格并标 `inYear:false`），`cli/renderYearCalendar.ts` 只负责把这个网格画成等宽字符
+——网页版以后只需要换"一格怎么画"（一个 div），不用重新设计"一年怎么切成周"这套逻辑。
+`today`/`status` 都改用这一套，年份取"今天"（偏移换算过的打卡日）所在的自然年。
+`buildHeatmap` 整个删掉，`computeCurrentStreak` 挪到新起的 `core/streak.ts`（原来的
+`heatmap.ts` 名字不再准确）。
+
+## 2026-08-01 —— status 补充：详细当前位置、目录、预计完读天数
+
+用户先反馈"进度显示好像只算了当天读的，不是整本书累计的"——排查后确认计算本身是对的
+（cumulative，用虚构的跨天日志验证过），真正容易误导的是紧挨着的另一行"读了多少分钟"
+文案本身就带"today"字样，容易被当成进度。接着用户提了两个新增需求：
+
+1. **详细当前位置**：加 `core/progress.ts` 的 `computeCurrentPosition`——找"第一个还没读过
+   的 block"所在的小节，故意不是 `lastCompletedSectionPath`（那个会滞后：一个小节读了一半
+   不算"完成"，但用户已经身处其中了）。
+2. **预计还要几天读完**：`core/completionEstimate.ts` 的 `estimateDaysRemaining`，剩余
+   block 的 est_seconds 总和除以每日目标秒数，向上取整（有余数就不能算 0 天）。`status`
+   本身不问用户任何问题，没设过目标时就老实说这是"假设"，不是真定过的目标。
+
+随后用户又要求把"详细当前位置"改成"整本书目录 + 箭头指向当前位置"，而不是一行文字。加了
+`core/tableOfContents.ts`（按 block 顺序去重出全部小节，一次性列出整本书目录，这也是分给
+web 版直接复用的纯数据）和 `cli/renderTableOfContents.ts`（在对应小节前画箭头、标"you are
+here today"）。
+
+## 2026-08-01 —— 主动退出（q/Ctrl-C）+ 打卡未完成时重开从头开始
+
+用户要求：阅读/答题过程中按了不该按的键不应该让程序异常退出，只有 `q` 或 Ctrl-C 才是真正
+接受的退出方式，退出时要有告别语；如果退出时打卡还没完成，重新打开应该从头开始今天的阅读
+（而不是像 M2.20 那次验收标准写的"续上"）。这是对早先"崩溃安全=续上"这个假设的一次显式
+修订——用户现在要的是"要么一口气读完一天，要么重来"，不要半途状态。
+
+实现：`cli/readLineOrQuit.ts` 包一层 `readLineOrQuit`（输入 "q" 就 throw 一个 `UserQuit`），
+所有交互提示（答题/阅读降级/目标调整/复习-超前选择）统一走这层，不会有哪个提示点漏掉这条
+规则。`cli/goodbye.ts` 打告别语，`SIGINT` 单独注册一个 handler 调用同一个函数。"重开从头"
+靠 `readBlockIdsForPacking`：打卡还没完成时，今天已经录过的 `block_read`（`blockIdsReadOnDate`
+过滤）从 `readBlockIds` 里排除掉再喂给 `packSession`——今天唯一能出现"部分已读、打卡未完成"
+的情况就是被中断过，所以这条排除规则不会误伤正常流程。
+
+## 2026-08-01 —— 原书 Exercise 独立建模为第三种、可选做的题目
+
+用户指出内容忠实度核查时顺带发现的问题："Exercise 目前完全没被特殊标记"，要求：每道
+Exercise 都要标出来、出一个可选做的"题"；跟每天必做的复习题是两种不同的东西；用户做习题
+花的时间计入当天阅读时长反馈，但**不**影响 block 切分的 est_seconds 估算（切分还是按最简单
+的文字量逻辑）；用户可以完全自己做，或者看一条 hint（生成器自己写），暂不提供答案。
+
+这是这次会话里唯一一次touch 到两份 schema 的改动：
+
+- `schema/pack.schema.json` 新增 `exercise`（`id`/`block_id`/`number`/`prompt_md`/
+  `hint_md`），`ContentPack` 加 `exercises` 必填数组；`schema/events.schema.json` 新增
+  `exercise_attempt` 事件（`exercise_id`/`seconds`/`used_hint`）。两侧类型/校验器都重新生成
+  （`pack-gen/scripts/gen_models.sh` + `npm run schema:gen-types`），sample-pack 和所有相关
+  测试 fixture 跟着补了 `exercises.json`/字段。
+- 生成器：`section_llm_output.py` 加 `ExerciseSpec`（只给边界索引 + hint_md，`prompt_md`
+  跟 block 的 `content_md` 一样由 `slice_section.py` 按边界机械切出来，不是复述）；
+  `slice_section.py` 新增习题的"解锁 block"推导（覆盖习题起始段落的那个 block，不要求手动
+  指定，避免跟 block 边界脱节）；`build_all_sections.py` 跟着支持合并 `exercises`。
+- `core/exerciseQueue.ts`（今天读过的 block 解锁了哪些习题）、`core/reducer.ts` 新增
+  `attemptedExerciseIds` 折叠、`cli/exerciseFlow.ts`+`cli/exercisePrompt.ts`（呈现习题、
+  可选看 hint、按 Enter 计时结束，`q` 退出走同一套 `readLineOrQuit`）。`totalReadSecondsToday`
+  在习题流程里累加，但 `packSession`/`est_seconds` 完全不知道习题这件事的存在。
+- 内容重新处理：用 grep 直接对 20 节的机械切分产物搜 "**Exercise" 标记，发现 12 节共 46 道
+  习题（跟 SICP 第一章实际的 1.1–1.46 编号对上了，是个很好的完整性校验）。8 节零习题的只加
+  `"exercises": []`；12 节各起一个 subagent 并行处理：定位每道习题的段落边界、写 hint、
+  并且**审查现有的 knowledge_items/questions，把明显是照着某道 Exercise 内容出的题挪除**
+  （复习题跟 Exercise 不能测同一段内容），涉及 6 个小节的 item/question 编号重排。重建后
+  76→70 items、80→73 questions（少的都是被挪去 exercises 的），137 blocks 数量不变。
+  重复了一遍完整的"从源文件重新组装、跟发布内容逐字段比对"的核查，零差异。

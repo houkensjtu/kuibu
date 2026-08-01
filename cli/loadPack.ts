@@ -25,6 +25,7 @@ export function loadPack(packDir: string): ContentPack {
     blocks: readJson("blocks.json"),
     items: readJson("items.json"),
     questions: readJson("questions.json"),
+    exercises: readJson("exercises.json"),
   };
 
   const result = validatePack(combined);

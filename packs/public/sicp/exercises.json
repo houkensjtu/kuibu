@@ -1,0 +1,324 @@
+[
+  {
+    "id": "x0001",
+    "block_id": "b0033",
+    "number": "1.1",
+    "prompt_md": "**Exercise 1.1:** Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.\n\n```scheme\n10\n(+ 5 3 4)\n(- 9 1)\n(/ 6 2)\n(+ (* 2 4) (- 4 6))\n(define a 3)\n(define b (+ a 1))\n(+ a b (* a b))\n(= a b)\n(if (and (> b a) (< b (* a b)))\n    b\n    a)\n(cond ((= a 4) 6)\n      ((= b 4) (+ 6 7 a))\n      (else 25))\n(+ 2 (if (> b a) b a))\n(* (cond ((> a b) a)\n         ((< a b) b)\n         (else -1))\n   (+ a 1))\n```",
+    "hint_md": "Work through the expressions one at a time, in the order given, applying the evaluation rules this section just covered: ordinary arithmetic, `define` binding a name, and then the `if`/`cond` predicate-then-branch behavior for the later lines. For the `and`/`or`-style predicate inside the `if`, remember evaluation is left to right and can short-circuit. Try predicting each result before you'd run it."
+  },
+  {
+    "id": "x0002",
+    "block_id": "b0033",
+    "number": "1.2",
+    "prompt_md": "**Exercise 1.2:** Translate the following expression into prefix form: 5 + 4 + ( 2 − ( 3 − ( 6 + 4 5 ) ) ) 3 ( 6 − 2 ) ( 2 − 7 ) .",
+    "hint_md": "Work from the innermost parenthesized subexpression outward, converting each arithmetic operation into prefix (operator-first) form one at a time, the same way `abs` was rewritten step by step earlier in this section. Watch out for the division: the big fraction bar is just another operation that needs its own `(/ ... )` form, applied to the fully-converted numerator and denominator."
+  },
+  {
+    "id": "x0003",
+    "block_id": "b0034",
+    "number": "1.3",
+    "prompt_md": "**Exercise 1.3:** Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.",
+    "hint_md": "You don't need to sort the three numbers - you only need to identify which one is *smallest*, since the sum of squares of the other two is what's wanted. Think about how the comparison predicates and compound-predicate forms from this section (`>`, `<`, `and`, `or`) could help you express \"is this the smallest of the three\" without writing out every possible ordering by hand."
+  },
+  {
+    "id": "x0004",
+    "block_id": "b0034",
+    "number": "1.4",
+    "prompt_md": "**Exercise 1.4:** Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behavior of the following procedure:\n\n```scheme\n(define (a-plus-abs-b a b)\n  ((if (> b 0) + -) a b))\n```",
+    "hint_md": "Recall that in a combination `(⟨operator⟩ ⟨operand⟩ ⟨operand⟩)`, the operator position is itself evaluated just like the operands are. Ask yourself: what does `(if (> b 0) + -)` evaluate to, on its own, before it's ever applied to `a` and `b`? Once you know what that sub-expression's value is, the rest follows from ordinary procedure application."
+  },
+  {
+    "id": "x0005",
+    "block_id": "b0034",
+    "number": "1.5",
+    "prompt_md": "**Exercise 1.5:** Ben Bitdiddle has invented a test to determine whether the interpreter he is faced with is using applicative-order evaluation or normal-order evaluation. He defines the following two procedures:\n\n```scheme\n(define (p) (p))\n\n(define (test x y) \n  (if (= x 0) \n      0 \n      y))\n```\n\nThen he evaluates the expression\n\n```scheme\n(test 0 (p))\n```\n\nWhat behavior will Ben observe with an interpreter that uses applicative-order evaluation? What behavior will he observe with an interpreter that uses normal-order evaluation? Explain your answer. (Assume that the evaluation rule for the special form `if` is the same whether the interpreter is using normal or applicative order: The predicate expression is evaluated first, and the result determines whether to evaluate the consequent or the alternative expression.)",
+    "hint_md": "Compare what applicative-order evaluation does with an argument like `(p)` before calling `test` (it evaluates arguments before applying the procedure) against what normal-order evaluation would do, combined with the note that `if`'s predicate is always evaluated first and only one of the consequent/alternative is ever evaluated. Think about what happens if you try to fully evaluate `(p)` versus never needing to."
+  },
+  {
+    "id": "x0006",
+    "block_id": "b0040",
+    "number": "1.6",
+    "prompt_md": "**Exercise 1.6:** Alyssa P. Hacker doesn’t see why `if` needs to be provided as a special form. “Why can’t I just define it as an ordinary procedure in terms of `cond`?” she asks. Alyssa’s friend Eva Lu Ator claims this can indeed be done, and she defines a new version of `if`:\n\n```scheme\n(define (new-if predicate \n                then-clause \n                else-clause)\n  (cond (predicate then-clause)\n        (else else-clause)))\n```\n\nEva demonstrates the program for Alyssa:\n\n```scheme\n(new-if (= 2 3) 0 5)\n5\n\n(new-if (= 1 1) 0 5)\n0\n\n```\n\nDelighted, Alyssa uses `new-if` to rewrite the square-root program:\n\n```scheme\n(define (sqrt-iter guess x)\n  (new-if (good-enough? guess x)\n          guess\n          (sqrt-iter (improve guess x) x)))\n```\n\nWhat happens when Alyssa attempts to use this to compute square roots? Explain.",
+    "hint_md": "Think about *when* arguments get evaluated for an ordinary procedure versus a special form. Under applicative-order evaluation, all of a procedure's operands are evaluated before the procedure is applied. Ask yourself which operand `new-if` receives that `if` would have been careful never to touch in this particular call."
+  },
+  {
+    "id": "x0007",
+    "block_id": "b0041",
+    "number": "1.7",
+    "prompt_md": "**Exercise 1.7:** The `good-enough?` test used in computing square roots will not be very effective for finding the square roots of very small numbers. Also, in real computers, arithmetic operations are almost always performed with limited precision. This makes our test inadequate for very large numbers. Explain these statements, with examples showing how the test fails for small and large numbers. An alternative strategy for implementing `good-enough?` is to watch how `guess` changes from one iteration to the next and to stop when the change is a very small fraction of the guess. Design a square-root procedure that uses this kind of end test. Does this work better for small and large numbers?",
+    "hint_md": "Try tracing `good-enough?` by hand on a very small radicand (say 0.0001) and a very large one (say a number with many significant digits) - what does a fixed absolute tolerance of 0.001 mean relative to each answer? For the alternative design, consider tracking how much `guess` moves between one iteration and the next, rather than comparing `guess*guess` to `x`."
+  },
+  {
+    "id": "x0008",
+    "block_id": "b0041",
+    "number": "1.8",
+    "prompt_md": "**Exercise 1.8:** Newton’s method for cube roots is based on the fact that if y is an approximation to the cube root of x , then a better approximation is given by the value x / y 2 + 2 y 3 . Use this formula to implement a cube-root procedure analogous to the square-root procedure. (In 1.3.4 we will see how to implement Newton’s method in general as an abstraction of these square-root and cube-root procedures.)",
+    "hint_md": "You already have a working template in `sqrt-iter`/`improve`/`good-enough?` from this section. Only the improvement formula needs to change to match the cube-root update rule given here - the overall recursive structure (guess, test, repeat with an improved guess) can stay the same."
+  },
+  {
+    "id": "x0009",
+    "block_id": "b0057",
+    "number": "1.9",
+    "prompt_md": "**Exercise 1.9:** Each of the following two procedures defines a method for adding two positive integers in terms of the procedures `inc`, which increments its argument by 1, and `dec`, which decrements its argument by 1.\n\n```scheme\n(define (+ a b)\n  (if (= a 0) \n      b \n      (inc (+ (dec a) b))))\n\n(define (+ a b)\n  (if (= a 0) \n      b \n      (+ (dec a) (inc b))))\n```\n\nUsing the substitution model, illustrate the process generated by each procedure in evaluating `(+ 4 5)`. Are these processes iterative or recursive?",
+    "hint_md": "Apply the substitution model exactly as this section did for `factorial` versus `fact-iter`: expand `(+ 4 5)` one call at a time for each definition and look at what's left to do after each recursive call returns. For one of the two definitions, is there an operation (the `inc`) still waiting to be applied once the recursive call comes back, or is the argument being passed forward already the up-to-date partial answer? That's the same question this section just asked about factorial."
+  },
+  {
+    "id": "x0010",
+    "block_id": "b0058",
+    "number": "1.10",
+    "prompt_md": "**Exercise 1.10:** The following procedure computes a mathematical function called Ackermann’s function.\n\n```scheme\n(define (A x y)\n  (cond ((= y 0) 0)\n        ((= x 0) (* 2 y))\n        ((= y 1) 2)\n        (else (A (- x 1)\n                 (A x (- y 1))))))\n```\n\nWhat are the values of the following expressions?\n\n```scheme\n(A 1 10)\n(A 2 4)\n(A 3 3)\n```\n\nConsider the following procedures, where `A` is the procedure defined above:\n\n```scheme\n(define (f n) (A 0 n))\n(define (g n) (A 1 n))\n(define (h n) (A 2 n))\n(define (k n) (* 5 n n))\n```\n\nGive concise mathematical definitions for the functions computed by the procedures `f`, `g`, and `h` for positive integer values of n . For example, `(k n)` computes 5 n 2 .",
+    "hint_md": "Evaluate `A` by mechanically applying its `cond` clauses one call at a time, innermost first, just as you would trace any recursive procedure with the substitution model - it helps to first work out a few small cases like `(A 1 2)` or `(A 2 2)` by hand before tackling `(A 1 10)`, `(A 2 4)`, and `(A 3 3)`. For `f`, `g`, and `h`, compute several small values of each (n = 1, 2, 3, 4...) and look for how each result relates to n - in particular, notice what happens to the output each time n increases by 1."
+  },
+  {
+    "id": "x0011",
+    "block_id": "b0067",
+    "number": "1.11",
+    "prompt_md": "**Exercise 1.11:** A function f is defined by the rule that f ( n ) = n if n < 3 and f ( n ) = f ( n − 1 ) + 2 f ( n − 2 ) + 3 f ( n − 3 ) if n ≥ 3 . Write a procedure that computes f by means of a recursive process. Write a procedure that computes f by means of an iterative process.",
+    "hint_md": "f(n) depends on three preceding values instead of two, so it's a direct three-term generalization of the fib pattern you just saw. For the recursive version, translate the piecewise rule almost verbatim, the same way `fib` was translated from its two-case definition. For the iterative version, think about what `fib-iter` carried forward at each step (a running pair) and what you'd need to carry forward here so that each step only needs to look at the current state, not re-derive earlier values."
+  },
+  {
+    "id": "x0012",
+    "block_id": "b0067",
+    "number": "1.12",
+    "prompt_md": "**Exercise 1.12:** The following pattern of numbers is called *Pascal’s triangle*.\n\n```scheme\n         1\n       1   1\n     1   2   1\n   1   3   3   1\n 1   4   6   4   1\n       . . .\n\n```\n\nThe numbers at the edge of the triangle are all 1, and each number inside the triangle is the sum of the two numbers above it. Write a procedure that computes elements of Pascal’s triangle by means of a recursive process.",
+    "hint_md": "Each interior entry is defined in terms of two entries from the row above it, which is itself a tree-recursive shape, much like `fib` branching into two smaller calls. Think about what the natural base cases are (which positions in a row are always 1), and how you'd index an entry so the recursive call refers to the two entries it's built from."
+  },
+  {
+    "id": "x0013",
+    "block_id": "b0067",
+    "number": "1.13",
+    "prompt_md": "**Exercise 1.13:** Prove that Fib ( n ) is the closest integer to φ n / 5 , where φ = ( 1 + 5 ) / 2 . Hint: Let ψ = ( 1 − 5 ) / 2 . Use induction and the definition of the Fibonacci numbers (see 1.2.2) to prove that Fib ( n ) = ( φ n − ψ n ) / 5 .",
+    "hint_md": "Follow the hint given in the text: define psi and show that both phi and psi satisfy x^2 = x + 1, which is what lets you turn a claim about Fib(n+1) and Fib(n) into a claim about Fib(n+2) when you do the induction step. Check the claimed formula against the base cases Fib(0) = 0 and Fib(1) = 1 first, then use the recurrence Fib(n) = Fib(n-1) + Fib(n-2) together with the phi/psi identity to carry the inductive hypothesis forward."
+  },
+  {
+    "id": "x0014",
+    "block_id": "b0070",
+    "number": "1.14",
+    "prompt_md": "**Exercise 1.14:** Draw the tree illustrating the process generated by the `count-change` procedure of 1.2.2 in making change for 11 cents. What are the orders of growth of the space and number of steps used by this process as the amount to be changed increases?",
+    "hint_md": "Draw the recursion tree the same way you would for the tree-recursive Fibonacci process from 1.2.2: at each node, branch on the choice `count-change` makes about whether to use the largest remaining coin denomination or not. Once you have the tree, ask two separate questions - how deep can the tree go (that bounds the space), and how many nodes does it have in total (that bounds the number of steps) - as the target amount grows for a fixed set of coin denominations."
+  },
+  {
+    "id": "x0015",
+    "block_id": "b0070",
+    "number": "1.15",
+    "prompt_md": "**Exercise 1.15:** The sine of an angle (specified in radians) can be computed by making use of the approximation sin ⁡ x ≈ x if x is sufficiently small, and the trigonometric identity sin ⁡ x = 3 sin ⁡ x 3 − 4 sin 3 ⁡ x 3 to reduce the size of the argument of sin. (For purposes of this exercise an angle is considered “sufficiently small” if its magnitude is not greater than 0.1 radians.) These ideas are incorporated in the following procedures:\n\n```scheme\n(define (cube x) (* x x x))\n(define (p x) (- (* 3 x) (* 4 (cube x))))\n(define (sine angle)\n   (if (not (> (abs angle) 0.1))\n       angle\n       (p (sine (/ angle 3.0)))))\n```\n\n- How many times is the procedure `p` applied when `(sine 12.15)` is evaluated?\n- What is the order of growth in space and number of steps (as a function of a ) used by the process generated by the `sine` procedure when `(sine a)` is evaluated?",
+    "hint_md": "Trace what happens to `angle` on each recursive call to `sine`: it gets divided by 3.0 every time, and the recursion only bottoms out once `(not (> (abs angle) 0.1))` becomes true. So the question 'how many times is `p` applied' is really 'how many times can you divide the original angle by 3 before it falls to within 0.1'. Think about what kind of function of the original angle that count is, and connect it to the logarithmic algorithms the surrounding text just mentioned."
+  },
+  {
+    "id": "x0016",
+    "block_id": "b0076",
+    "number": "1.16",
+    "prompt_md": "**Exercise 1.16:** Design a procedure that evolves an iterative exponentiation process that uses successive squaring and uses a logarithmic number of steps, as does `fast-expt`. (Hint: Using the observation that ( b n / 2 ) 2 = ( b 2 ) n / 2 , keep, along with the exponent n and the base b , an additional state variable a , and define the state transformation in such a way that the product a b n is unchanged from state to state. At the beginning of the process a is taken to be 1, and the answer is given by the value of a at the end of the process. In general, the technique of defining an *invariant quantity* that remains unchanged from state to state is a powerful way to think about the design of iterative algorithms.)",
+    "hint_md": "Think in terms of an invariant: find a quantity built from the state variables `a`, `b`, and `n` that stays exactly the same before and after every step of the loop, and that is trivially readable off once `n` reaches 0. Handle the even and odd cases for `n` the same way `fast-expt` does, but express each case as a *state update* to `(a, b, n)` rather than as a fresh recursive call."
+  },
+  {
+    "id": "x0017",
+    "block_id": "b0077",
+    "number": "1.17",
+    "prompt_md": "**Exercise 1.17:** The exponentiation algorithms in this section are based on performing exponentiation by means of repeated multiplication. In a similar way, one can perform integer multiplication by means of repeated addition. The following multiplication procedure (in which it is assumed that our language can only add, not multiply) is analogous to the `expt` procedure:\n\n```scheme\n(define (* a b)\n  (if (= b 0)\n      0\n      (+ a (* a (- b 1)))))\n```\n\nThis algorithm takes a number of steps that is linear in `b`. Now suppose we include, together with addition, operations `double`, which doubles an integer, and `halve`, which divides an (even) integer by 2. Using these, design a multiplication procedure analogous to `fast-expt` that uses a logarithmic number of steps.",
+    "hint_md": "Look for the structural analogy to `fast-expt`: repeated addition plays the role that repeated multiplication played there, and `double`/`halve` play the role that squaring the base and halving the exponent played there. Ask what should happen to the two arguments on each step when the multiplier is even vs. odd, mirroring the even/odd cases of `fast-expt` directly."
+  },
+  {
+    "id": "x0018",
+    "block_id": "b0078",
+    "number": "1.18",
+    "prompt_md": "**Exercise 1.18:** Using the results of Exercise 1.16 and Exercise 1.17, devise a procedure that generates an iterative process for multiplying two integers in terms of adding, doubling, and halving and uses a logarithmic number of steps.",
+    "hint_md": "This is a direct combination of the previous two exercises: reuse the invariant-preserving iterative structure you built for exponentiation, but substitute `double`/`halve`/`+` wherever `square`/halved-exponent/`*` appeared before."
+  },
+  {
+    "id": "x0019",
+    "block_id": "b0079",
+    "number": "1.19",
+    "prompt_md": "**Exercise 1.19:** There is a clever algorithm for computing the Fibonacci numbers in a logarithmic number of steps. Recall the transformation of the state variables a and b in the `fib-iter` process of 1.2.2: a ← a + b and b ← a . Call this transformation T , and observe that applying T over and over again n times, starting with 1 and 0, produces the pair Fib ( n + 1 ) and Fib ( n ) . In other words, the Fibonacci numbers are produced by applying T n , the n th power of the transformation T , starting with the pair (1, 0). Now consider T to be the special case of p = 0 and q = 1 in a family of transformations T p q , where T p q transforms the pair ( a , b ) according to a ← b q + a q + a p and b ← b p + a q . Show that if we apply such a transformation T p q twice, the effect is the same as using a single transformation T p ′ q ′ of the same form, and compute p ′ and q ′ in terms of p and q . This gives us an explicit way to square these transformations, and thus we can compute T n using successive squaring, as in the `fast-expt` procedure. Put this all together to complete the following procedure, which runs in a logarithmic number of steps:\n\n```scheme\n(define (fib n)\n  (fib-iter 1 0 0 1 n))\n\n(define (fib-iter a b p q count)\n  (cond ((= count 0) \n         b)\n        ((even? count)\n         (fib-iter a\n                   b\n                   ⟨??⟩  ;compute p'\n                   ⟨??⟩  ;compute q'\n                   (/ count 2)))\n        (else \n         (fib-iter (+ (* b q) \n                      (* a q) \n                      (* a p))\n                   (+ (* b p) \n                      (* a q))\n                   p\n                   q\n                   (- count 1)))))\n```",
+    "hint_md": "Write out symbolically what applying T_{p,q} twice does to the pair (a, b), then compare the resulting coefficients on `a` and `b` to a single application of some T_{p',q'} to see what p' and q' must be in terms of p and q - this step is algebra/pattern-matching, not a new algorithmic idea. Once you have p' and q', the squaring structure that fills in the even-count branch is exactly `fast-expt`'s again."
+  },
+  {
+    "id": "x0020",
+    "block_id": "b0084",
+    "number": "1.20",
+    "prompt_md": "**Exercise 1.20:** The process that a procedure generates is of course dependent on the rules used by the interpreter. As an example, consider the iterative `gcd` procedure given above. Suppose we were to interpret this procedure using normal-order evaluation, as discussed in 1.1.5. (The normal-order-evaluation rule for `if` is described in Exercise 1.5.) Using the substitution method (for normal order), illustrate the process generated in evaluating `(gcd 206 40)` and indicate the `remainder` operations that are actually performed. How many `remainder` operations are actually performed in the normal-order evaluation of `(gcd 206 40)`? In the applicative-order evaluation?",
+    "hint_md": "Trace `(gcd 206 40)` the way Exercise 1.5 traced normal-order `if`: substitute each argument expression as-is, without evaluating it first, and only force a value when something (like the `= b 0` test, or the final printed result) actually demands one. At each recursive call the new second argument is built by wrapping the previous, still-unevaluated `(remainder a b)` expression one level deeper - so watch how many separate `remainder` sub-expressions end up nested inside the fully expanded form by the time it's finally forced, versus how many times `remainder` is actually computed when each argument is reduced to a number immediately, as in applicative order."
+  },
+  {
+    "id": "x0021",
+    "block_id": "b0091",
+    "number": "1.21",
+    "prompt_md": "**Exercise 1.21:** Use the `smallest-divisor` procedure to find the smallest divisor of each of the following numbers: 199, 1999, 19999.",
+    "hint_md": "Just apply `smallest-divisor` directly to each of the three numbers. Think about what it means when the returned divisor equals the number itself, versus when it doesn't."
+  },
+  {
+    "id": "x0022",
+    "block_id": "b0091",
+    "number": "1.22",
+    "prompt_md": "**Exercise 1.22:** Most Lisp implementations include a primitive called `runtime` that returns an integer that specifies the amount of time the system has been running (measured, for example, in microseconds). The following `timed-prime-test` procedure, when called with an integer n , prints n and checks to see if n is prime. If n is prime, the procedure prints three asterisks followed by the amount of time used in performing the test.\n\n```scheme\n(define (timed-prime-test n)\n  (newline)\n  (display n)\n  (start-prime-test n (runtime)))\n```\n\n```scheme\n(define (start-prime-test n start-time)\n  (if (prime? n)\n      (report-prime (- (runtime) \n                       start-time))))\n```\n\n```scheme\n(define (report-prime elapsed-time)\n  (display \" *** \")\n  (display elapsed-time))\n```\n\nUsing this procedure, write a procedure `search-for-primes` that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000; larger than 10,000; larger than 100,000; larger than 1,000,000. Note the time needed to test each prime. Since the testing algorithm has order of growth of Θ ( n ) , you should expect that testing for primes around 10,000 should take about 10 times as long as testing for primes around 1000. Do your timing data bear this out? How well do the data for 100,000 and 1,000,000 support the Θ ( n ) prediction? Is your result compatible with the notion that programs on your machine run in time proportional to the number of steps required for the computation?",
+    "hint_md": "Build `search-for-primes` on top of `timed-prime-test`, walking consecutive odd integers upward from the given starting point (you can skip even candidates outright, since no even number above 2 is prime). Keep a running count of primes found so you know when to stop after three. When comparing timings across the four ranges, remember you're checking whether the *ratios* between them roughly match what Θ(√n) predicts, not the absolute numbers."
+  },
+  {
+    "id": "x0023",
+    "block_id": "b0092",
+    "number": "1.23",
+    "prompt_md": "**Exercise 1.23:** The `smallest-divisor` procedure shown at the start of this section does lots of needless testing: After it checks to see if the number is divisible by 2 there is no point in checking to see if it is divisible by any larger even numbers. This suggests that the values used for `test-divisor` should not be 2, 3, 4, 5, 6, …, but rather 2, 3, 5, 7, 9, …. To implement this change, define a procedure `next` that returns 3 if its input is equal to 2 and otherwise returns its input plus 2. Modify the `smallest-divisor` procedure to use `(next test-divisor)` instead of `(+ test-divisor 1)`. With `timed-prime-test` incorporating this modified version of `smallest-divisor`, run the test for each of the 12 primes found in Exercise 1.22. Since this modification halves the number of test steps, you should expect it to run about twice as fast. Is this expectation confirmed? If not, what is the observed ratio of the speeds of the two algorithms, and how do you explain the fact that it is different from 2?",
+    "hint_md": "Define `next` as a small dispatch on its input (special-case 2, otherwise add 2), then thread it into `find-divisor`'s recursive call in place of `(+ test-divisor 1)`. When the measured speedup comes out less clean than exactly 2x, consider what other costs `find-divisor` pays on every step that don't scale down just because the divisor sequence got shorter."
+  },
+  {
+    "id": "x0024",
+    "block_id": "b0092",
+    "number": "1.24",
+    "prompt_md": "**Exercise 1.24:** Modify the `timed-prime-test` procedure of Exercise 1.22 to use `fast-prime?` (the Fermat method), and test each of the 12 primes you found in that exercise. Since the Fermat test has Θ ( log ⁡ n ) growth, how would you expect the time to test primes near 1,000,000 to compare with the time needed to test primes near 1000? Do your data bear this out? Can you explain any discrepancy you find?",
+    "hint_md": "Swap in `fast-prime?` (with a fixed trial count) wherever your timing harness currently calls `prime?`. Since Θ(log n) grows so much more slowly than Θ(√n), think about roughly how many more log-steps a million-scale n needs versus a thousand-scale n, and compare that predicted ratio to what you actually measure."
+  },
+  {
+    "id": "x0025",
+    "block_id": "b0093",
+    "number": "1.25",
+    "prompt_md": "**Exercise 1.25:** Alyssa P. Hacker complains that we went to a lot of extra work in writing `expmod`. After all, she says, since we already know how to compute exponentials, we could have simply written\n\n```scheme\n(define (expmod base exp m)\n  (remainder (fast-expt base exp) m))\n```\n\nIs she correct? Would this procedure serve as well for our fast prime tester? Explain.",
+    "hint_md": "Trace through what each version of `expmod` actually computes at each recursive step, not just what it returns mathematically. Pay attention to the size of the intermediate numbers each version has to construct and operate on along the way."
+  },
+  {
+    "id": "x0026",
+    "block_id": "b0094",
+    "number": "1.26",
+    "prompt_md": "**Exercise 1.26:** Louis Reasoner is having great difficulty doing Exercise 1.24. His `fast-prime?` test seems to run more slowly than his `prime?` test. Louis calls his friend Eva Lu Ator over to help. When they examine Louis’s code, they find that he has rewritten the `expmod` procedure to use an explicit multiplication, rather than calling `square`:\n\n```scheme\n(define (expmod base exp m)\n  (cond ((= exp 0) 1)\n        ((even? exp)\n         (remainder \n          (* (expmod base (/ exp 2) m)\n             (expmod base (/ exp 2) m))\n          m))\n        (else\n         (remainder \n          (* base \n             (expmod base (- exp 1) m))\n          m))))\n```\n\n“I don’t see what difference that could make,” says Louis. “I do.” says Eva. “By writing the procedure like that, you have transformed the Θ ( log ⁡ n ) process into a Θ ( n ) process.” Explain.",
+    "hint_md": "Sketch the recursion tree for one call to each version of `expmod`. Count how many recursive calls get made at each successive halving of the exponent, and compare what happens to that count when a computed value is reused (via `square`) versus when the identical computation is simply issued again from scratch."
+  },
+  {
+    "id": "x0027",
+    "block_id": "b0095",
+    "number": "1.27",
+    "prompt_md": "**Exercise 1.27:** Demonstrate that the Carmichael numbers listed in Footnote 47 really do fool the Fermat test. That is, write a procedure that takes an integer n and tests whether a n is congruent to a modulo n for every a < n , and try your procedure on the given Carmichael numbers.",
+    "hint_md": "You'll need a procedure that, given n, exhaustively checks the Fermat congruence for every a from 1 up to n − 1, rather than sampling a random a the way `fermat-test` does. Run it on each Carmichael number and see what it reports."
+  },
+  {
+    "id": "x0028",
+    "block_id": "b0095",
+    "number": "1.28",
+    "prompt_md": "**Exercise 1.28:** One variant of the Fermat test that cannot be fooled is called the *Miller-Rabin test* (Miller 1976; Rabin 1980). This starts from an alternate form of Fermat’s Little Theorem, which states that if n is a prime number and a is any positive integer less than n , then a raised to the ( n − 1 ) -st power is congruent to 1 modulo n . To test the primality of a number n by the Miller-Rabin test, we pick a random number a < n and raise a to the ( n − 1 ) -st power modulo n using the `expmod` procedure. However, whenever we perform the squaring step in `expmod`, we check to see if we have discovered a “nontrivial square root of 1 modulo n ,” that is, a number not equal to 1 or n − 1 whose square is equal to 1 modulo n . It is possible to prove that if such a nontrivial square root of 1 exists, then n is not prime. It is also possible to prove that if n is an odd number that is not prime, then, for at least half the numbers a < n , computing a n − 1 in this way will reveal a nontrivial square root of 1 modulo n . (This is why the Miller-Rabin test cannot be fooled.) Modify the `expmod` procedure to signal if it discovers a nontrivial square root of 1, and use this to implement the Miller-Rabin test with a procedure analogous to `fermat-test`. Check your procedure by testing various known primes and non-primes. Hint: One convenient way to make `expmod` signal is to have it return 0.",
+    "hint_md": "Modify the squaring branch of `expmod` so that, before returning a squared-and-reduced value, it checks whether the value being squared is a nontrivial square root of 1 modulo n (not congruent to 1 or n − 1, yet its square is congruent to 1). The text's own suggestion is to have `expmod` signal this discovery by returning 0; build your Miller-Rabin test to watch for that signal instead of just comparing a final result to `a`."
+  },
+  {
+    "id": "x0029",
+    "block_id": "b0103",
+    "number": "1.29",
+    "prompt_md": "**Exercise 1.29:** Simpson’s Rule is a more accurate method of numerical integration than the method illustrated above. Using Simpson’s Rule, the integral of a function f between a and b is approximated as h 3 ( y 0 + 4 y 1 + 2 y 2 + 4 y 3 + 2 y 4 + ⋯ + 2 y n − 2 + 4 y n − 1 + y n ) , where h = ( b − a ) / n , for some even integer n , and y k = f ( a + k h ) . (Increasing n increases the accuracy of the approximation.) Define a procedure that takes as arguments f , a , b , and n and returns the value of the integral, computed using Simpson’s Rule. Use your procedure to integrate `cube` between 0 and 1 (with n = 100 and n = 1000 ), and compare the results to those of the `integral` procedure shown above.",
+    "hint_md": "You already have a general `sum` procedure parameterized by `term` and `next`. Think of Simpson's Rule as summing over k = 0..n, where the coefficient in front of y_k alternates 4, 2, 4, 2, ... except at the two endpoints - can you write a single `term` function of k that folds in the right coefficient times y_k = f(a + k·h), and a `next` that just increments k? Work out how h = (b − a)/n relates to the arguments you'd hand to `sum`, and what you multiply the sum by afterward."
+  },
+  {
+    "id": "x0030",
+    "block_id": "b0103",
+    "number": "1.30",
+    "prompt_md": "**Exercise 1.30:** The `sum` procedure above generates a linear recursion. The procedure can be rewritten so that the sum is performed iteratively. Show how to do this by filling in the missing expressions in the following definition:\n\n```scheme\n(define (sum term a next b)\n  (define (iter a result)\n    (if ⟨??⟩\n        ⟨??⟩\n        (iter ⟨??⟩ ⟨??⟩)))\n  (iter ⟨??⟩ ⟨??⟩))\n```",
+    "hint_md": "This has the same shape as turning a recursive process into an iterative one that you practiced in section 1.2 (think of how `fact-iter` carries a running result). `iter` needs: a test for when `a` has moved past `b`, what to return once that happens, and how to combine the current `result` with `(term a)` before recursing on `(next a)`. Figure out what the very first call to `iter` should pass in for `result`."
+  },
+  {
+    "id": "x0031",
+    "block_id": "b0104",
+    "number": "1.31",
+    "prompt_md": "**Exercise 1.31:**\n\n- The `sum` procedure is only the simplest of a vast number of similar abstractions that can be captured as higher-order procedures. Write an analogous procedure called `product` that returns the product of the values of a function at points over a given range. Show how to define `factorial` in terms of `product`. Also use `product` to compute approximations to π using the formula π 4 = 2 ⋅ 4 ⋅ 4 ⋅ 6 ⋅ 6 ⋅ 8 ⋅ ⋯ 3 ⋅ 3 ⋅ 5 ⋅ 5 ⋅ 7 ⋅ 7 ⋅ ⋯ .\n- If your `product` procedure generates a recursive process, write one that generates an iterative process. If it generates an iterative process, write one that generates a recursive process.",
+    "hint_md": "`product` should mirror `sum`'s structure almost exactly - ask yourself what changes if the combining operation becomes multiplication and the base case (what you return once `a` passes `b`) becomes 1 instead of 0. For the recursive-vs-iterative part, revisit the distinction from section 1.2 between a process that defers operations until a base case is reached versus one that carries all its state forward in arguments."
+  },
+  {
+    "id": "x0032",
+    "block_id": "b0104",
+    "number": "1.32",
+    "prompt_md": "**Exercise 1.32:**\n\n- Show that `sum` and `product` (Exercise 1.31) are both special cases of a still more general notion called `accumulate` that combines a collection of terms, using some general accumulation function: (accumulate combiner null-value term a next b) `Accumulate` takes as arguments the same term and range specifications as `sum` and `product`, together with a `combiner` procedure (of two arguments) that specifies how the current term is to be combined with the accumulation of the preceding terms and a `null-value` that specifies what base value to use when the terms run out. Write `accumulate` and show how `sum` and `product` can both be defined as simple calls to `accumulate`.\n- If your `accumulate` procedure generates a recursive process, write one that generates an iterative process. If it generates an iterative process, write one that generates a recursive process.",
+    "hint_md": "Look at where `+`/`0` appear in `sum` and where `*`/`1` appear in `product` - in both cases that's a two-argument combining operation plus a base value for it. If you pull those two things out as extra parameters (`combiner` and `null-value`), what's left over is one procedure that both `sum` and `product` can be defined in terms of with a single line each."
+  },
+  {
+    "id": "x0033",
+    "block_id": "b0105",
+    "number": "1.33",
+    "prompt_md": "**Exercise 1.33:** You can obtain an even more general version of `accumulate` (Exercise 1.32) by introducing the notion of a *filter* on the terms to be combined. That is, combine only those terms derived from values in the range that satisfy a specified condition. The resulting `filtered-accumulate` abstraction takes the same arguments as accumulate, together with an additional predicate of one argument that specifies the filter. Write `filtered-accumulate` as a procedure. Show how to express the following using `filtered-accumulate`:\n\n- the sum of the squares of the prime numbers in the interval a to b (assuming that you have a `prime?` predicate already written)\n- the product of all the positive integers less than n that are relatively prime to n (i.e., all positive integers i < n such that GCD ( i , n ) = 1 ).",
+    "hint_md": "Start from the `accumulate` you wrote for Exercise 1.32 and find the single spot in its recursion where a term gets folded into the result via `combiner`. What would it mean to skip that combining step - recursing on `(next a)` without touching the accumulation - whenever a value of `a` fails a given predicate? Once you have that, think about which one-argument predicate captures 'is prime' for the first part, and which captures 'is relatively prime to n' for the second."
+  },
+  {
+    "id": "x0034",
+    "block_id": "b0115",
+    "number": "1.34",
+    "prompt_md": "**Exercise 1.34:** Suppose we define the procedure\n\n```scheme\n(define (f g) (g 2))\n```\n\nThen we have\n\n```scheme\n(f square)\n4\n\n(f (lambda (z) (* z (+ z 1))))\n6\n\n```\n\nWhat happens if we (perversely) ask the interpreter to evaluate the combination `(f f)`? Explain.",
+    "hint_md": "Trace this with the substitution model, one application at a time. First reduce `(f f)`: `g` becomes bound to `f`, so the body `(g 2)` turns into another combination - write out exactly what that combination is before going further. Then reduce that new combination the same way: what does `g` get bound to this time, and what is the body `(g 2)` now asking the interpreter to do with that value? Once you see what kind of thing `g` has become in that second step, think about what it means, mechanically, for a combination's operator position to hold something that isn't a procedure."
+  },
+  {
+    "id": "x0035",
+    "block_id": "b0124",
+    "number": "1.35",
+    "prompt_md": "**Exercise 1.35:** Show that the golden ratio φ (1.2.2) is a fixed point of the transformation x ↦ 1 + 1 / x , and use this fact to compute φ by means of the `fixed-point` procedure.",
+    "hint_md": "Recall the defining equation for the golden ratio from 1.2.2 (phi^2 = phi + 1). Divide both sides by phi and see what equation of the form phi = f(phi) falls out - that tells you which transformation to hand to `fixed-point`, and any reasonable positive initial guess should converge."
+  },
+  {
+    "id": "x0036",
+    "block_id": "b0124",
+    "number": "1.36",
+    "prompt_md": "**Exercise 1.36:** Modify `fixed-point` so that it prints the sequence of approximations it generates, using the `newline` and `display` primitives shown in Exercise 1.22. Then find a solution to x x = 1000 by finding a fixed point of x ↦ log ⁡ ( 1000 ) / log ⁡ ( x ) . (Use Scheme’s primitive `log` procedure, which computes natural logarithms.) Compare the number of steps this takes with and without average damping. (Note that you cannot start `fixed-point` with a guess of 1, as this would cause division by log ⁡ ( 1 ) = 0 .)",
+    "hint_md": "Look at where `try` computes `next` inside `fixed-point` - that's the one place you need to add a printing side effect before recursing. For the x^x = 1000 case, think about why an initial guess of 1 is invalid (what happens to log(x) there), and pick a different starting guess. To compare with/without average damping, try the same equation both as a plain fixed-point search and as one wrapped with the averaging transform from earlier in this section, and just count how many printed lines each takes."
+  },
+  {
+    "id": "x0037",
+    "block_id": "b0124",
+    "number": "1.37",
+    "prompt_md": "**Exercise 1.37:**\n\n- An infinite *continued fraction* is an expression of the form f = N 1 D 1 + N 2 D 2 + N 3 D 3 + … . As an example, one can show that the infinite continued fraction expansion with the N i and the D i all equal to 1 produces 1 / φ , where φ is the golden ratio (described in 1.2.2). One way to approximate an infinite continued fraction is to truncate the expansion after a given number of terms. Such a truncation—a so-called finite continued fraction **k*-term finite continued fraction*—has the form N 1 D 1 + N 2 ⋱ + N k D k . Suppose that `n` and `d` are procedures of one argument (the term index i ) that return the N i and D i of the terms of the continued fraction. Define a procedure `cont-frac` such that evaluating `(cont-frac n d k)` computes the value of the k -term finite continued fraction. Check your procedure by approximating 1 / φ using (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) k) for successive values of `k`. How large must you make `k` in order to get an approximation that is accurate to 4 decimal places?\n- If your `cont-frac` procedure generates a recursive process, write one that generates an iterative process. If it generates an iterative process, write one that generates a recursive process.",
+    "hint_md": "Build the k-term continued fraction from the innermost term outward: the innermost fraction is just N_k/D_k, and each step out wraps the previous result as N_i/(D_i + previous). Decide whether it's more natural to compute that starting from i=k counting down, or i=1 counting up - one direction falls out as a recursive process, the other as an iterative one, and the second part of the exercise asks you to produce whichever one your first version isn't. Use the phi-related continued fraction mentioned earlier in this section as your test case."
+  },
+  {
+    "id": "x0038",
+    "block_id": "b0124",
+    "number": "1.38",
+    "prompt_md": "**Exercise 1.38:** In 1737, the Swiss mathematician Leonhard Euler published a memoir De Fractionibus Continuis, which included a continued fraction expansion for e − 2 , where e is the base of the natural logarithms. In this fraction, the N i are all 1, and the D i are successively 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, …. Write a program that uses your `cont-frac` procedure from Exercise 1.37 to approximate e , based on Euler’s expansion.",
+    "hint_md": "You just need to write the `d` procedure to hand to your `cont-frac` from Exercise 1.37 - `n` is trivial since every N_i is 1. Look at the pattern 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, ... and notice it repeats in groups of three; figure out which position within each group of three holds the growing even number, and what arithmetic on the index (1-based i) produces that number only at that position."
+  },
+  {
+    "id": "x0039",
+    "block_id": "b0124",
+    "number": "1.39",
+    "prompt_md": "**Exercise 1.39:** A continued fraction representation of the tangent function was published in 1770 by the German mathematician J.H. Lambert: tan ⁡ x = x 1 − x 2 3 − x 2 5 − … , where x is in radians. Define a procedure `(tan-cf x k)` that computes an approximation to the tangent function based on Lambert’s formula. `k` specifies the number of terms to compute, as in Exercise 1.37.",
+    "hint_md": "This one doesn't reuse `cont-frac` as-is, since the numerators here aren't all 1: the first numerator is x itself, and every numerator after that is -x^2 while the denominators are the successive odd numbers 1, 3, 5, .... Write `n` and `d` procedures capturing that pattern (careful with the i=1 case, whose numerator is x rather than -x^2), and combine them the same way you combined `n` and `d` in Exercise 1.37."
+  },
+  {
+    "id": "x0040",
+    "block_id": "b0136",
+    "number": "1.40",
+    "prompt_md": "**Exercise 1.40:** Define a procedure `cubic` that can be used together with the `newtons-method` procedure in expressions of the form\n\n```scheme\n(newtons-method (cubic a b c) 1)\n```\n\nto approximate zeros of the cubic x 3 + a x 2 + b x + c .",
+    "hint_md": "`newtons-method` expects a procedure of one argument (the function whose zero you're looking for), not the cubic's coefficients themselves. So `cubic` shouldn't compute a value directly - it needs to return a lambda of one argument `x` that evaluates x^3 + a*x^2 + b*x + c, closing over `a`, `b`, and `c` the same way `average-damp`'s returned lambda closes over `f`."
+  },
+  {
+    "id": "x0041",
+    "block_id": "b0136",
+    "number": "1.41",
+    "prompt_md": "**Exercise 1.41:** Define a procedure `double` that takes a procedure of one argument as argument and returns a procedure that applies the original procedure twice. For example, if `inc` is a procedure that adds 1 to its argument, then `(double inc)` should be a procedure that adds 2. What value is returned by\n\n```scheme\n(((double (double double)) inc) 5)\n```",
+    "hint_md": "Think about what `double` must return: not a number, but a procedure - one that applies the original procedure's effect twice in a row, the same way `average-damp`'s lambda wraps a single application of `f`. Once `double` works on one procedure, trace `(double (double double))` step by step rather than guessing: doubling the doubling operation itself compounds how many times the innermost procedure ends up applied."
+  },
+  {
+    "id": "x0042",
+    "block_id": "b0136",
+    "number": "1.42",
+    "prompt_md": "**Exercise 1.42:** Let f and g be two one-argument functions. The *composition* f after g is defined to be the function x ↦ f ( g ( x ) ) . Define a procedure `compose` that implements composition. For example, if `inc` is a procedure that adds 1 to its argument,\n\n```scheme\n((compose square inc) 6)\n49\n\n```",
+    "hint_md": "`compose` should mirror the shape of `average-damp` and `deriv`: it takes two procedures and returns a new one-argument lambda. That lambda's body needs to call `g` first on its argument, then feed the result into `f` - nothing more."
+  },
+  {
+    "id": "x0043",
+    "block_id": "b0137",
+    "number": "1.43",
+    "prompt_md": "**Exercise 1.43:** If f is a numerical function and n is a positive integer, then we can form the n th repeated application of f , which is defined to be the function whose value at x is f ( f ( … ( f ( x ) ) … ) ) . For example, if f is the function x ↦ x + 1 , then the n th repeated application of f is the function x ↦ x + n . If f is the operation of squaring a number, then the n th repeated application of f is the function that raises its argument to the 2 n -th power. Write a procedure that takes as inputs a procedure that computes f and a positive integer n and returns the procedure that computes the n th repeated application of f . Your procedure should be able to be used as follows:\n\n```scheme\n((repeated square 2) 5)\n625\n\n```\n\nHint: You may find it convenient to use `compose` from Exercise 1.42.",
+    "hint_md": "The text's own aside points the way: build `repeated` in terms of `compose`. Think recursively - applying `f` n times is the same as composing `f` with the result of applying it n-1 times, bottoming out when n reaches 1."
+  },
+  {
+    "id": "x0044",
+    "block_id": "b0137",
+    "number": "1.44",
+    "prompt_md": "**Exercise 1.44:** The idea of *smoothing* a function is an important concept in signal processing. If f is a function and d x is some small number, then the smoothed version of f is the function whose value at a point x is the average of f ( x − d x ) , f ( x ) , and f ( x + d x ) . Write a procedure `smooth` that takes as input a procedure that computes f and returns a procedure that computes the smoothed f . It is sometimes valuable to repeatedly smooth a function (that is, smooth the smoothed function, and so on) to obtain the **n*-fold smoothed function*. Show how to generate the *n*-fold smoothed function of any given function using `smooth` and `repeated` from Exercise 1.43.",
+    "hint_md": "Model `smooth` on `average-damp`'s structure, but instead of averaging just x and f(x), average three samples of f taken around x using a small step (the same kind of `dx` defined earlier in this section). For the n-fold version, consider what `repeated` applied to `smooth` itself would give you."
+  },
+  {
+    "id": "x0045",
+    "block_id": "b0137",
+    "number": "1.45",
+    "prompt_md": "**Exercise 1.45:** We saw in 1.3.3 that attempting to compute square roots by naively finding a fixed point of y ↦ x / y does not converge, and that this can be fixed by average damping. The same method works for finding cube roots as fixed points of the average-damped y ↦ x / y 2 . Unfortunately, the process does not work for fourth roots—a single average damp is not enough to make a fixed-point search for y ↦ x / y 3 converge. On the other hand, if we average damp twice (i.e., use the average damp of the average damp of y ↦ x / y 3 ) the fixed-point search does converge. Do some experiments to determine how many average damps are required to compute n th roots as a fixed-point search based upon repeated average damping of y ↦ x / y n − 1 . Use this to implement a simple procedure for computing n th roots using `fixed-point`, `average-damp`, and the `repeated` procedure of Exercise 1.43. Assume that any arithmetic operations you need are available as primitives.",
+    "hint_md": "Experiment directly in the interpreter: for y -> x/y^(n-1) with increasing n, wrap the transform in one, two, three... nested average-damps and see how many are needed before `fixed-point` converges. Look for a pattern relating n to that count, then use `repeated` (Exercise 1.43) to apply `average-damp` that many times to the base transform automatically."
+  },
+  {
+    "id": "x0046",
+    "block_id": "b0137",
+    "number": "1.46",
+    "prompt_md": "**Exercise 1.46:** Several of the numerical methods described in this chapter are instances of an extremely general computational strategy known as *iterative improvement*. Iterative improvement says that, to compute something, we start with an initial guess for the answer, test if the guess is good enough, and otherwise improve the guess and continue the process using the improved guess as the new guess. Write a procedure `iterative-improve` that takes two procedures as arguments: a method for telling whether a guess is good enough and a method for improving a guess. `Iterative-improve` should return as its value a procedure that takes a guess as argument and keeps improving the guess until it is good enough. Rewrite the `sqrt` procedure of 1.1.7 and the `fixed-point` procedure of 1.3.3 in terms of `iterative-improve`.",
+    "hint_md": "Compare the `sqrt` loop from 1.1.7 and `fixed-point` from 1.3.3 side by side: both repeat a 'guess -> improved guess' step until some 'close enough' test passes. `iterative-improve` should take exactly those two pieces - the good-enough? test and the improve step - as its two procedure arguments, and return a procedure that loops guess -> improve(guess) until good-enough? holds."
+  }
+]

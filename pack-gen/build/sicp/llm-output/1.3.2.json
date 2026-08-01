@@ -160,5 +160,13 @@
       "answer_index": 0,
       "explanation": "There is an explicit stylistic preference: use `let` for situations like binding local variables (e.g., `a` and `b`), and reserve internal `define` for defining internal procedures."
     }
+  ],
+  "exercises": [
+    {
+      "number": "1.34",
+      "start_paragraph_index": 37,
+      "end_paragraph_index": 41,
+      "hint_md": "Trace this with the substitution model, one application at a time. First reduce `(f f)`: `g` becomes bound to `f`, so the body `(g 2)` turns into another combination - write out exactly what that combination is before going further. Then reduce that new combination the same way: what does `g` get bound to this time, and what is the body `(g 2)` now asking the interpreter to do with that value? Once you see what kind of thing `g` has become in that second step, think about what it means, mechanically, for a combination's operator position to hold something that isn't a procedure."
+    }
   ]
 }

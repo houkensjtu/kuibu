@@ -71,6 +71,15 @@ describe("reduceEvents", () => {
     expect(state.dailyTargetSeconds).toBe(600);
   });
 
+  it("tracks attempted exercise ids from exercise_attempt events", () => {
+    const events: Event[] = [
+      { id: "e1", ts: "2026-08-01T10:00:00Z", type: "exercise_attempt", exercise_id: "x0001", seconds: 200, used_hint: false },
+      { id: "e2", ts: "2026-08-01T10:05:00Z", type: "exercise_attempt", exercise_id: "x0002", seconds: 90, used_hint: true },
+    ];
+    const state = reduceEvents(events, questionItemMap);
+    expect(state.attemptedExerciseIds).toEqual(new Set(["x0001", "x0002"]));
+  });
+
   it("ignores an answer for an unknown question_id instead of throwing", () => {
     const events: Event[] = [
       { id: "e1", ts: "2026-08-01T10:00:00Z", type: "answer", question_id: "q-does-not-exist", correct: true },
