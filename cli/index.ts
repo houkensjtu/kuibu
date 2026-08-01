@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { Command } from "commander";
 import { loadPack, PackLoadError } from "./loadPack.js";
 import { appendEvent, readEvents, writeEvents } from "./eventLog.js";
-import { reduceEvents } from "../core/reducer.js";
+import { reduceEvents, blockIdsReadOnDate } from "../core/reducer.js";
 import { packSession } from "../core/sessionPacker.js";
 import { buildQuestionQueue } from "../core/questionQueue.js";
 import { leitnerScheduler } from "../core/scheduler.js";
@@ -18,6 +18,7 @@ import { runAnswerFlow } from "./answerFlow.js";
 import { askInTerminal } from "./answerPrompt.js";
 import { renderHeatmap } from "./renderHeatmap.js";
 import { askDailyTargetMinutes, classifyTimeSpent, askAdjustTarget } from "./targetPrompt.js";
+import { askReviewOrAhead } from "./reviewOrAheadPrompt.js";
 import { createLineReader } from "./lineReader.js";
 
 const DEFAULT_TARGET_MINUTES = 12;
@@ -44,9 +45,31 @@ program
       const questionItemMap = new Map(pack.questions.map((q) => [q.id, q.item_id]));
       const priorEvents = readEvents(options.log);
       const state = reduceEvents(priorEvents, questionItemMap);
+      const today = checkinDate(new Date());
 
       const lineReader = createLineReader();
       try {
+        if (state.checkinDates.has(today)) {
+          const choice = await askReviewOrAhead(lineReader);
+          if (choice === "review") {
+            const readTodayIds = blockIdsReadOnDate(priorEvents, today);
+            const reviewBlocks = pack.blocks.filter((b) => readTodayIds.has(b.id));
+            if (reviewBlocks.length === 0) {
+              console.log("No reading recorded for today yet - nothing to review.");
+            } else {
+              for (const block of reviewBlocks) {
+                await showBlockInPagerOrFallback(block, lineReader);
+              }
+              console.log("Review complete.");
+            }
+            return;
+          }
+          // choice === "ahead": fall through to the normal flow below, which
+          // packs whatever comes after everything read so far - today's
+          // already-read blocks are excluded automatically since readBlockIds
+          // is cumulative, so this naturally becomes tomorrow's content.
+        }
+
         let targetSeconds: number;
         let persistTargetChange = false;
 
@@ -109,10 +132,7 @@ program
           });
         }
 
-        const dueItemIds = leitnerScheduler.due(
-          [...state.itemStates.values()],
-          checkinDate(new Date()),
-        );
+        const dueItemIds = leitnerScheduler.due([...state.itemStates.values()], today);
         const queue = buildQuestionQueue({
           todayReadBlockIds: new Set(todaysBlocks.map((b) => b.id)),
           items: pack.items,
@@ -144,7 +164,6 @@ program
           },
         });
 
-        const today = checkinDate(new Date());
         const passed = isCheckinComplete({
           assignedBlockIds: todaysBlocks.map((b) => b.id),
           readBlockIdsToday,

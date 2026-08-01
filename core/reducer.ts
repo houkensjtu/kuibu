@@ -85,3 +85,24 @@ export function reduceEvents(
 
   return state;
 }
+
+/**
+ * 抽出"哪些 block 是在指定打卡日读的"，用于打卡后重新打开时的"复习今天内容"
+ * 选项——reduceEvents 的 readBlockIds 是全书累计集合，不区分是哪天读的，
+ * 满足不了这个需求，所以单独提供这个按天过滤的版本。
+ * block_read 事件本身只存 ts，不像 checkin 那样预先存好换算过的 date，
+ * 所以这里用 checkinDate() 现算，跟 reducer 给 answer 事件算 Leitner 到期日
+ * 时的做法一致。
+ */
+export function blockIdsReadOnDate(
+  events: readonly Event[],
+  date: string,
+): Set<string> {
+  const blockIds = new Set<string>();
+  for (const event of events) {
+    if (event.type === "block_read" && checkinDate(new Date(event.ts)) === date) {
+      blockIds.add(event.block_id);
+    }
+  }
+  return blockIds;
+}

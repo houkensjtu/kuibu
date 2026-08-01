@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { reduceEvents } from "./reducer.js";
+import { reduceEvents, blockIdsReadOnDate } from "./reducer.js";
 import type { Event } from "../schema/types/events.js";
 
 const questionItemMap = new Map([["q0001", "k0001"]]);
@@ -78,5 +78,37 @@ describe("reduceEvents", () => {
 
     expect(() => reduceEvents(events, questionItemMap)).not.toThrow();
     expect(reduceEvents(events, questionItemMap).itemStates.size).toBe(0);
+  });
+});
+
+// 用本地时间构造再转 ISO，跟 checkinDate.test.ts 一样的手法——保证测试结果
+// 不依赖跑测试的机器在哪个时区，因为 checkinDate() 内部用的是本地时间 getter。
+const localTs = (y: number, monthIndex: number, d: number, h: number): string =>
+  new Date(y, monthIndex, d, h, 0, 0).toISOString();
+
+describe("blockIdsReadOnDate", () => {
+  it("returns only the block ids whose block_read falls on the given checkin-day", () => {
+    const events: Event[] = [
+      { id: "e1", ts: localTs(2026, 7, 1, 10), type: "block_read", block_id: "b0001", seconds: 100 },
+      { id: "e2", ts: localTs(2026, 7, 1, 11), type: "block_read", block_id: "b0002", seconds: 100 },
+      // 2026-08-02 凌晨 1 点，早于 4 点偏移边界，算作 2026-08-01 这天
+      { id: "e3", ts: localTs(2026, 7, 2, 1), type: "block_read", block_id: "b0003", seconds: 100 },
+      // 2026-08-02 上午 9 点，正常算 2026-08-02
+      { id: "e4", ts: localTs(2026, 7, 2, 9), type: "block_read", block_id: "b0004", seconds: 100 },
+    ];
+
+    expect(blockIdsReadOnDate(events, "2026-08-01")).toEqual(
+      new Set(["b0001", "b0002", "b0003"]),
+    );
+    expect(blockIdsReadOnDate(events, "2026-08-02")).toEqual(new Set(["b0004"]));
+  });
+
+  it("ignores non-block_read events and returns an empty set when nothing matches", () => {
+    const events: Event[] = [
+      { id: "e1", ts: localTs(2026, 7, 1, 10), type: "answer", question_id: "q0001", correct: true },
+      { id: "e2", ts: localTs(2026, 7, 1, 10), type: "checkin", date: "2026-08-01" },
+    ];
+
+    expect(blockIdsReadOnDate(events, "2026-08-01")).toEqual(new Set());
   });
 });
