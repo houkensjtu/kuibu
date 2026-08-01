@@ -16,7 +16,7 @@ sarabander 维护的 Unofficial Texinfo Format 版本在 mitpress.mit.edu 原版
 import warnings
 from typing import List, Optional
 
-from bs4 import BeautifulSoup, NavigableString, Tag, XMLParsedAsHTMLWarning
+from bs4 import BeautifulSoup, Comment, NavigableString, Tag, XMLParsedAsHTMLWarning
 
 from .source_adapter import Paragraph, ParagraphKind, Subsection
 
@@ -34,6 +34,11 @@ _INLINE_MARKDOWN = {
 
 
 def _render_inline(node) -> str:
+    # Comment 是 NavigableString 的子类，必须先排除，否则 texinfo 转换过程
+    # 遗留的 <!-- /@w --> 这类内部标记（"@w" 是"不要在此换行"指令）会被当成
+    # 可见文本混进正文，产生 "For example /@w :" 这种明显的乱码。
+    if isinstance(node, Comment):
+        return ""
     if isinstance(node, NavigableString):
         return str(node)
     if not isinstance(node, Tag):
@@ -47,6 +52,19 @@ def _render_inline(node) -> str:
 
 def _clean_text(raw: str) -> str:
     return " ".join(raw.split())
+
+
+def _extract_verbatim_text(node) -> str:
+    """代码块专用：只拼接字面文本，不做任何 markdown 装饰（_render_inline 会给
+    <i> 包上 *斜体*，但代码块里的 <i> 是排版意义上的求值结果，不是强调）,
+    同样要排除 Comment 节点。"""
+    if isinstance(node, Comment):
+        return ""
+    if isinstance(node, NavigableString):
+        return str(node)
+    if not isinstance(node, Tag):
+        return ""
+    return "".join(_extract_verbatim_text(child) for child in node.children)
 
 
 def _paragraph_from_element(el: Tag) -> Optional[Paragraph]:
@@ -70,7 +88,7 @@ def _paragraph_from_element(el: Tag) -> Optional[Paragraph]:
             pre = el.find("pre")
             if pre is None:
                 return None
-            code_text = pre.get_text()
+            code_text = _extract_verbatim_text(pre)
             return Paragraph(kind=ParagraphKind.code, text=code_text) if code_text.strip() else None
 
     return None  # nav、blockquote 等其他标签，不属于正文

@@ -12,11 +12,12 @@ FIXTURE_HTML = """<?xml version="1.0" encoding="utf-8"?>
 <p>Intro paragraph before any subsection.</p>
 <h4 class="subsection"><span class="secnum">1.1.1</span><span class="sectitle">First <code>Sub</code></span></h4>
 <p>First paragraph with <b>bold</b> and <i>italic</i> text.</p>
+<p>numbers.  For example<!-- /@w -->: end of sentence.</p>
 <ul>
 <li>item one</li>
 <li>item two</li>
 </ul>
-<div class="lisp"><pre class="lisp">(define (square x) (* x x))</pre></div>
+<div class="lisp"><pre class="lisp">(define (square x) (* x x))<!-- /@w --> <i>486</i></pre></div>
 <div class="footnote"><p>this footnote definition should be skipped</p></div>
 <h4 class="subsection"><span class="secnum">1.1.2</span><span class="sectitle">Second</span></h4>
 <p>Second subsection paragraph.</p>
@@ -71,7 +72,23 @@ def test_code_blocks_are_preserved_verbatim_as_code_kind(fixture_path):
     subsections = TexinfoHtmlAdapter().parse([fixture_path])
     code_paragraphs = [p for p in subsections[0].paragraphs if p.kind == ParagraphKind.code]
     assert len(code_paragraphs) == 1
-    assert code_paragraphs[0].text == "(define (square x) (* x x))"
+    assert code_paragraphs[0].text == "(define (square x) (* x x)) 486"
+
+
+def test_html_comments_inside_paragraphs_are_dropped_not_rendered_as_text(fixture_path):
+    # texinfo leaves internal markers like <!-- /@w --> (a "don't break here" hint)
+    # as HTML comments; Comment is a NavigableString subclass in bs4, so this must
+    # be explicitly excluded or it leaks into the visible text as garbage.
+    subsections = TexinfoHtmlAdapter().parse([fixture_path])
+    texts = [p.text for p in subsections[0].paragraphs if p.kind == ParagraphKind.text]
+    assert "numbers. For example: end of sentence." in texts
+    assert "/@w" not in " ".join(texts)
+
+
+def test_html_comments_inside_code_blocks_are_dropped(fixture_path):
+    subsections = TexinfoHtmlAdapter().parse([fixture_path])
+    code_paragraphs = [p for p in subsections[0].paragraphs if p.kind == ParagraphKind.code]
+    assert "/@w" not in code_paragraphs[0].text
 
 
 def test_ascii_art_example_blocks_preserve_whitespace_verbatim(fixture_path):

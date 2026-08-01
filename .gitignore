@@ -8,4 +8,9 @@ __pycache__/
 
 .kuibu-events.jsonl
 
-pack-gen/build/
+# build/sicp/sections 和 pack-parts 都是机械/确定性可重跑的中间产物；
+# llm-output 不忽略——目前是手工产出（M3.22 还没接真实 API），之后接了 API
+# 也是真金白银换来的结果，不该被 rm -rf build 之类操作误删。
+pack-gen/build/sicp/sections/
+pack-gen/build/sicp/pack-parts/
+pack-gen/.env
