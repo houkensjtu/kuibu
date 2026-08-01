@@ -34,15 +34,23 @@
   "knowledge_items": [
     {
       "statement": "组合式求值时，解释器先递归求值运算符和每个运算对象，再把求值结果传给运算符对应的过程。",
-      "block_indices": [1, 2]
+      "block_indices": [
+        1,
+        2
+      ]
     },
     {
       "statement": "前缀记法把运算符写在最左边，因此天然支持任意数量的运算对象，并且可以无歧义地嵌套。",
-      "block_indices": [2, 3]
+      "block_indices": [
+        2,
+        3
+      ]
     },
     {
       "statement": "Scheme 解释器以 read-eval-print loop 的方式工作：读取表达式、求值、自动打印结果，用户不需要显式要求打印。",
-      "block_indices": [4]
+      "block_indices": [
+        4
+      ]
     }
   ],
   "questions": [

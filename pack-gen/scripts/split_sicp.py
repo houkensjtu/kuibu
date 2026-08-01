@@ -4,9 +4,14 @@
 pack-gen/ 在 sys.path 上，那个 shell 脚本负责把 cwd 切到正确位置）。
 """
 
+import sys
 from pathlib import Path
 
 from generator.texinfo_html_adapter import TexinfoHtmlAdapter
+
+# Windows 终端有时报告 cp1252 作为默认 stdout 编码，打印中文标题会崩；
+# 显式转 utf-8。
+sys.stdout.reconfigure(encoding="utf-8")
 
 SOURCE_DIR = Path("sources/sicp")
 OUTPUT_DIR = Path("build/sicp/sections")

@@ -10,6 +10,9 @@ import json
 import sys
 from pathlib import Path
 
+# Windows 终端有时报告 cp1252 作为默认 stdout 编码，打印中文会崩；显式转 utf-8。
+sys.stdout.reconfigure(encoding="utf-8")
+
 from generator.section_llm_output import SectionLLMOutput
 from generator.slice_section import IdCounters, slice_section
 from generator.source_adapter import Subsection

@@ -13,4 +13,5 @@ __pycache__/
 # 也是真金白银换来的结果，不该被 rm -rf build 之类操作误删。
 pack-gen/build/sicp/sections/
 pack-gen/build/sicp/pack-parts/
+pack-gen/build/sicp/merged-pack-parts.json
 pack-gen/.env
