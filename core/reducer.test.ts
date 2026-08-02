@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { reduceEvents, blockIdsReadOnDate } from "./reducer.js";
+import { reduceEvents, blockIdsReadOnDate, findLoggedBookId } from "./reducer.js";
 import type { Event } from "../schema/types/events.js";
 
 const questionItemMap = new Map([["q0001", "k0001"]]);
@@ -119,5 +119,22 @@ describe("blockIdsReadOnDate", () => {
     ];
 
     expect(blockIdsReadOnDate(events, "2026-08-01")).toEqual(new Set());
+  });
+});
+
+describe("findLoggedBookId", () => {
+  it("returns the book_id of the first session_start event", () => {
+    const events: Event[] = [
+      { id: "e1", ts: localTs(2026, 7, 1, 10), type: "session_start", book_id: "gatsby", target_seconds: 720 },
+      { id: "e2", ts: localTs(2026, 7, 1, 11), type: "block_read", block_id: "b0001", seconds: 100 },
+    ];
+    expect(findLoggedBookId(events)).toBe("gatsby");
+  });
+
+  it("returns null for an empty or session_start-less log (not yet claimed by any book)", () => {
+    expect(findLoggedBookId([])).toBeNull();
+    expect(findLoggedBookId([
+      { id: "e1", ts: localTs(2026, 7, 1, 10), type: "block_read", block_id: "b0001", seconds: 100 },
+    ])).toBeNull();
   });
 });

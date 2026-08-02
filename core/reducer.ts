@@ -113,3 +113,16 @@ export function blockIdsReadOnDate(
   }
   return blockIds;
 }
+
+/**
+ * 一份事件日志目前属于哪本书——只有 session_start 事件带 book_id，取第一条
+ * 即可（多本书日志隔离靠"一本书一个日志文件"，同一份日志理论上只应该属于
+ * 一本书，见 DESIGN.md §14.4）。空日志、或还没打过 session_start 的日志
+ * 返回 null，表示"还没被任何书占用"，不算冲突。
+ */
+export function findLoggedBookId(events: readonly Event[]): string | null {
+  for (const event of events) {
+    if (event.type === "session_start") return event.book_id;
+  }
+  return null;
+}

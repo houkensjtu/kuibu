@@ -4,6 +4,7 @@ import { Command } from "commander";
 import { loadPack, PackLoadError } from "./loadPack.js";
 import { appendEvent, readEvents, writeEvents } from "./eventLog.js";
 import { reduceEvents, blockIdsReadOnDate } from "../core/reducer.js";
+import { assertLogMatchesPack, LogBookMismatchError } from "./logGuard.js";
 import { packSession } from "../core/sessionPacker.js";
 import { buildQuestionQueue } from "../core/questionQueue.js";
 import { leitnerScheduler } from "../core/scheduler.js";
@@ -34,6 +35,20 @@ import { printGoodbye } from "./goodbye.js";
 import packageJson from "../package.json" with { type: "json" };
 
 const DEFAULT_TARGET_MINUTES = 12;
+const DEFAULT_PACK = "packs/public/sicp";
+
+/**
+ * 每本书一个独立事件日志文件（DESIGN.md §14.4）：不传 --log 时，日志路径按
+ * --pack 目录名推导——SICP（真正在用的默认 pack）继续用老路径
+ * .kuibu-events.jsonl，保证老用户的默认行为不变；其他 pack 默认
+ * .kuibu-events-<packname>.jsonl，不用每次都手动传两个 option。
+ * 传了 --log 就永远以它为准，这里只处理"没传"的默认值推导。
+ */
+function defaultLogPath(packDir: string): string {
+  if (packDir === DEFAULT_PACK) return ".kuibu-events.jsonl";
+  const packName = packDir.split(/[\\/]/).filter(Boolean).at(-1) ?? packDir;
+  return `.kuibu-events-${packName}.jsonl`;
+}
 
 const program = new Command();
 
@@ -45,15 +60,17 @@ program
 program
   .command("today")
   .description("start/continue today's reading checkin")
-  .option("--pack <dir>", "content pack directory", "packs/public/sicp")
-  .option("--log <path>", "event log file path", ".kuibu-events.jsonl")
+  .option("--pack <dir>", "content pack directory", DEFAULT_PACK)
+  .option("--log <path>", "event log file path (default: derived from --pack)")
   .option("--minutes <n>", "adjust daily reading target (minutes); remembered for next run", (v) => Number.parseInt(v, 10))
-  .action(async (options: { pack: string; log: string; minutes?: number }) => {
+  .action(async (options: { pack: string; log?: string; minutes?: number }) => {
+    const logPath = options.log ?? defaultLogPath(options.pack);
+
     // Ctrl-C is one of only two accepted ways to quit (the other is typing "q" at
     // any prompt, see readLineOrQuit.ts) - both print a goodbye instead of dying
     // with a raw stack trace/no message.
     process.on("SIGINT", () => {
-      printGoodbye(options.log);
+      printGoodbye(logPath);
       process.exit(0);
     });
 
@@ -63,7 +80,8 @@ program
       console.log(`${pack.blocks.length} blocks total`);
 
       const questionItemMap = new Map(pack.questions.map((q) => [q.id, q.item_id]));
-      const priorEvents = readEvents(options.log);
+      const priorEvents = readEvents(logPath);
+      assertLogMatchesPack(priorEvents, pack.manifest.book_id, logPath);
       const state = reduceEvents(priorEvents, questionItemMap);
       const today = checkinDate(new Date());
       const checkedInToday = state.checkinDates.has(today);
@@ -107,7 +125,7 @@ program
         }
 
         if (persistTargetChange) {
-          appendEvent(options.log, {
+          appendEvent(logPath, {
             id: randomUUID(),
             ts: new Date().toISOString(),
             type: "settings_change",
@@ -116,7 +134,7 @@ program
           });
         }
 
-        appendEvent(options.log, {
+        appendEvent(logPath, {
           id: randomUUID(),
           ts: new Date().toISOString(),
           type: "session_start",
@@ -198,7 +216,7 @@ program
             onBlockRead: (blockId, seconds) => {
               totalReadSecondsToday += seconds;
               readBlockIdsToday.add(blockId);
-              appendEvent(options.log, {
+              appendEvent(logPath, {
                 id: randomUUID(),
                 ts: new Date().toISOString(),
                 type: "block_read",
@@ -234,7 +252,7 @@ program
               console.log(question.explanation);
             }
 
-            appendEvent(options.log, {
+            appendEvent(logPath, {
               id: randomUUID(),
               ts: new Date().toISOString(),
               type: "answer",
@@ -265,7 +283,7 @@ program
             attempt: (exercise) => attemptExercise(lineReader, exercise),
             onAttempted: (exercise, outcome) => {
               totalReadSecondsToday += outcome.seconds;
-              appendEvent(options.log, {
+              appendEvent(logPath, {
                 id: randomUUID(),
                 ts: new Date().toISOString(),
                 type: "exercise_attempt",
@@ -286,7 +304,7 @@ program
 
         const checkinDates = new Set(state.checkinDates);
         if (passed) {
-          appendEvent(options.log, {
+          appendEvent(logPath, {
             id: randomUUID(),
             ts: new Date().toISOString(),
             type: "checkin",
@@ -312,7 +330,7 @@ program
             );
             const newMinutes = await askAdjustTarget(lineReader, "increase", targetMinutes);
             if (newMinutes !== null) {
-              appendEvent(options.log, {
+              appendEvent(logPath, {
                 id: randomUUID(),
                 ts: new Date().toISOString(),
                 type: "settings_change",
@@ -327,7 +345,7 @@ program
             );
             const newMinutes = await askAdjustTarget(lineReader, "decrease", targetMinutes);
             if (newMinutes !== null) {
-              appendEvent(options.log, {
+              appendEvent(logPath, {
                 id: randomUUID(),
                 ts: new Date().toISOString(),
                 type: "settings_change",
@@ -359,8 +377,8 @@ program
       }
     } catch (err) {
       if (err instanceof UserQuit) {
-        printGoodbye(options.log);
-      } else if (err instanceof PackLoadError) {
+        printGoodbye(logPath);
+      } else if (err instanceof PackLoadError || err instanceof LogBookMismatchError) {
         console.error(err.message);
         process.exitCode = 1;
       } else {
@@ -373,13 +391,16 @@ program
 program
   .command("status")
   .description("show current streak, today's checkin state, and reading progress without starting a session")
-  .option("--pack <dir>", "content pack directory", "packs/public/sicp")
-  .option("--log <path>", "event log file path", ".kuibu-events.jsonl")
-  .action((options: { pack: string; log: string }) => {
+  .option("--pack <dir>", "content pack directory", DEFAULT_PACK)
+  .option("--log <path>", "event log file path (default: derived from --pack)")
+  .action((options: { pack: string; log?: string }) => {
+    const logPath = options.log ?? defaultLogPath(options.pack);
     try {
       const pack = loadPack(options.pack);
       const questionItemMap = new Map(pack.questions.map((q) => [q.id, q.item_id]));
-      const state = reduceEvents(readEvents(options.log), questionItemMap);
+      const priorEvents = readEvents(logPath);
+      assertLogMatchesPack(priorEvents, pack.manifest.book_id, logPath);
+      const state = reduceEvents(priorEvents, questionItemMap);
 
       const today = checkinDate(new Date());
       const streak = computeCurrentStreak(state.checkinDates, today);
@@ -435,7 +456,7 @@ program
       console.log();
       console.log(renderYearCalendar(buildYearCalendar(state.checkinDates, Number(today.slice(0, 4)))));
     } catch (err) {
-      if (err instanceof PackLoadError) {
+      if (err instanceof PackLoadError || err instanceof LogBookMismatchError) {
         console.error(err.message);
       } else {
         console.error(err);
