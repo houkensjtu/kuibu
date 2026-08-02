@@ -505,3 +505,50 @@ schema/代码改动；小说 `section_path` 只有"章"一级，比 SICP 的三�
 版本号：新增了一本可以真正打卡阅读的书（`kuibu today --pack packs/public/gatsby`），
 是用户可见的新能力，按 `CLAUDE.md` 的规则算 MINOR，升到 0.3.0（大版本号继续停在 0，
 阶段一还没到"基本可用"那个由用户判断的时间点）。
+
+## 2026-08-02 —— 一次真实的日志串号事故 + 两个多本书易用性补丁
+
+用户实测报告"第一次读 Gatsby 就是从中间开始的"，怀疑是不是串用了 SICP 的记录。
+排查后确认：**不是设计如此，是真的串了**——全局链接的 `kuibu` 命令指向 `dist/`，
+而 `dist/` 是今天上一条日志（M1 六步）改完 `cli/index.ts` 之后忘了 `npm run build`
+的旧编译产物，还是 0.2.6 时代"没有按 pack 派生默认 --log、没有 book_id 校验"的
+老代码。旧代码跑 `kuibu today --pack packs/public/gatsby` 时，`--log` 默认值仍然
+硬编码指向真实的 `.kuibu-events.jsonl`（SICP 的日志）；而两个内容包的 block id
+恰好都从 `b0001` 起步，reducer 把 SICP 已读的 `b0001`-`b0004` 当成"Gatsby 前 4 块
+也读过了"，于是 `packSession` 从 Gatsby 第 5 块开始打包——这就是用户看到的"从中间
+开始"。真实伤害：SICP 日志混入了 2 条 `book_id: "gatsby"` 的 `session_start` 和 5 条
+`b0005`-`b0009` 的 `block_read`（没有伪造 checkin，streak 本身没坏，但 SICP 的阅读
+进度状态被污染了）。修复：把 `.kuibu-events.jsonl` 精确恢复到事故前的 9 行（这份
+日志此前在对话里出现过，内容可以逐行核对），重新 `npm run build` 刷新全局链接。
+
+顺带确认了一件事：这不是这次新加的"多本书日志隔离"功能本身设计有问题——功能代码
+是对的，只是没被跑到；`npm link` 指向编译产物这个事实本身在 2026-08-01 的日志里
+已经踩过一次坑（那次是"改完 recap 忘记 build，看起来像功能没生效"），这次是同一个
+坑的更严重版本（这次是真的写脏了数据，不只是显示旧内容）。
+
+用户接着提了两个真实的日常易用性问题：
+
+1. **`kuibu today --pack packs/public/gatsby` 太长**——新增 `cli/discoverPacks.ts`
+   的 `discoverPacks()`，扫 `packs/public/`（+ `packs/private/`，如果存在）下所有
+   带 `manifest.json` 的目录，按 manifest 里的 `book_id` 建立"短名 → 目录"的映射，
+   不需要另开一份注册表文件人工维护同步——新书目录一旦存在就自动被认出来。
+   `resolvePackDir()` 让 `--pack` 既认完整路径（老用法不受影响）也认短名：
+   `kuibu today --pack gatsby` 现在就够了，`--log` 仍然按解析出来的真实目录走
+   之前那套按 pack 派生默认值的逻辑。
+2. **`status` 只显示一本书，以后书多了怎么办**——新增 `kuibu books` 命令，列出
+   `discoverPacks()` 找到的每一本书，各打印一行"连续天数 / 今天是否打卡 / 阅读
+   进度"摘要。这个命令不需要因为"加了第三本书"而修改代码——扫描是自动的，Chinese
+   novel、用户私有 epub 以后接入后会自动出现在这张列表里。
+
+实现过程中自己抓到一个真实 bug，没等用户发现：`discoverPacks()` 用
+`node:path` 的 `join()` 拼路径，在 Windows 上产出反斜杠分隔的字符串
+（`"packs\public\sicp"`），而 `cli/index.ts` 的 `defaultLogPath()` 判断"这是不是
+默认的 SICP pack"用的是跟硬编码字符串 `"packs/public/sicp"`（正斜杠）的严格
+`===` 比较——两种分隔符风格的字符串永远不相等，导致 `kuibu books` 或
+`--pack sicp`（短名）会把 SICP 误判成"陌生的新书"，算出一个从未存在过的
+`.kuibu-events-sicp.jsonl` 空日志，展示出跟真实进度完全对不上的"0% 已读"。
+在提交前的自测里发现了这个不一致（`books` 显示 SICP 3% 变成了 0%），修成
+`discoverPacks()` 统一吐出正斜杠路径，加了一条专门盯着这个回归的测试。
+
+版本号：`kuibu books` 是新命令、`--pack` 接受短名是新的用户可见能力，按
+`CLAUDE.md` 的规则算 MINOR，升到 0.4.0。
