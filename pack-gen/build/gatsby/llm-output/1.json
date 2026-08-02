@@ -1,0 +1,268 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 4,
+      "est_seconds": 149,
+      "recap_md": "Nick recalls his father's advice to reserve moral judgment, though he admits his tolerance has limits."
+    },
+    {
+      "start_paragraph_index": 5,
+      "end_paragraph_index": 11,
+      "est_seconds": 139,
+      "recap_md": "Restless after the war, Nick leaves the Midwest for New York to learn the bond business and settles in West Egg."
+    },
+    {
+      "start_paragraph_index": 12,
+      "end_paragraph_index": 15,
+      "est_seconds": 158,
+      "recap_md": "Nick describes his small rented house in West Egg, across the bay from the wealthier East Egg."
+    },
+    {
+      "start_paragraph_index": 16,
+      "end_paragraph_index": 25,
+      "est_seconds": 181,
+      "recap_md": "Nick introduces his old classmate Tom Buchanan, a former football star, and visits Tom and Daisy's East Egg mansion."
+    },
+    {
+      "start_paragraph_index": 26,
+      "end_paragraph_index": 33,
+      "est_seconds": 172,
+      "recap_md": "Inside, Nick finds his cousin Daisy and her friend Jordan Baker lounging on a couch in the breezy, sunlit room."
+    },
+    {
+      "start_paragraph_index": 34,
+      "end_paragraph_index": 57,
+      "est_seconds": 123,
+      "recap_md": "Over drinks, the group trades light banter about Chicago gossip, the baby, and Nick's job."
+    },
+    {
+      "start_paragraph_index": 58,
+      "end_paragraph_index": 75,
+      "est_seconds": 129,
+      "recap_md": "Jordan casually mentions Nick's neighbor Gatsby, surprising Daisy, before the group goes in to dinner amid small tensions."
+    },
+    {
+      "start_paragraph_index": 76,
+      "end_paragraph_index": 83,
+      "est_seconds": 68,
+      "recap_md": "Tom passionately defends a racist pseudo-scientific book, revealing his anxious, bigoted worldview."
+    },
+    {
+      "start_paragraph_index": 84,
+      "end_paragraph_index": 107,
+      "est_seconds": 173,
+      "recap_md": "Amid strained dinner conversation, Jordan quietly tells Nick that Tom is involved with another woman in New York."
+    },
+    {
+      "start_paragraph_index": 108,
+      "end_paragraph_index": 113,
+      "est_seconds": 85,
+      "recap_md": "A phone call from Tom's mistress interrupts dinner, and the group moves outside in visible discomfort."
+    },
+    {
+      "start_paragraph_index": 114,
+      "end_paragraph_index": 121,
+      "est_seconds": 89,
+      "recap_md": "Daisy tells Nick, with bitter irony, that she hopes her daughter grows up to be 'a beautiful little fool.'"
+    },
+    {
+      "start_paragraph_index": 122,
+      "end_paragraph_index": 138,
+      "est_seconds": 109,
+      "recap_md": "After the tense evening, Nick recalls that Jordan Baker, a professional golfer, was once at the center of a cheating scandal."
+    },
+    {
+      "start_paragraph_index": 139,
+      "end_paragraph_index": 148,
+      "est_seconds": 53,
+      "recap_md": "As Nick leaves, Tom and Daisy needle him about a rumored engagement back home, which he denies."
+    },
+    {
+      "start_paragraph_index": 149,
+      "end_paragraph_index": 153,
+      "est_seconds": 140,
+      "recap_md": "Driving home, Nick reflects on the Buchanans' wealth before glimpsing Gatsby alone on his lawn, reaching toward a green light across the water."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Nick's father advised him that whenever he feels like criticizing anyone, he should remember not everyone has had his advantages - advice Nick says has made him inclined to reserve judgment.",
+      "block_indices": [0]
+    },
+    {
+      "statement": "Nick came East, restless after the war, to learn the bond business, and rented a house in West Egg, Long Island.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "Nick's house sits in West Egg, the less fashionable of the two egg-shaped peninsulas, across the bay from the more fashionable East Egg.",
+      "block_indices": [2]
+    },
+    {
+      "statement": "Tom Buchanan, Nick's old college acquaintance, had been one of the most powerful football players ever to play at New Haven.",
+      "block_indices": [3]
+    },
+    {
+      "statement": "When Nick arrives, Daisy and Jordan Baker are found reclining together on a large couch, as if just blown back in by a breeze.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "When Jordan mentions that Nick must know Gatsby, Daisy reacts with surprise, asking 'What Gatsby?'",
+      "block_indices": [6]
+    },
+    {
+      "statement": "Tom enthusiastically defends a book arguing that the 'Nordic' race is losing control of civilization, revealing his anxious, bigoted worldview.",
+      "block_indices": [7]
+    },
+    {
+      "statement": "During dinner, Jordan quietly tells Nick that Tom has 'some woman in New York' - implying Tom is having an affair.",
+      "block_indices": [8]
+    },
+    {
+      "statement": "Daisy says she hopes her infant daughter will grow up to be 'a beautiful little fool,' calling that the best thing a girl can be.",
+      "block_indices": [10]
+    },
+    {
+      "statement": "Nick recalls that Jordan Baker, a professional golfer, was once at the center of an unpleasant, half-forgotten story about a tournament.",
+      "block_indices": [11]
+    },
+    {
+      "statement": "Chapter 1 ends with Nick's first glimpse of Gatsby, standing alone on his lawn and stretching his arms toward a green light across the water.",
+      "block_indices": [13]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "According to Nick, what advice did his father give him that he has been 'turning over' in his mind ever since?",
+      "options": [
+        "To always tell people exactly what he thinks of them",
+        "To remember that not everyone has had the advantages he has had",
+        "To never trust a man who has read fewer books than himself",
+        "To marry only within his own social class"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick's father told him that whenever he felt like criticizing anyone, he should remember that not all people have had the same advantages - advice Nick says left him inclined to reserve judgment."
+    },
+    {
+      "item_index": 1,
+      "prompt": "Why does Nick say he came East?",
+      "options": [
+        "He inherited a house in West Egg from a relative",
+        "He wanted to escape a rumored engagement back home",
+        "Restless after the war, he decided to learn the bond business",
+        "Tom Buchanan invited him to manage the family's investments"
+      ],
+      "answer_index": 2,
+      "explanation": "The Middle West now felt to Nick like 'the ragged edge of the universe,' so he decided to go East and learn the bond business - the rumored engagement is a different thread Tom and Daisy needle him about later."
+    },
+    {
+      "item_index": 2,
+      "prompt": "What is true about where Nick lives compared to Tom and Daisy?",
+      "options": [
+        "Nick's small house in West Egg is across the bay from the more fashionable East Egg, where Tom and Daisy live",
+        "Nick lives in East Egg, in a small cottage next to Gatsby's mansion",
+        "Nick and Tom live in the same neighborhood, on opposite ends of the same street",
+        "Nick's house is directly next to Daisy's, separated only by a garden"
+      ],
+      "answer_index": 0,
+      "explanation": "Nick describes living at West Egg, 'the - well, the less fashionable of the two,' with East Egg's white palaces visible glittering across the bay. (Gatsby's mansion is next to Nick's - but in West Egg, not East Egg.)"
+    },
+    {
+      "item_index": 3,
+      "prompt": "What do we learn about Tom Buchanan's background?",
+      "options": [
+        "He was a decorated war hero who served alongside Nick",
+        "He was one of the most powerful football players ever to play at New Haven",
+        "He inherited his entire fortune from Daisy's family",
+        "He worked his way up from a working-class Chicago family"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick recalls Tom as 'one of the most powerful ends that ever played football at New Haven.'"
+    },
+    {
+      "item_index": 4,
+      "prompt": "How are Daisy and Jordan Baker first positioned when Nick enters the room?",
+      "options": [
+        "Standing at the window, watching the sunset over the bay",
+        "Both reclining on a large couch, as if just blown back in after a flight around the house",
+        "Playing cards at a small table in the corner",
+        "Seated formally at the dining table, waiting for dinner"
+      ],
+      "answer_index": 1,
+      "explanation": "The two women were 'buoyed up as though upon an anchored balloon' on the room's one stationary couch, their dresses still rippling as if just settled from a breeze."
+    },
+    {
+      "item_index": 5,
+      "prompt": "What happens right after Jordan tells Nick 'You must know Gatsby'?",
+      "options": [
+        "Nick immediately explains that Gatsby is his old college roommate",
+        "Daisy reacts with surprised curiosity, asking 'What Gatsby?'",
+        "Tom changes the subject before Nick can answer",
+        "Daisy reveals that she and Gatsby dated years earlier"
+      ],
+      "answer_index": 1,
+      "explanation": "Daisy 'demanded' to know 'What Gatsby?' - her surprise is a small early hint of history the reader doesn't understand yet."
+    },
+    {
+      "item_index": 6,
+      "prompt": "What does Tom's enthusiasm for the book about 'the Nordic race' reveal about his character?",
+      "options": [
+        "He is well-read and genuinely curious about other cultures",
+        "He is anxious about losing racial and social dominance, and embraces pseudo-scientific bigotry",
+        "He is mocking the book's ideas to amuse Daisy",
+        "He secretly disagrees with the book but reads it to please his father"
+      ],
+      "answer_index": 1,
+      "explanation": "Tom insists earnestly that 'we're Nordics' who 'produced all the things that go to make civilization' and that 'we've got to beat them down' - revealing an anxious, bigoted worldview, not detached curiosity."
+    },
+    {
+      "item_index": 7,
+      "prompt": "What does Jordan reveal to Nick in a hushed aside during dinner?",
+      "options": [
+        "That Daisy is planning to leave Tom",
+        "That Tom has 'some woman' in New York",
+        "That Gatsby and Daisy used to be engaged",
+        "That the butler is stealing from the household"
+      ],
+      "answer_index": 1,
+      "explanation": "Jordan says hesitantly, 'Tom's got some woman in New York' - the first direct hint of his affair."
+    },
+    {
+      "item_index": 8,
+      "prompt": "What does Daisy say she hopes for her infant daughter, and what does it reveal?",
+      "options": [
+        "That she'll grow up to be a great scholar, reflecting Daisy's ambitions for her",
+        "That she'll be 'a beautiful little fool,' reflecting Daisy's disillusionment",
+        "That she'll marry a man exactly like Tom, reflecting Daisy's contentment",
+        "That she'll travel the world freely, reflecting Daisy's own restlessness"
+      ],
+      "answer_index": 1,
+      "explanation": "Daisy says, 'I hope she'll be a fool - that's the best thing a girl can be in this world, a beautiful little fool,' a bitterly ironic line about what she's learned life expects of women."
+    },
+    {
+      "item_index": 9,
+      "prompt": "What does Nick recall about Jordan Baker once he places her face as familiar?",
+      "options": [
+        "She had once been engaged to Tom before he married Daisy",
+        "There had been a critical, unpleasant story about her at a tournament",
+        "She was once a well-known silent film actress",
+        "She was Daisy's childhood governess"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick recognizes her from 'rotogravure pictures of the sporting life' and recalls hearing 'some story of her too, a critical, unpleasant story,' though he'd forgotten the details."
+    },
+    {
+      "item_index": 10,
+      "prompt": "How does Chapter 1 end?",
+      "options": [
+        "Nick falls asleep on the train back to New York",
+        "Nick sees Gatsby for the first time, standing alone and stretching his arms toward a green light across the water",
+        "Gatsby appears at Nick's door to introduce himself",
+        "Tom and Daisy argue loudly as Nick drives away"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick decides not to call out to his oddly solitary neighbor, who stretches his arms toward the dark water; Nick can make out nothing except 'a single green light' far across the bay."
+    }
+  ]
+}
