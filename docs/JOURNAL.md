@@ -452,3 +452,56 @@ Code (scheme):
 顺带确认：小说没有 SICP 那种原书 Exercise，`exercises` 直接空数组，不需要任何
 schema/代码改动；小说 `section_path` 只有"章"一级，比 SICP 的三级浅得多，但 schema
 本身没有固定深度限制，不用改。
+
+## 2026-08-02 —— 阶段二 M1 完成：EpubAdapter 跑通，Gatsby 第一章可读可打卡
+
+用户拍板设计后明确要求"接下来我要离开一会儿，到完成所有 6 个 step 之前都不要问我
+问题"——一次性把 M1 的全部实现工作做完，中途不再停下来确认。
+
+1. **`EpubAdapter`**（`pack-gen/generator/epub_adapter.py`）：`zipfile` 读 epub，
+   `xml.etree` 解析 `META-INF/container.xml` + `content.opf` 拿到 spine 顺序，
+   `BeautifulSoup` 按 `<div id="chapter-N">` 找章节（正则取 id 里的数字当章号，
+   不用猜罗马数字怎么转换）。诗体引文（`<br/>` 分行 + `<cite>` 落款）、一处
+   作息表 `<table>`、章内 `<hr/>` 场景分隔符都是 SICP 源码里没见过的结构，专门
+   处理：`<hr/>` 渲染成一行 `* * *` 标记（不然连续两个场景会在阅读时毫无提示地
+   粘在一起）。合成 fixture epub 写了 15 个单元测试，另外对照真实下载的 Gatsby
+   epub 做了 3 个冒烟测试（九章顺序、开篇第一句、无 Gutenberg 样板泄漏）。
+2. **`split_gatsby.py`**（镜像 `split_sicp.py`）机械切出全书 9 章到
+   `build/gatsby/sections/`——这一步不花钱不花时间，9 章一起切没有代价，
+   跟"这轮只做第一章"的节奏决定不冲突。
+3. **手工产出第一章内容**（人工代 LLM，跟 SICP 同一套流程，还没接真实 API）：
+   14 个 block（按 ~2-3 分钟/块、尊重原文两处场景分隔手工断的），11 个知识点，
+   11 道单选题（干扰项是"看漏了/记错了细节"级别的常见误判，不是荒谬选项）。
+   `build_gatsby_section.py`（镜像 `build_section.py`）跑 `slice_section` 切出
+   `pack-parts/1.json`，人工核对过 block/item/question 交叉引用完整性，并抽查了
+   切出来的 `content_md`——场景分隔标记和结尾"green light"那段名场面都跟原文
+   逐字一致。
+4. **组装 `packs/public/gatsby/`**：`manifest.json` 标明来源是 Gutenberg
+   ebook #64317、公有领域；`section_headings.json` 是空数组（小说只有"章"一级，
+   没有更高层级需要额外标题行，DESIGN.md §14.2 已经讲过为什么这是对的而不是
+   漏做了）；`recap_checkpoints.json` 复用 `compute-recap-boundaries.ts`（这次
+   顺手把它从写死 SICP 路径改成接受 pack 路径参数，验证过零参数调用跟改之前
+   结果完全一致，35 个 checkpoint 一个不差）算出 3 个切分点，手写了 3 段
+   累计压缩式回顾。两侧 schema 校验（Python pydantic + TS ajv，走的是
+   `cli/loadPack.ts` 真正运行时用的那条路径，不是另开一条校验逻辑）都过。
+5. **多本书日志隔离**：`cli/index.ts` 新增 `defaultLogPath`——不传 `--log` 时
+   按 `--pack` 目录名推导（`packs/public/sicp` 继续用 `.kuibu-events.jsonl`，
+   其他包用 `.kuibu-events-<name>.jsonl`）；新增 `cli/logGuard.ts` 的
+   `assertLogMatchesPack` + `core/reducer.ts` 的 `findLoggedBookId`，加载时
+   校验日志里已有的 `book_id` 跟当前 pack 是否一致，不一致直接拒绝运行——
+   手动验证过：故意用 `--pack packs/public/gatsby --log .kuibu-events.jsonl`
+   （真实的 SICP 日志）会被正确拦下，报错信息里点明是哪本书、该怎么修。
+6. **端到端验证**：拿一次性 `--log` 跑了完整的 `kuibu today --pack
+   packs/public/gatsby`，从头到尾走一遍（首次目标提问 → 阅读 → 2 道复习题 →
+   打卡 → 年历），单级 `section_path` 下 "Chapter N" 标题行、缩进、场景分隔、
+   选项 shuffle 全部正常，没有为小说改一行 `cli/renderBlocks.ts`——DESIGN.md
+   §14.2/14.5 事先分析过这一点应该成立，这次是实测确认。另外单独用一次性
+   `--log` 跑了默认 SICP 路径两遍（首次 + 打卡后重开选 review），确认这次改动
+   没有影响 SICP 的默认行为；`status`（不传任何 option）确认没碰真实的
+   `.kuibu-events.jsonl`，读完之后文件行数没变。
+
+全程 TypeScript 168 个测试、Python 36 个测试保持全绿，每步都单独 commit。
+
+版本号：新增了一本可以真正打卡阅读的书（`kuibu today --pack packs/public/gatsby`），
+是用户可见的新能力，按 `CLAUDE.md` 的规则算 MINOR，升到 0.3.0（大版本号继续停在 0，
+阶段一还没到"基本可用"那个由用户判断的时间点）。
