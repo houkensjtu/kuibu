@@ -19,13 +19,16 @@ texinfo HTML 源码结构完全不同（DESIGN.md §14.3 记录了完整推导�
 """
 
 import re
+import warnings
 import zipfile
-from typing import List, Optional
+from typing import List
 from xml.etree import ElementTree as ET
 
-from bs4 import BeautifulSoup, Comment, NavigableString, Tag
+from bs4 import BeautifulSoup, Comment, NavigableString, Tag, XMLParsedAsHTMLWarning
 
 from .source_adapter import Paragraph, ParagraphKind, Subsection
+
+warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 _CHAPTER_ID_RE = re.compile(r"^chapter-(\d+)$")
 
