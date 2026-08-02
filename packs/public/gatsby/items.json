@@ -1,0 +1,112 @@
+[
+  {
+    "id": "k0001",
+    "block_ids": [
+      "b0001"
+    ],
+    "statement": "Nick's father advised him that whenever he feels like criticizing anyone, he should remember not everyone has had his advantages - advice Nick says has made him inclined to reserve judgment.",
+    "question_ids": [
+      "q0001"
+    ]
+  },
+  {
+    "id": "k0002",
+    "block_ids": [
+      "b0002"
+    ],
+    "statement": "Nick came East, restless after the war, to learn the bond business, and rented a house in West Egg, Long Island.",
+    "question_ids": [
+      "q0002"
+    ]
+  },
+  {
+    "id": "k0003",
+    "block_ids": [
+      "b0003"
+    ],
+    "statement": "Nick's house sits in West Egg, the less fashionable of the two egg-shaped peninsulas, across the bay from the more fashionable East Egg.",
+    "question_ids": [
+      "q0003"
+    ]
+  },
+  {
+    "id": "k0004",
+    "block_ids": [
+      "b0004"
+    ],
+    "statement": "Tom Buchanan, Nick's old college acquaintance, had been one of the most powerful football players ever to play at New Haven.",
+    "question_ids": [
+      "q0004"
+    ]
+  },
+  {
+    "id": "k0005",
+    "block_ids": [
+      "b0005"
+    ],
+    "statement": "When Nick arrives, Daisy and Jordan Baker are found reclining together on a large couch, as if just blown back in by a breeze.",
+    "question_ids": [
+      "q0005"
+    ]
+  },
+  {
+    "id": "k0006",
+    "block_ids": [
+      "b0007"
+    ],
+    "statement": "When Jordan mentions that Nick must know Gatsby, Daisy reacts with surprise, asking 'What Gatsby?'",
+    "question_ids": [
+      "q0006"
+    ]
+  },
+  {
+    "id": "k0007",
+    "block_ids": [
+      "b0008"
+    ],
+    "statement": "Tom enthusiastically defends a book arguing that the 'Nordic' race is losing control of civilization, revealing his anxious, bigoted worldview.",
+    "question_ids": [
+      "q0007"
+    ]
+  },
+  {
+    "id": "k0008",
+    "block_ids": [
+      "b0009"
+    ],
+    "statement": "During dinner, Jordan quietly tells Nick that Tom has 'some woman in New York' - implying Tom is having an affair.",
+    "question_ids": [
+      "q0008"
+    ]
+  },
+  {
+    "id": "k0009",
+    "block_ids": [
+      "b0011"
+    ],
+    "statement": "Daisy says she hopes her infant daughter will grow up to be 'a beautiful little fool,' calling that the best thing a girl can be.",
+    "question_ids": [
+      "q0009"
+    ]
+  },
+  {
+    "id": "k0010",
+    "block_ids": [
+      "b0012"
+    ],
+    "statement": "Nick recalls that Jordan Baker, a professional golfer, was once at the center of an unpleasant, half-forgotten story about a tournament.",
+    "question_ids": [
+      "q0010"
+    ]
+  },
+  {
+    "id": "k0011",
+    "block_ids": [
+      "b0014"
+    ],
+    "statement": "Chapter 1 ends with Nick's first glimpse of Gatsby, standing alone on his lawn and stretching his arms toward a green light across the water.",
+    "question_ids": [
+      "q0011"
+    ]
+  }
+]
