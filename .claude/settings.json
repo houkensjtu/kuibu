@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit *)",
+      "Bash(python *)",
+      "Bash(python3 *)",
+      "Bash(pytest *)",
+      "Bash(./.venv/Scripts/python.exe *)",
+      "Bash(.venv/Scripts/python.exe *)",
+      "Bash(pack-gen/.venv/Scripts/python.exe *)",
+      "Bash(npx *)",
+      "Bash(npm *)",
+      "Bash(rm *)",
+      "PowerShell(Remove-Item *)"
+    ]
+  }
+}
