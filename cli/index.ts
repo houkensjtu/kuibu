@@ -33,6 +33,7 @@ import { askReviewOrAhead } from "./reviewOrAheadPrompt.js";
 import { createLineReader } from "./lineReader.js";
 import { UserQuit, readLineOrQuit } from "./readLineOrQuit.js";
 import { printGoodbye } from "./goodbye.js";
+import { displayWidth, padDisplayWidth } from "./textWidth.js";
 import packageJson from "../package.json" with { type: "json" };
 
 const DEFAULT_TARGET_MINUTES = 12;
@@ -483,29 +484,42 @@ program
     }
 
     const today = checkinDate(new Date());
-    // 两遍：先算出每本书要打印的字段，再统一按最长的 bookId/title 对齐——
-    // 不然每行列宽不一样，多本书刷屏时很难扫视对比。
+    // 每本书的展示字段各自算成独立的列（不是拼成一整条 summary 字符串），
+    // 这样才能按列对齐；书名可能中英文混杂（"西遊記" 這種），对齐必须按
+    // displayWidth（宽字符算两列）而不是字符数，否则中文书名那一行会错位。
     const rows = discovered.map(({ bookId, packDir }) => {
       try {
         const pack = loadPack(packDir);
         const questionItemMap = new Map(pack.questions.map((q) => [q.id, q.item_id]));
         const state = reduceEvents(readEvents(defaultLogPath(packDir)), questionItemMap);
         const streak = computeCurrentStreak(state.checkinDates, today);
-        const checkedInToday = state.checkinDates.has(today) ? "checked in today" : "not checked in today";
+        const checkedInToday = state.checkinDates.has(today);
         const { percentRead } = computeProgress(pack.blocks, state.readBlockIds);
         return {
           bookId,
-          summary: `${pack.manifest.title}  -  ${streak} day streak, ${checkedInToday}, ${percentRead}% read`,
+          title: pack.manifest.title,
+          streak: `${streak} day${streak === 1 ? "" : "s"} streak`,
+          checkedIn: checkedInToday ? "checked in today" : "not checked in today",
+          progress: `${percentRead}% read`,
         };
       } catch (err) {
         const message = err instanceof PackLoadError ? err.message : String(err);
-        return { bookId, summary: `(failed to load: ${message})` };
+        return { bookId, title: `(failed to load: ${message})`, streak: "", checkedIn: "", progress: "" };
       }
     });
 
-    const idWidth = Math.max(...rows.map((r) => r.bookId.length));
-    for (const { bookId, summary } of rows) {
-      console.log(`${bookId.padEnd(idWidth)}  ${summary}`);
+    const columns = ["bookId", "title", "streak", "checkedIn"] as const;
+    const widths = Object.fromEntries(
+      columns.map((col) => [col, Math.max(...rows.map((r) => displayWidth(r[col])))]),
+    ) as Record<(typeof columns)[number], number>;
+
+    for (const row of rows) {
+      const line = columns
+        .map((col) => padDisplayWidth(row[col], widths[col]))
+        .concat(row.progress)
+        .join("  ")
+        .trimEnd();
+      console.log(line);
     }
     console.log();
     console.log("Use `kuibu today --pack <book id>` / `kuibu status --pack <book id>` to switch books.");
