@@ -27,3 +27,7 @@ pack-gen/.env
 # 这条必须先于任何私有包文件存在——.gitignore 对已 tracked 的文件无效。
 packs-private/
 packs/private/
+pack-gen/build/xiyouji/sections/
+pack-gen/build/xiyouji/pack-parts/
+pack-gen/build/xiyouji/merged-pack-parts.json
+pack-gen/build/xiyouji/recap-boundaries.json

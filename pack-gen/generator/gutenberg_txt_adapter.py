@@ -17,13 +17,16 @@
   的还是原文，只是 section_path 的编号是我们自己按出现顺序给的。
 """
 
+import warnings
 from typing import List, Optional, Pattern
 
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
 
 from .epub_zip import read_spine_documents
 from .html_text import clean_text, render_inline
 from .source_adapter import Paragraph, ParagraphKind, Subsection
+
+warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 
 class GutenbergTxtAdapter:
