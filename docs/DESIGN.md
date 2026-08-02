@@ -731,8 +731,10 @@ function checkinDate(ts: Date, offsetHours = 4): string {
 - **The Great Gatsby**：F. Scott Fitzgerald 原著，美国版权已于 2021 年到期进入公有领域，
   来源是 Project Gutenberg 官方 epub（ebook #64317，存进 `pack-gen/sources/gatsby/`），
   可以合法进 git 的 `packs/public/`。
-- **中文小说**：同样要求先确认版权状态是公有领域/开放授权，才能进 `packs/public/`——
-  具体书目待定，选定时版权状态是前置条件之一。
+- **中文小说**：吴承恩《西游记》，明代小说，作者约 1582 年去世，公有领域早已确定
+  无疑，来源是 Project Gutenberg 官方 epub（ebook #23962，存进
+  `pack-gen/sources/xiyouji/`）。原文是繁体字——不转成简体，只要终端能正常显示
+  就保留原样（实测确认 Windows 终端下渲染无异常）。
 - **用户自己的 epub**（可能非公版）：走既有的私有包基础设施——放进 `packs/private/`
   （或 `packs-private/`），已被 `.gitignore` + `.githooks/pre-commit` 挡在 git 之外。
   这是构建期一次性的本地流程（用户把 epub 文件放进这个目录、本地跑生成脚本），不需要在
@@ -744,4 +746,37 @@ function checkinDate(ts: Date, offsetHours = 4): string {
 不追求一次性做完整本书：先用 Gatsby 前几章验证"epub 解析 → 机械切块 → 手工出题/recap
 → `packs/public/gatsby` 组装 → `kuibu today --pack packs/public/gatsby` 完整走一遍，
 确认不影响 SICP 现有体验/命令行为"，再决定是否铺开全书——跟当年 SICP 先做 1.1 一节
-再铺开是同一个套路（见 `docs/JOURNAL.md` 2026-07-31 M3 条目）。
+再铺开是同一个套路（见 `docs/JOURNAL.md` 2026-07-31 M3 条目）。西游记同理：先做前
+10 回让用户验收，通过再铺开剩余 90 回，见 §14.8。
+
+### 14.8 第二个 SourceAdapter：`GutenbergTxtAdapter`（2026-08 新增）
+
+`EpubAdapter` 是照着 Gatsby 那份 epub 的结构设计的——"ebookmaker 从 HTML 源转换"
+这一种 Gutenberg 工具链产物，`<div id="chapter-N">` 是可靠的章节容器。西游记的
+Gutenberg 版本（ebook #23962）是**从纯文本 `.txt` 源转换**的，结构完全不同，
+`EpubAdapter` 直接套用会失败，实测验证后新写了 `GutenbergTxtAdapter`：
+
+- **没有任何容器元素**：全书正文就是 spine 文件里一串平铺的兄弟 `<p>`（外加
+  `<br/>`），章节靠正文自己的标题行识别，不是靠 `<div>`——构造函数接受一个
+  "这段文本是不是章节标题"的正则，不是写死在 adapter 里。
+- **样板起止标记是裸 `<span>`，不在任何 `<p>` 里**：`*** START OF THE PROJECT
+  GUTENBERG EBOOK ... ***` / `*** END OF ... ***` 直接躺在 body 下面，不像 Gatsby
+  那样可以靠"文件里有没有 chapter div"这种标签结构判断。第一版实现在 `<p>` 标签
+  内搜索这两个标记文本，一个都没找到（因为压根不在 `<p>` 里）——最终改成在
+  **原始字符串层面**用子串查找定位起止位置，裁剪掉样板部分后再交给 BeautifulSoup
+  解析剩下的内容，不依赖标记具体被哪个标签包着。
+- **章节数字不可信，只信标题出现的顺序**：这版西游记的回目数字写法本身不统一——
+  "第一回".."第九回"用标准数字，往后大部分改成逐位读数（"第一二回"表示十二），
+  但也有例外用回标准复合数字（"第八十七回"），十位数为零时甚至用"○"（全角圆圈，
+  不是"零"字，也不是阿拉伯数字 0）代替。与其解析这堆不一致的写法，adapter 不
+  尝试理解数字本身的含义，只按"遇到匹配正则的标题行"的实际顺序自己编号
+  （`chapter_num += 1`），原文标题字符串原样保留在 `section_title` 里给读者看。
+  实测验证：这个策略找到了全部 100 回，顺序正确。
+- **比 Gatsby 更简单**：没有 `<blockquote>`/`<table>`，诗词是穿插在叙述段落里的
+  （同一个 `<p>` 用 `<br/>` 分行），不是独立的引文块，`_paragraphs_from_element`
+  那套按标签类型分发的逻辑在这里用不上，`GutenbergTxtAdapter.parse()` 直接对每个
+  `<p>` 调 `html_text.render_inline`/`clean_text` 就够了。
+
+两个 adapter 都要用到的 zip+OPF 解析和 `<br/>` 保留换行的内联渲染，抽成了
+`epub_zip.py`/`html_text.py` 两个共用模块——第二个 adapter 出现后，这是真实的
+代码重复，不是投机式的提前抽象。
