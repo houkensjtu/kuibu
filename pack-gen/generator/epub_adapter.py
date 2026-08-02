@@ -20,55 +20,18 @@ texinfo HTML 源码结构完全不同（DESIGN.md §14.3 记录了完整推导�
 
 import re
 import warnings
-import zipfile
 from typing import List
-from xml.etree import ElementTree as ET
 
-from bs4 import BeautifulSoup, Comment, NavigableString, Tag, XMLParsedAsHTMLWarning
+from bs4 import BeautifulSoup, Tag, XMLParsedAsHTMLWarning
 
+from .epub_zip import read_spine_documents
+from .html_text import clean_text as _clean_text
+from .html_text import render_inline as _render_inline
 from .source_adapter import Paragraph, ParagraphKind, Subsection
 
 warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 _CHAPTER_ID_RE = re.compile(r"^chapter-(\d+)$")
-
-# epub 内部文本里常见的零宽格式字符（如 Gutenberg 排版用来防止数字范围被
-# 换行截断的 U+2060 WORD JOINER），对阅读没有意义，清理掉避免终端里出现
-# 看不见但占位的怪字符。
-_ZERO_WIDTH_RE = re.compile("[​⁠﻿]")
-
-_INLINE_MARKDOWN = {
-    "b": "**",
-    "strong": "**",
-    "i": "*",
-    "em": "*",
-    "cite": "*",
-}
-
-
-def _render_inline(node) -> str:
-    if isinstance(node, Comment):
-        return ""
-    if isinstance(node, NavigableString):
-        return str(node)
-    if not isinstance(node, Tag):
-        return ""
-    if node.name == "br":
-        return "\n"
-    if node.name == "sup":
-        return ""  # 脚注引用标记，不属于正文
-    marker = _INLINE_MARKDOWN.get(node.name, "")
-    inner = "".join(_render_inline(child) for child in node.children)
-    return f"{marker}{inner}{marker}" if marker else inner
-
-
-def _clean_text(raw: str) -> str:
-    """跟 texinfo adapter 的版本不同：不能直接把所有空白（含换行）压成一个
-    空格——诗体引文靠 <br/> 产生的换行是有意义的分行，必须保留，只清理
-    每一行内部的空白。"""
-    raw = _ZERO_WIDTH_RE.sub("", raw)
-    lines = [" ".join(line.split()) for line in raw.split("\n")]
-    return "\n".join(line for line in lines if line)
 
 
 def _paragraphs_from_element(el: Tag) -> List[Paragraph]:
@@ -140,36 +103,10 @@ class EpubAdapter:
         return []
 
     def _parse_epub(self, epub_path: str) -> List[Subsection]:
-        with zipfile.ZipFile(epub_path) as zf:
-            opf_path = self._find_opf_path(zf)
-            opf_dir = opf_path.rsplit("/", 1)[0] + "/" if "/" in opf_path else ""
-            spine_hrefs = self._spine_hrefs(zf, opf_path, opf_dir)
-
-            subsections: List[Subsection] = []
-            for href in spine_hrefs:
-                content = zf.read(href).decode("utf-8")
-                subsections.extend(self._parse_xhtml(content))
-            return subsections
-
-    def _find_opf_path(self, zf: zipfile.ZipFile) -> str:
-        container = ET.fromstring(zf.read("META-INF/container.xml"))
-        ns = {"c": "urn:oasis:names:tc:opendocument:xmlns:container"}
-        rootfile = container.find(".//c:rootfile", ns)
-        if rootfile is None:
-            raise ValueError(f"{zf.filename}: META-INF/container.xml has no <rootfile>")
-        return rootfile.attrib["full-path"]
-
-    def _spine_hrefs(self, zf: zipfile.ZipFile, opf_path: str, opf_dir: str) -> List[str]:
-        opf = ET.fromstring(zf.read(opf_path))
-        ns = {"opf": "http://www.idpf.org/2007/opf"}
-
-        href_by_id = {
-            item.attrib["id"]: item.attrib["href"] for item in opf.findall(".//opf:manifest/opf:item", ns)
-        }
-        spine_idrefs = [
-            itemref.attrib["idref"] for itemref in opf.findall(".//opf:spine/opf:itemref", ns)
-        ]
-        return [opf_dir + href_by_id[idref] for idref in spine_idrefs if idref in href_by_id]
+        subsections: List[Subsection] = []
+        for content in read_spine_documents(epub_path):
+            subsections.extend(self._parse_xhtml(content))
+        return subsections
 
     def _parse_xhtml(self, content: str) -> List[Subsection]:
         soup = BeautifulSoup(content, "lxml")
