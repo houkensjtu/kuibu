@@ -1,24 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git *)",
-      "Bash(python *)",
-      "Bash(python3 *)",
-      "Bash(pytest *)",
-      "Bash(node *)",
-      "Bash(./.venv/Scripts/python.exe *)",
-      "Bash(.venv/Scripts/python.exe *)",
-      "Bash(pack-gen/.venv/Scripts/python.exe *)",
-      "Bash(npx *)",
-      "Bash(npm *)",
-      "Bash(rm *)",
-      "Bash(cp *)",
-      "Bash(chmod *)",
-      "Bash(./scripts/*)",
-      "Bash(scripts/*)",
-      "Bash(pack-gen/scripts/*)",
-      "Bash(kuibu *)",
-      "PowerShell(Remove-Item *)"
+      "Bash(*)",
+      "PowerShell(*)"
     ],
     "ask": [
       "Bash(git push *)",
@@ -26,7 +10,11 @@
       "Bash(git clean -f*)",
       "Bash(git branch -D*)",
       "Bash(git checkout .*)",
-      "Bash(git restore .*)"
+      "Bash(git restore .*)",
+      "PowerShell(git push *)",
+      "PowerShell(git reset --hard*)",
+      "PowerShell(git clean -f*)",
+      "PowerShell(git branch -D*)"
     ]
   }
 }
