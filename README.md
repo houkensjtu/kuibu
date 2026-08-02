@@ -103,11 +103,22 @@ kuibu status
 |---|---|
 | `today` | 开始/继续今天的阅读+答题+打卡；`--minutes <n>` 临时调整今日目标（会记住） |
 | `status` | 查看当前连续打卡天数、今天是否已打卡、阅读进度、待复习题数——不会进入阅读或答题流程 |
+| `books` | 列出 `packs/public/`（+ `packs/private/`，如果有）下所有能识别的书，每本一行打卡摘要 |
 | `export` | 把事件日志导出到 stdout，配合 shell 重定向存成文件备份 |
 | `import <file>` | 合并一份之前导出的日志（按 id 去重），用于跨设备同步或恢复备份 |
 
-所有命令都接受 `--pack <dir>`（内容包目录，默认 `packs/public/sicp`）和
-`--log <path>`（事件日志路径，默认 `.kuibu-events.jsonl`）。
+`today`/`status` 都接受 `--pack <dir-or-book-id>`——可以是完整目录路径
+（`packs/public/gatsby`），也可以是短书名（`gatsby`，`kuibu books` 列出的
+就是这个名字），默认 `packs/public/sicp`。`--log <path>` 默认按 `--pack`
+自动推导（SICP 继续用 `.kuibu-events.jsonl`，其他书用
+`.kuibu-events-<书名>.jsonl`），每本书的打卡记录互相独立；一般不需要手动
+传 `--log`，除非你想把某本书的记录存到别的位置。
+
+```
+kuibu today --pack gatsby      # 不用打完整路径，也不用再传 --log
+kuibu status --pack gatsby
+kuibu books                    # 一眼看到所有书的打卡状态
+```
 
 ### 试用完了想清空重来
 

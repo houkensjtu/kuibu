@@ -2,6 +2,7 @@
 import { randomUUID } from "node:crypto";
 import { Command } from "commander";
 import { loadPack, PackLoadError } from "./loadPack.js";
+import { discoverPacks, resolvePackDir } from "./discoverPacks.js";
 import { appendEvent, readEvents, writeEvents } from "./eventLog.js";
 import { reduceEvents, blockIdsReadOnDate } from "../core/reducer.js";
 import { assertLogMatchesPack, LogBookMismatchError } from "./logGuard.js";
@@ -60,22 +61,27 @@ program
 program
   .command("today")
   .description("start/continue today's reading checkin")
-  .option("--pack <dir>", "content pack directory", DEFAULT_PACK)
+  .option("--pack <dir-or-book-id>", "content pack directory, or a short book id (see `kuibu books`)", DEFAULT_PACK)
   .option("--log <path>", "event log file path (default: derived from --pack)")
   .option("--minutes <n>", "adjust daily reading target (minutes); remembered for next run", (v) => Number.parseInt(v, 10))
   .action(async (options: { pack: string; log?: string; minutes?: number }) => {
-    const logPath = options.log ?? defaultLogPath(options.pack);
-
-    // Ctrl-C is one of only two accepted ways to quit (the other is typing "q" at
-    // any prompt, see readLineOrQuit.ts) - both print a goodbye instead of dying
-    // with a raw stack trace/no message.
-    process.on("SIGINT", () => {
-      printGoodbye(logPath);
-      process.exit(0);
-    });
-
+    // 声明在 try 外面，好让下面 catch 块里的 UserQuit 分支也能引用到它；
+    // 一开始用未解析的 options.pack 兜底（万一 resolvePackDir 本身就抛错，
+    // 这个值不会被用到，但类型上必须先有个确定的 string，不能是 undefined）。
+    let logPath = options.log ?? defaultLogPath(options.pack);
     try {
-      const pack = loadPack(options.pack);
+      const packDir = resolvePackDir(options.pack, discoverPacks());
+      logPath = options.log ?? defaultLogPath(packDir);
+
+      // Ctrl-C is one of only two accepted ways to quit (the other is typing "q" at
+      // any prompt, see readLineOrQuit.ts) - both print a goodbye instead of dying
+      // with a raw stack trace/no message.
+      process.on("SIGINT", () => {
+        printGoodbye(logPath);
+        process.exit(0);
+      });
+
+      const pack = loadPack(packDir);
       console.log(pack.manifest.title);
       console.log(`${pack.blocks.length} blocks total`);
 
@@ -391,12 +397,13 @@ program
 program
   .command("status")
   .description("show current streak, today's checkin state, and reading progress without starting a session")
-  .option("--pack <dir>", "content pack directory", DEFAULT_PACK)
+  .option("--pack <dir-or-book-id>", "content pack directory, or a short book id (see `kuibu books`)", DEFAULT_PACK)
   .option("--log <path>", "event log file path (default: derived from --pack)")
   .action((options: { pack: string; log?: string }) => {
-    const logPath = options.log ?? defaultLogPath(options.pack);
     try {
-      const pack = loadPack(options.pack);
+      const packDir = resolvePackDir(options.pack, discoverPacks());
+      const logPath = options.log ?? defaultLogPath(packDir);
+      const pack = loadPack(packDir);
       const questionItemMap = new Map(pack.questions.map((q) => [q.id, q.item_id]));
       const priorEvents = readEvents(logPath);
       assertLogMatchesPack(priorEvents, pack.manifest.book_id, logPath);
@@ -463,6 +470,45 @@ program
       }
       process.exitCode = 1;
     }
+  });
+
+program
+  .command("books")
+  .description("list every known book (packs/public + packs/private) with a one-line progress summary")
+  .action(() => {
+    const discovered = discoverPacks();
+    if (discovered.length === 0) {
+      console.log("No content packs found under packs/public/ or packs/private/.");
+      return;
+    }
+
+    const today = checkinDate(new Date());
+    // 两遍：先算出每本书要打印的字段，再统一按最长的 bookId/title 对齐——
+    // 不然每行列宽不一样，多本书刷屏时很难扫视对比。
+    const rows = discovered.map(({ bookId, packDir }) => {
+      try {
+        const pack = loadPack(packDir);
+        const questionItemMap = new Map(pack.questions.map((q) => [q.id, q.item_id]));
+        const state = reduceEvents(readEvents(defaultLogPath(packDir)), questionItemMap);
+        const streak = computeCurrentStreak(state.checkinDates, today);
+        const checkedInToday = state.checkinDates.has(today) ? "checked in today" : "not checked in today";
+        const { percentRead } = computeProgress(pack.blocks, state.readBlockIds);
+        return {
+          bookId,
+          summary: `${pack.manifest.title}  -  ${streak} day streak, ${checkedInToday}, ${percentRead}% read`,
+        };
+      } catch (err) {
+        const message = err instanceof PackLoadError ? err.message : String(err);
+        return { bookId, summary: `(failed to load: ${message})` };
+      }
+    });
+
+    const idWidth = Math.max(...rows.map((r) => r.bookId.length));
+    for (const { bookId, summary } of rows) {
+      console.log(`${bookId.padEnd(idWidth)}  ${summary}`);
+    }
+    console.log();
+    console.log("Use `kuibu today --pack <book id>` / `kuibu status --pack <book id>` to switch books.");
   });
 
 program
