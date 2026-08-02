@@ -552,3 +552,51 @@ schema/代码改动；小说 `section_path` 只有"章"一级，比 SICP 的三�
 
 版本号：`kuibu books` 是新命令、`--pack` 接受短名是新的用户可见能力，按
 `CLAUDE.md` 的规则算 MINOR，升到 0.4.0。
+
+## 2026-08-02 —— 阶段二 M2：Gatsby 铺开到全书 9 章
+
+用户拍板"把 Gatsby 剩下的所有章节都做完"。第一章（M1）已经验证过整条链路，
+这次是纯粹的规模化：8 个并行 subagent（`Agent` 工具，`model: "sonnet"`，各自
+独立跑在后台）各写一章（II–IX），每个都拿到同一份任务简报——第一章的
+`llm-output/1.json` 当具体范例、`section_prompt.md` 当规格、目标 block 大小
+~400-600 词（~200 wpm，跟 SICP 那套技术阅读速度换算完全不同）、场景分隔 `* * *`
+折进上一个 block 收尾、知识点覆盖大部分 block、干扰项要"半对半错"级别的常见
+误判、explanation 必须逐字引用原文。Chapter VII（419 段，是其他章的~3倍，
+Plaza 对峙+车祸那章）明确告诉它按比例产出更多 block，不要为了凑数压缩。
+
+8 个 agent 全部拿到之前，先把合并脚本写好（`build_all_gatsby_sections.py`，
+镜像 `build_all_sections.py`，SECTION_ORDER 1-9，单一递增 `IdCounters`）——
+这一步不依赖 agent 产出，可以并行准备。全部 8 章交上来后（每个都在自己的
+输出里跑了 pydantic 校验和段落覆盖检查，Chapter IX 那个 agent 甚至自己抓到
+并修好了一处引用错误的原文摘录），跑合并脚本：118 blocks / 125 items /
+125 questions。**验证了一个不能出错的不变量**：Chapter I 的 id（b0001-b0014
+等）在整本书重新合并后完全没变——因为 `build_all_gatsby_sections.py` 按章节
+顺序处理、Chapter I 排第一个，即使它的缓存因为格式差异（旧版 `build_gatsby_
+section.py` 产出的 `pack-parts/1.json` 没有 `_input_hash` 字段）触发重新生成，
+从零开始的 `IdCounters` 处理第一章时算出来的 id 也是同一套——这是设计上的
+巧合还是必然，取决于 Chapter I 永远排第一个这个事实，值得记一笔。
+
+`packs/public/gatsby/` 的 `blocks.json`/`items.json`/`questions.json` 整体
+覆盖成全书内容，两侧 schema（pydantic + `cli/loadPack.ts` 的 ajv 路径）都验证
+通过。
+
+`recap_checkpoints.json` 是这次唯一没有交给 agent 的部分——跟 SICP 35 条
+checkpoint 当年的道理一样，回顾必须逐条累积压缩，天然是顺序任务。重新跑
+`compute-recap-boundaries.ts` 对着全书 118 个 block 算边界时发现一个反直觉的
+结果：**M1 写的前 3 条 checkpoint 的边界本身也变了**（第 3 条从"到第 14 块"
+变成"到第 15 块"）——`packSession`（回顾切分复用的同一个函数）纯按时长贪心
+打包，不认章节边界，M1 时只有 14 个 block 存在，"这一天"自然在第 14 块结束；
+现在第 15 块（第二章开头）也可用了，同一个时长预算能多装进一块，边界就跟着
+往后挪。这意味着不能假设"新增内容只会在后面追加 checkpoint"，22 条全部
+从头重写，没有复用 M1 那 3 条的文字。
+
+端到端验证：不能直接跑用户真实的 `.kuibu-events-gatsby.jsonl`（那是真实进度），
+拷贝一份一次性副本测试"打卡后重开选 read ahead"——正确从 block 5 接着读
+（不是从头开始，也没跳过内容），recap 正确定位到 checkpoint 1（此时只读过 4
+块），问答/打卡/日历全部走通。中途犯过一次测试方法上的错误：把同一个命令对
+同一份（会被写入的）日志文件跑了两次，产出的 block 范围看起来像 `packSession`
+超出了预算一倍多，一度怀疑是 bug——重新用干净的单份日志、单次调用复现后发现
+是两次调用的结果被误当成了一次来看，`packSession` 本身完全按预期在预算内停止。
+
+版本号：全书内容覆盖是实质性扩展（4 分钟的一章 → 4 小时的全书），按
+`CLAUDE.md` 的规则算 MINOR，升到 0.5.0。

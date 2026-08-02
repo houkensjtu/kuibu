@@ -109,9 +109,29 @@
 **验收**：Gatsby 第一章能独立走完一次完整 session，SICP 现有体验/日志零变化。**M1 完成
 （2026-08-02）**——目前只做了第一章（14 个 block），不是全书；铺开全书排在 M2。
 
-## 阶段二 M2+ —— 待排期（先做完 M1 再定细节）
+## 阶段二 M2 —— Gatsby 铺开到全书
 
-- Gatsby 铺开到全书（第一章之后还有 8 章未切分内容）
+**目标**：把 M1 只做了第一章的 Gatsby 内容包铺开到全书 9 章。
+
+- [x] Chapters II–IX：8 个并行 subagent 各写一章，跟第一章同一套流程/质量标准
+  （block 切分respects场景分隔、知识点覆盖大部分 block、干扰项是"半对半错"级别的
+  常见误判、explanation 逐字引用原文）
+- [x] `build_all_gatsby_sections.py`（镜像 `build_all_sections.py`）合并全部 9 章，
+  单一递增 `IdCounters`——验证过关键不变量：Chapter I 的 id（b0001-b0014 等）
+  没有因为重新合并全书而改变，用户真实的 `.kuibu-events-gatsby.jsonl` 不受影响
+- [x] `packs/public/gatsby/` 更新为全书：118 blocks / 125 items / 125 questions /
+  0 exercises，两侧 schema 校验通过
+- [x] `recap_checkpoints.json` 从 3 条扩到 22 条，覆盖全书——重新计算后发现前 3 条
+  的边界其实也变了（`packSession` 不认章节边界，纯按时长贪心打包），22 条全部
+  重写，不是简单在后面追加
+- [x] 用真实用户日志的一次性副本验证续读：从 block 5 正确接着读（不是从头开始，
+  也没有跳过任何内容），recap 正确定位到对应的 checkpoint
+
+**验收**：`kuibu today --pack gatsby` 现在覆盖全书 9 章约 4 小时阅读量，用户已有的
+真实打卡记录/block id 完全不受影响。
+
+## 阶段二 M3+ —— 待排期
+
 - 中文小说（书目 + 版权状态待定）
 - 用户私有 epub（走 `packs/private/`，本地构建流程，不做 CLI 上传功能）
 - 复习健康度提示 · 周期性综合测验 · 网页版导入内容包 · 补签 · 日志快照压缩
