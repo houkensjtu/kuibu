@@ -2,7 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(*)",
-      "PowerShell(*)"
+      "PowerShell(*)",
+      "WebFetch",
+      "WebSearch",
+      "Agent",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep"
     ],
     "ask": [
       "Bash(git push *)",
