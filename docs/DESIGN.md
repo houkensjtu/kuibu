@@ -434,15 +434,15 @@ block 自己的小节标题再深一级，`cli/renderBlocks.ts` 的 `indentConte
 1. 输出量从几百 KB 降到几 KB
 2. **防止 SICP 的 Scheme 代码被 LLM 悄悄改写**——在技术书里这是灾难性的
 
-### 8.3 输入适配器（预留乔布斯传端口）
+### 8.3 输入适配器
 
 ```
 SourceAdapter: 源文件 → 归一化的带结构纯文本（章 / 节 / 段落 / 代码块）
   ├─ TexinfoHtmlAdapter   SICP
-  └─ EpubAdapter          乔布斯传（阶段一不实现，接口先留）
+  └─ EpubAdapter          小说类书籍（阶段二，2026-08 开始实现，详细设计见 §14）
 ```
 
-下游流程与源格式完全解耦。
+下游流程与源格式完全解耦——`EpubAdapter` 不要求 `slice_section.py`/`build_all_sections.py` 改一行代码，是这条解耦的实测验证。
 
 ### 8.4 出题规格
 
@@ -571,13 +571,12 @@ pack/
 
 ### 阶段二
 
+- 多本书并行切换 · EpubAdapter（2026-08 已开始设计与实现，见 §14；顺序是 The Great Gatsby → 中文小说 → 用户私有 epub，不再局限于早期"乔布斯传"这个占位示例）
 - 复习健康度提示（待复习积压数 + leech 挂起）
-- 多本书并行切换
 - 周期性综合测验
 - 网页版导入自制内容包
 - 补签 / 回溯打卡
 - 事件日志快照压缩
-- 乔布斯传 EpubAdapter
 
 ### 阶段三
 
@@ -641,3 +640,108 @@ function checkinDate(ts: Date, offsetHours = 4): string {
 | R7 | 私有内容包误推至公开仓 | gitignore 前置 + 禁用 `git add -A` + pre-commit hook | 部分缓解 |
 | R8 | 选择题靠排除法蒙对，失去检验价值 | 生成器 prompt 强制要求干扰项为常见误解 | 部分缓解 |
 | R9 | LLM 改写 SICP 代码 | LLM 只输出边界索引，原文由脚本切割 | 已缓解 |
+
+---
+
+## 14. 阶段二设计：多本书与 EpubAdapter（2026-08 新增）
+
+### 14.1 范围与动机
+
+用户决定不必等 SICP 的"连续打卡 21 天"（阶段一唯一验收指标）先跑完，两条线并行：
+**SICP 打卡继续是阶段一验收标准本身**，`EpubAdapter`/多本书支持是阶段二的第一块拼图，
+独立推进，互不阻塞、互不干扰——具体如何互不干扰见 §14.4/14.5。
+
+顺序（用户拍板，先易后难）：
+
+1. **The Great Gatsby**（英文，公有领域）—— 验证 `EpubAdapter` 解析链路本身
+2. **一本中文小说**（书目、版权状态待定）—— 验证生成内容随源书语言切换这条既有约定
+   （见项目记忆 `feedback_language_rules`）在小说场景下依然成立
+3. **用户自己的 epub**（可能非公版）—— 走私有包路径，见 §14.6
+
+小说**没有 Exercise**：§3.3.1 的原书习题模型是 SICP 特有的，小说没有对应物，
+`exercises` 直接是空数组——不需要任何 schema/代码改动（8 个 SICP 小节已经这么用过）。
+内容生成方式跟 SICP 完全一致：人工代 LLM 手写（尚未接入真实 API），产出遵守铁律 6
+（不复述原文，只给边界索引）。
+
+### 14.2 内容模型的差异
+
+- SICP 的 `section_path` 是三级（章/节/小节），小说只有"章"一级，形如 `["6"]`；
+  `SectionHeading` 依然可用，只是层级浅得多——schema 本身不用改（`section_path` 只要求
+  `minItems: 1`，没有固定深度约束）。
+- 没有代码块 → `cli/renderBlocks.ts` 的 `indentContent`/`Code (scheme):` 那套渲染逻辑
+  天然不会被触发，不需要为小说改一行阅读器代码。
+
+### 14.3 EpubAdapter 技术方案
+
+基于实际下载并解压 Project Gutenberg 官方 epub（ebook #64317）验证，不是拍脑袋设计：
+
+- epub 是标准 zip，`META-INF/container.xml` 指向 `content.opf`（OPF manifest + spine
+  决定阅读顺序）。
+- **实测发现 Gatsby 的 epub 把全书内容摊在 spine 里的 3 个 xhtml 文件里，不是像 SICP 源码
+  那样每个小节一个文件**：
+  - `*-h-0.htm.xhtml`：Gutenberg 页眉样板 + 标题页 + 目录 + 第 I–V 章
+  - `*-h-1.htm.xhtml`：第 VI–IX 章
+  - `*-h-2.htm.xhtml`：纯 Gutenberg 版权/许可样板（整篇丢弃）
+- 每一章是一个 `<div id="chapter-N"><h2>罗马数字</h2><p>...</p>...<hr/>...</div>` 块；
+  `<hr/>` 是章内的场景分隔符（不是新章节），正文段落是纯 `<p>`，强调用 `<i>`。
+- `EpubAdapter.parse()` 策略：
+  1. 按 spine 顺序遍历 xhtml 文件；
+  2. 一个文件里如果找不到任何 `<div id="chapter-*">`，整篇跳过（页眉/页脚样板不需要
+     逐段落甄别，直接按"有没有章节 div"这个粗粒度信号过滤）；
+  3. 每个 `chapter-N` div 内，`<h2>` 文本作为该章标题（罗马数字换算成阿拉伯数字存进
+     `section_path`，标题原文存进 `SectionHeading`）；
+  4. `<p>` 顺序收集成段落列表；`<hr/>` 记为场景分隔标记，暂定不强制作为 block 边界
+     （场景分隔不一定卡在 2–3 分钟的整数倍上，留给切块脚本按字数决定）；
+  5. 输出跟 `TexinfoHtmlAdapter.parse()` 完全一样的 `Subsection` 结构，下游
+     `slice_section.py`/`build_all_sections.py` 不需要改一行代码。
+- Gatsby 没有 SICP 那种"章引言"结构，`_parse_chapter_intro` 分支这里用不上——每章直接从
+  `<h2>` 开始。
+
+### 14.4 多本书事件日志隔离
+
+**现状缺口**：`block_read`/`answer`/`checkin` 事件都不带 `book_id`（只有 `session_start`
+带），加载时对"当前 pack 是否匹配当前日志"也没有任何校验——单本书时这个缺口不会暴露，
+多本书并存后必须补上。否则一次手滑（`--pack` 换了、`--log` 忘了换）就会让两本书的 block id
+（各自都从 `b0001` 起步）在同一份日志里打架，污染 SICP 那份真实的 21 天记录。
+
+方案（已跟用户确认，用哪种隔离方式是明确问过的决策点，不是我自己选的）：
+
+- **不改事件 schema**（不给每种事件都加 `book_id`——那是更大的改动，还会碰到已经产生
+  真实数据的 `.kuibu-events.jsonl`），改用**每本书一个独立日志文件**，复用已有的 `--log`
+  CLI 参数机制。
+- `--log` 的默认值不再硬编码 `.kuibu-events.jsonl`，改成按 `--pack` 目录名推导：
+  `packs/public/sicp` 继续默认 `.kuibu-events.jsonl`（老用户默认路径不能变），
+  `packs/public/gatsby` 默认 `.kuibu-events-gatsby.jsonl`，以此类推；用户仍可用 `--log`
+  显式覆盖。
+- **加载时校验**：日志非空且已有 `session_start` 事件时，若其 `book_id` 跟当前
+  `pack.manifest.book_id` 不一致，直接拒绝运行并报错，而不是静默把两本书的状态折算成
+  一个 `ReducerState`。
+- `.gitignore` 需要从精确匹配 `.kuibu-events.jsonl` 改成通配 `.kuibu-events*.jsonl`，
+  否则新书的默认日志文件不会被自动忽略。
+
+### 14.5 CLI 默认行为不变
+
+`kuibu today`/`kuibu status` 不传 `--pack` 时依然默认 `packs/public/sicp`——SICP 是且仍是
+默认阅读对象，新书必须显式 `--pack packs/public/gatsby` 才会切换。**唯一成功指标**
+（连续打卡 21 天）在这次改动后依然只认 SICP 那份日志；新书的打卡/streak 是独立的、
+次要的功能验证，不计入也不会稀释这个指标。
+
+### 14.6 内容来源与版权
+
+- **The Great Gatsby**：F. Scott Fitzgerald 原著，美国版权已于 2021 年到期进入公有领域，
+  来源是 Project Gutenberg 官方 epub（ebook #64317，存进 `pack-gen/sources/gatsby/`），
+  可以合法进 git 的 `packs/public/`。
+- **中文小说**：同样要求先确认版权状态是公有领域/开放授权，才能进 `packs/public/`——
+  具体书目待定，选定时版权状态是前置条件之一。
+- **用户自己的 epub**（可能非公版）：走既有的私有包基础设施——放进 `packs/private/`
+  （或 `packs-private/`），已被 `.gitignore` + `.githooks/pre-commit` 挡在 git 之外。
+  这是构建期一次性的本地流程（用户把 epub 文件放进这个目录、本地跑生成脚本），不需要在
+  CLI 里做"上传"功能——铁律 2/3 本来就要求生成器只在本地构建期跑，不需要运行时接受任意
+  用户上传。
+
+### 14.7 推进节奏
+
+不追求一次性做完整本书：先用 Gatsby 前几章验证"epub 解析 → 机械切块 → 手工出题/recap
+→ `packs/public/gatsby` 组装 → `kuibu today --pack packs/public/gatsby` 完整走一遍，
+确认不影响 SICP 现有体验/命令行为"，再决定是否铺开全书——跟当年 SICP 先做 1.1 一节
+再铺开是同一个套路（见 `docs/JOURNAL.md` 2026-07-31 M3 条目）。

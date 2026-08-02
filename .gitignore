@@ -6,7 +6,9 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
-.kuibu-events.jsonl
+# 每本书一个独立事件日志（DESIGN.md §14.4）：SICP 默认还是 .kuibu-events.jsonl，
+# 其他 pack 默认按目录名推导，比如 .kuibu-events-gatsby.jsonl。
+.kuibu-events*.jsonl
 
 # build/sicp/sections 和 pack-parts 都是机械/确定性可重跑的中间产物；
 # llm-output 不忽略——目前是手工产出（M3.22 还没接真实 API），之后接了 API

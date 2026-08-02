@@ -421,3 +421,34 @@ Code (scheme):
 
 版本号：同一个显示特性的进一步调整，按 `CLAUDE.md` 的规则继续算 PATCH，
 升到 0.2.6。
+
+## 2026-08-02 —— 阶段二启动：EpubAdapter 设计定稿
+
+用户提出要开始做 EpubAdapter/多本书功能——这在 `docs/MILESTONES.md`/`DESIGN.md` §10
+里原本白纸黑字标的是"阶段二"工作，且 M4 的"连续打卡 21 天"还没打勾。问清楚后确认：
+用户是有意把这个提前，两条线并行推进（SICP 打卡继续是阶段一验收指标本身，EpubAdapter
+是阶段二第一块拼图，独立推进不互相阻塞），不是我自己临场决定要不要提前。
+
+三个决策点问清楚后拍板：
+
+1. **文档**：不是简单挪一条 bullet，而是把 EpubAdapter 按阶段一材料的详细程度重新写
+   一份设计（`docs/DESIGN.md` 新增 §14），`MILESTONES.md` 阶段二也从一行 bullet list
+   拆成跟 M0–M4 同规格的 checkbox milestone（"阶段二 M1"）。
+2. **多本书事件日志隔离**：不改事件 schema（会碰到已经产生真实数据的
+   `.kuibu-events.jsonl`），改成每本书一个独立日志文件，`--log` 默认值按 `--pack`
+   目录名自动推导（SICP 默认路径保持向后兼容不变），并在加载时校验日志已有的
+   `book_id` 跟当前 pack 是否匹配，不匹配拒绝运行——现状里这个校验完全不存在，属于
+   顺手补的安全网。
+3. **推进节奏**：先用 The Great Gatsby 前几章验证 EpubAdapter 解析→切块→出题→recap
+   全链路，跑通后再铺开全书，不追求今天一次性做完整本——跟当年 SICP 先做 1.1 一节
+   再铺开同一个套路。
+
+动手写设计之前，先实测下载了 Project Gutenberg 的 Gatsby epub（ebook #64317）解压查看
+真实结构，避免设计建立在猜测上——发现它跟 SICP 源码的"每小节一个文件"完全不同：全书
+内容摊在 spine 里的 3 个 xhtml 文件（页眉+第 I–V 章 / 第 VI–IX 章 / 纯 Gutenberg 版权
+样板），每章是 `<div id="chapter-N"><h2>罗马数字</h2><p>...</p></div>`，`<hr/>` 是章内
+场景分隔不是新章节。这些实测细节直接写进了 §14.3 的 `EpubAdapter.parse()` 策略。
+
+顺带确认：小说没有 SICP 那种原书 Exercise，`exercises` 直接空数组，不需要任何
+schema/代码改动；小说 `section_path` 只有"章"一级，比 SICP 的三级浅得多，但 schema
+本身没有固定深度限制，不用改。

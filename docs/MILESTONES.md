@@ -87,6 +87,30 @@
 
 ---
 
-## 阶段二（M1–M2 的 `core/` 直接复用，暂不动工）
+## 阶段二 M1 —— EpubAdapter 跑通链路（The Great Gatsby 前几章）
 
-复习健康度提示 · 多本书切换 · 周期性综合测验 · 网页版导入内容包 · 补签 · 日志快照压缩 · EpubAdapter
+**目标**：验证"epub → 解析 → 切块 → 出题/recap → CLI 阅读打卡"整条链路，且新书的打卡
+记录跟 SICP（阶段一验收指标所在的那份日志）完全隔离。跟 M0–M4 不同，这条milestone跟
+"连续打卡 21 天"并行推进，不等它完成——这是用户明确拍板的决定，不是我自己提前的。
+详细设计见 `docs/DESIGN.md` §14。
+
+- [ ] `EpubAdapter`（`pack-gen/generator/epub_adapter.py`）：按 spine 顺序解析 epub，
+  识别 `<div id="chapter-N">` 章节块，跳过 Gutenberg 页眉/页脚样板
+- [ ] `pack-gen/sources/gatsby/`：存入 Project Gutenberg 官方 epub（ebook #64317，公有领域）
+- [ ] The Great Gatsby 前几章：手工切块 + 知识点 + 复习题 + recap checkpoint
+  （无 exercise，`exercises: []`）
+- [ ] 多本书事件日志隔离：`--log` 默认值按 `--pack` 目录名推导（SICP 默认路径不变）；
+  加载时校验日志已有 `book_id` 与当前 pack 是否匹配，不匹配拒绝运行
+- [ ] `.gitignore` 从精确匹配 `.kuibu-events.jsonl` 改成通配，覆盖新书的默认日志文件
+- [ ] `packs/public/gatsby/` 组装，两侧 schema 校验通过
+- [ ] `kuibu today --pack packs/public/gatsby` 完整走一遍：阅读 → 答题 → 打卡 → 年历
+- [ ] 确认 SICP 默认路径（不传 `--pack`）的行为、输出、事件日志完全不受影响
+
+**验收**：Gatsby 前几章能独立走完一次完整 session，SICP 现有体验/日志零变化。
+
+## 阶段二 M2+ —— 待排期（先做完 M1 再定细节）
+
+- Gatsby 全书铺开
+- 中文小说（书目 + 版权状态待定）
+- 用户私有 epub（走 `packs/private/`，本地构建流程，不做 CLI 上传功能）
+- 复习健康度提示 · 周期性综合测验 · 网页版导入内容包 · 补签 · 日志快照压缩
