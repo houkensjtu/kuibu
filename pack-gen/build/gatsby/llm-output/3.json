@@ -1,0 +1,285 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 5,
+      "est_seconds": 183,
+      "recap_md": "Nick describes the recurring spectacle of Gatsby's summer parties, with music, motorboats, caterers, and a full orchestra arriving each weekend."
+    },
+    {
+      "start_paragraph_index": 6,
+      "end_paragraph_index": 10,
+      "est_seconds": 122,
+      "recap_md": "Nick recalls that, unlike most guests, he was actually invited by a formal note from Gatsby, and finds the party full of young Englishmen who seem to be selling something."
+    },
+    {
+      "start_paragraph_index": 11,
+      "end_paragraph_index": 25,
+      "est_seconds": 118,
+      "recap_md": "Nick finds Jordan Baker at the party, and they join two girls in yellow whose friend Lucille describes the expensive replacement gown Gatsby sent her."
+    },
+    {
+      "start_paragraph_index": 26,
+      "end_paragraph_index": 38,
+      "est_seconds": 106,
+      "recap_md": "Guests trade rumors that Gatsby once killed a man or was a German spy, before the first supper is served and Jordan proposes they go find their host."
+    },
+    {
+      "start_paragraph_index": 39,
+      "end_paragraph_index": 57,
+      "est_seconds": 107,
+      "recap_md": "In Gatsby's library, Nick and Jordan meet a drunk, owl-eyed man astonished to discover that the books on the shelves are real and not just decorative props."
+    },
+    {
+      "start_paragraph_index": 58,
+      "end_paragraph_index": 75,
+      "est_seconds": 177,
+      "recap_md": "Nick unknowingly spends part of the evening talking with his own host, who reveals mid-conversation that he is Gatsby, flashing a rare, reassuring smile."
+    },
+    {
+      "start_paragraph_index": 76,
+      "end_paragraph_index": 92,
+      "est_seconds": 162,
+      "recap_md": "Jordan tells Nick that Gatsby once claimed to be an Oxford man, though she doesn't believe it, before the orchestra plays Tostoff's 'Jazz History of the World.'"
+    },
+    {
+      "start_paragraph_index": 93,
+      "end_paragraph_index": 102,
+      "est_seconds": 121,
+      "recap_md": "Gatsby's butler pulls Jordan away for a private word, and Nick goes inside to find a drunken singer weeping and several wives quarreling with their husbands."
+    },
+    {
+      "start_paragraph_index": 103,
+      "end_paragraph_index": 121,
+      "est_seconds": 126,
+      "recap_md": "Struggling wives are carried off by their husbands, Jordan and Gatsby emerge from the library together, and Nick says goodnight to Gatsby, who reminds him of their planned hydroplane ride."
+    },
+    {
+      "start_paragraph_index": 122,
+      "end_paragraph_index": 137,
+      "est_seconds": 114,
+      "recap_md": "Leaving the party, Nick finds a car wrecked in a ditch, where the drunk man from the library insists that he wasn't driving and that another man was in the car."
+    },
+    {
+      "start_paragraph_index": 138,
+      "end_paragraph_index": 153,
+      "est_seconds": 76,
+      "recap_md": "A dazed passenger stumbles out of the wrecked car, and as Nick finally walks home he glances back to see Gatsby standing alone on the porch, waving a formal farewell."
+    },
+    {
+      "start_paragraph_index": 154,
+      "end_paragraph_index": 158,
+      "est_seconds": 139,
+      "recap_md": "Nick explains that the parties were only a minor part of a busy summer mostly spent working at the Probity Trust and wandering New York's streets at night with a haunting loneliness."
+    },
+    {
+      "start_paragraph_index": 159,
+      "end_paragraph_index": 161,
+      "est_seconds": 102,
+      "recap_md": "Nick grows fond of Jordan Baker again over the summer, while recognizing that she is 'incurably dishonest,' recalling both a lie about a borrowed car and her golf tournament scandal."
+    },
+    {
+      "start_paragraph_index": 162,
+      "end_paragraph_index": 171,
+      "est_seconds": 65,
+      "recap_md": "Nick and Jordan spar lightly over her careless driving, and though he feels a flicker of love for her, the chapter closes with his claim to be one of the few honest people he has ever known."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Nick was invited to this particular party by a chauffeur who delivered a formal note from Gatsby, hand-signed 'Jay Gatsby' - unlike most guests, who simply showed up uninvited.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "Lucille tells the group that after she tore her gown at a previous party, Gatsby asked for her name and address and, within a week, sent her a new evening gown from Croirier's.",
+      "block_indices": [2]
+    },
+    {
+      "statement": "At the table, guests speculate that Gatsby once killed a man, and separately that he was a German spy during the war - though one guest counters that he was actually in the American army.",
+      "block_indices": [3]
+    },
+    {
+      "statement": "The drunk 'owl-eyed' man in Gatsby's library is astonished to discover that the books on the shelves are real printed volumes with actual pages, not cardboard props.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "Nick spends part of the evening talking with a stranger about the war before the man suddenly says, 'I'm Gatsby' - not the older, heavier man Nick had pictured.",
+      "block_indices": [5]
+    },
+    {
+      "statement": "Jordan tells Nick that Gatsby once told her he was an Oxford man, but she says she doesn't believe it.",
+      "block_indices": [6]
+    },
+    {
+      "statement": "As they say goodnight, Gatsby reminds Nick not to forget that they are going up in the hydroplane together the next morning at nine o'clock.",
+      "block_indices": [8]
+    },
+    {
+      "statement": "At the wrecked car in the ditch, the drunk owl-eyed man insists, 'I wasn't driving. There's another man in the car.'",
+      "block_indices": [9]
+    },
+    {
+      "statement": "The last thing Nick sees as he walks home is Gatsby standing alone on the porch, his hand raised in a formal gesture of farewell.",
+      "block_indices": [10]
+    },
+    {
+      "statement": "Nick says he actually spent most of that summer working at the Probity Trust in the mornings and studying investments at the Yale Club library in the evenings, not at parties.",
+      "block_indices": [11]
+    },
+    {
+      "statement": "Nick concludes that Jordan Baker is 'incurably dishonest' after recalling that she once left a borrowed car out in the rain and then lied about it.",
+      "block_indices": [12]
+    },
+    {
+      "statement": "Chapter 3 ends with Nick declaring, 'I am one of the few honest people that I have ever known.'",
+      "block_indices": [13]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "How did Nick come to attend this particular Gatsby party?",
+      "options": [
+        "He simply arrived like most other guests, without a formal invitation",
+        "A chauffeur delivered a formal note, hand-signed by Gatsby, inviting him",
+        "Jordan Baker called him on the phone and invited him personally",
+        "He received a printed invitation card mailed to his office in the city"
+      ],
+      "answer_index": 1,
+      "explanation": "Unlike most guests, who 'were not invited - they went there,' Nick received a surprisingly formal note delivered by a chauffeur, 'signed Jay Gatsby, in a majestic hand.'"
+    },
+    {
+      "item_index": 1,
+      "prompt": "What does Lucille say happened after she tore her gown at a previous Gatsby party?",
+      "options": [
+        "Gatsby asked for her name and address and sent her a new gown from Croirier's within a week",
+        "She had to pay for the damage and was asked not to return",
+        "Jordan lent her a spare dress for the rest of the night",
+        "She never went back to another one of Gatsby's parties"
+      ],
+      "answer_index": 0,
+      "explanation": "Lucille says Gatsby 'asked me my name and address - inside of a week I got a package from Croirier's with a new evening gown in it.'"
+    },
+    {
+      "item_index": 2,
+      "prompt": "What do the guests at the table speculate about Gatsby's past?",
+      "options": [
+        "That he once killed a man, and separately that he was a German spy during the war",
+        "That he served heroically in the American army and was highly decorated",
+        "That he inherited his wealth from a family estate in the Midwest",
+        "That he was once secretly engaged to Jordan Baker"
+      ],
+      "answer_index": 0,
+      "explanation": "One girl says 'Somebody told me they thought he killed a man once,' and Lucille adds 'it's more that he was a German spy during the war' - another guest only says he was 'in the American army during the war,' not that he was a decorated hero."
+    },
+    {
+      "item_index": 3,
+      "prompt": "What does the drunk man in Gatsby's library find so astonishing?",
+      "options": [
+        "That the library contains a secret passage behind the bookshelves",
+        "That the books are real printed volumes with actual pages, not cardboard props",
+        "That the shelves are stocked entirely with first-edition Shakespeare",
+        "That Gatsby has personally read every book in the collection"
+      ],
+      "answer_index": 1,
+      "explanation": "He cries, 'Absolutely real - have pages and everything. I thought they'd be a nice durable cardboard,' amazed that the library is 'a bona-fide piece of printed matter.'"
+    },
+    {
+      "item_index": 4,
+      "prompt": "What does Nick realize once the stranger he's been chatting with reveals himself?",
+      "options": [
+        "That the man was Gatsby all along, not the older, heavier man Nick had pictured",
+        "That the man was actually Gatsby's chauffeur, testing the guests",
+        "That the man was Tom Buchanan in disguise",
+        "That the man was one of the owl-eyed man's drinking companions"
+      ],
+      "answer_index": 0,
+      "explanation": "'\"I'm Gatsby,\" he said suddenly' - Nick had 'expected that Mr. Gatsby would be a florid and corpulent person in his middle years,' the opposite of the 'elegant young roughneck' beside him."
+    },
+    {
+      "item_index": 5,
+      "prompt": "What does Jordan tell Nick about Gatsby's background when he presses her?",
+      "options": [
+        "That Gatsby once told her he was an Oxford man, though she doesn't believe it",
+        "That Gatsby grew up on the same street as her family in Louisville",
+        "That Gatsby confided he inherited his fortune from an uncle",
+        "That Gatsby refuses to discuss his past with anyone, including her"
+      ],
+      "answer_index": 0,
+      "explanation": "Jordan says, 'he told me once he was an Oxford man,' but immediately adds, 'However, I don't believe it.'"
+    },
+    {
+      "item_index": 6,
+      "prompt": "What does Gatsby remind Nick of as they say goodnight?",
+      "options": [
+        "Their planned hydroplane ride together at nine o'clock the next morning",
+        "A dinner invitation to meet Daisy and Tom later that week",
+        "That Nick still owes him for a broken cocktail glass",
+        "A business meeting about bonds scheduled for the following Monday"
+      ],
+      "answer_index": 0,
+      "explanation": "Gatsby tells him, 'don't forget we're going up in the hydroplane tomorrow morning, at nine o'clock.'"
+    },
+    {
+      "item_index": 7,
+      "prompt": "What does the drunk man ('Owl Eyes') claim about the wrecked coupe in the ditch?",
+      "options": [
+        "That he wasn't driving, and that there is another man in the car",
+        "That the car was sabotaged by one of Gatsby's rivals",
+        "That he had bought the car only that afternoon",
+        "That the wheel had been stolen before the crash"
+      ],
+      "answer_index": 0,
+      "explanation": "He insists, '\"You don't understand,\" explained the criminal. \"I wasn't driving. There's another man in the car.\"'"
+    },
+    {
+      "item_index": 8,
+      "prompt": "What is the last image Nick sees as he walks home from the party?",
+      "options": [
+        "Gatsby dancing with one of the girls in yellow",
+        "Gatsby standing alone on the porch, his hand raised in a formal farewell",
+        "Gatsby driving off in his Rolls-Royce to follow the wrecked car",
+        "Gatsby arguing with the owl-eyed man about the crash"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick describes 'the figure of the host, who stood on the porch, his hand up in a formal gesture of farewell' - isolated even at the height of his own party."
+    },
+    {
+      "item_index": 9,
+      "prompt": "How does Nick say he actually spent most of his time that summer?",
+      "options": [
+        "Attending Gatsby's parties several nights a week",
+        "Working at the Probity Trust and studying investments in the evenings",
+        "Traveling back and forth to the Midwest to visit his family",
+        "Managing Tom Buchanan's investment portfolio"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick says, 'Most of the time I worked... I hurried down the white chasms of lower New York to the Probity Trust,' and spent evenings studying 'investments and securities' at the Yale Club library."
+    },
+    {
+      "item_index": 10,
+      "prompt": "What does Nick recall about Jordan that leads him to conclude she is 'incurably dishonest'?",
+      "options": [
+        "She left a borrowed car out in the rain and then lied about it",
+        "She admitted to cheating on her college entrance exams",
+        "She confessed to forging a letter from her aunt",
+        "She was caught taking money from Daisy's purse"
+      ],
+      "answer_index": 0,
+      "explanation": "Nick recalls that 'she left a borrowed car out in the rain with the top down, and then lied about it' - which also brings back the earlier golf-tournament scandal and leads him to call her 'incurably dishonest.'"
+    },
+    {
+      "item_index": 11,
+      "prompt": "How does Nick describe himself at the very end of Chapter 3?",
+      "options": [
+        "As one of the few honest people he has ever known",
+        "As the most careless driver in New York",
+        "As a man hopelessly in love with Jordan Baker",
+        "As someone who has finally broken off his tie to the girl back home"
+      ],
+      "answer_index": 0,
+      "explanation": "The chapter closes: 'Everyone suspects himself of at least one of the cardinal virtues, and this is mine: I am one of the few honest people that I have ever known.'"
+    }
+  ],
+  "exercises": []
+}

@@ -108,5 +108,1145 @@
     "question_ids": [
       "q0011"
     ]
+  },
+  {
+    "id": "k0012",
+    "block_ids": [
+      "b0015"
+    ],
+    "statement": "The eyes of Doctor T. J. Eckleburg, brooding over the valley of ashes, are actually a giant faded advertising billboard for an oculist who set them up to fatten his practice and then moved away or went blind himself.",
+    "question_ids": [
+      "q0012"
+    ]
+  },
+  {
+    "id": "k0013",
+    "block_ids": [
+      "b0016"
+    ],
+    "statement": "At Wilson's garage, Tom quietly tells Myrtle to get on the next train and meet him by the newsstand on the lower level, arranging their rendezvous right in front of her oblivious husband.",
+    "question_ids": [
+      "q0013"
+    ]
+  },
+  {
+    "id": "k0014",
+    "block_ids": [
+      "b0017"
+    ],
+    "statement": "On the way into New York, Myrtle buys a puppy from a street peddler who claims it is an Airedale, even after Tom flatly tells her 'that's no police dog.'",
+    "question_ids": [
+      "q0014"
+    ]
+  },
+  {
+    "id": "k0015",
+    "block_ids": [
+      "b0018"
+    ],
+    "statement": "Nick tells us that the afternoon at Myrtle's apartment was only the second time in his life he had been drunk.",
+    "question_ids": [
+      "q0015"
+    ]
+  },
+  {
+    "id": "k0016",
+    "block_ids": [
+      "b0019"
+    ],
+    "statement": "Once Myrtle changes into an elaborate cream-coloured chiffon dress, the intense vitality she had at the garage converts into an affected, impressive hauteur.",
+    "question_ids": [
+      "q0016"
+    ]
+  },
+  {
+    "id": "k0017",
+    "block_ids": [
+      "b0021"
+    ],
+    "statement": "Catherine tells Nick that Gatsby is rumored to be a nephew or cousin of Kaiser Wilhelm's, and that this is supposedly where his money comes from.",
+    "question_ids": [
+      "q0017"
+    ]
+  },
+  {
+    "id": "k0018",
+    "block_ids": [
+      "b0021"
+    ],
+    "statement": "Catherine claims Tom can't marry Myrtle because his wife is Catholic and won't allow divorce, but Nick privately notes that Daisy is not actually Catholic - it is a lie.",
+    "question_ids": [
+      "q0018"
+    ]
+  },
+  {
+    "id": "k0019",
+    "block_ids": [
+      "b0022"
+    ],
+    "statement": "Myrtle says she married George Wilson because she thought he was a gentleman who 'knew something about breeding'; Catherine adds that the couple has lived over the garage for eleven years and that Tom is Myrtle's first affair.",
+    "question_ids": [
+      "q0019"
+    ]
+  },
+  {
+    "id": "k0020",
+    "block_ids": [
+      "b0024"
+    ],
+    "statement": "When Myrtle keeps shouting Daisy's name in the apartment, Tom breaks her nose with a short, deft movement of his open hand.",
+    "question_ids": [
+      "q0020"
+    ]
+  },
+  {
+    "id": "k0021",
+    "block_ids": [
+      "b0026"
+    ],
+    "statement": "Nick was invited to this particular party by a chauffeur who delivered a formal note from Gatsby, hand-signed 'Jay Gatsby' - unlike most guests, who simply showed up uninvited.",
+    "question_ids": [
+      "q0021"
+    ]
+  },
+  {
+    "id": "k0022",
+    "block_ids": [
+      "b0027"
+    ],
+    "statement": "Lucille tells the group that after she tore her gown at a previous party, Gatsby asked for her name and address and, within a week, sent her a new evening gown from Croirier's.",
+    "question_ids": [
+      "q0022"
+    ]
+  },
+  {
+    "id": "k0023",
+    "block_ids": [
+      "b0028"
+    ],
+    "statement": "At the table, guests speculate that Gatsby once killed a man, and separately that he was a German spy during the war - though one guest counters that he was actually in the American army.",
+    "question_ids": [
+      "q0023"
+    ]
+  },
+  {
+    "id": "k0024",
+    "block_ids": [
+      "b0029"
+    ],
+    "statement": "The drunk 'owl-eyed' man in Gatsby's library is astonished to discover that the books on the shelves are real printed volumes with actual pages, not cardboard props.",
+    "question_ids": [
+      "q0024"
+    ]
+  },
+  {
+    "id": "k0025",
+    "block_ids": [
+      "b0030"
+    ],
+    "statement": "Nick spends part of the evening talking with a stranger about the war before the man suddenly says, 'I'm Gatsby' - not the older, heavier man Nick had pictured.",
+    "question_ids": [
+      "q0025"
+    ]
+  },
+  {
+    "id": "k0026",
+    "block_ids": [
+      "b0031"
+    ],
+    "statement": "Jordan tells Nick that Gatsby once told her he was an Oxford man, but she says she doesn't believe it.",
+    "question_ids": [
+      "q0026"
+    ]
+  },
+  {
+    "id": "k0027",
+    "block_ids": [
+      "b0033"
+    ],
+    "statement": "As they say goodnight, Gatsby reminds Nick not to forget that they are going up in the hydroplane together the next morning at nine o'clock.",
+    "question_ids": [
+      "q0027"
+    ]
+  },
+  {
+    "id": "k0028",
+    "block_ids": [
+      "b0034"
+    ],
+    "statement": "At the wrecked car in the ditch, the drunk owl-eyed man insists, 'I wasn't driving. There's another man in the car.'",
+    "question_ids": [
+      "q0028"
+    ]
+  },
+  {
+    "id": "k0029",
+    "block_ids": [
+      "b0035"
+    ],
+    "statement": "The last thing Nick sees as he walks home is Gatsby standing alone on the porch, his hand raised in a formal gesture of farewell.",
+    "question_ids": [
+      "q0029"
+    ]
+  },
+  {
+    "id": "k0030",
+    "block_ids": [
+      "b0036"
+    ],
+    "statement": "Nick says he actually spent most of that summer working at the Probity Trust in the mornings and studying investments at the Yale Club library in the evenings, not at parties.",
+    "question_ids": [
+      "q0030"
+    ]
+  },
+  {
+    "id": "k0031",
+    "block_ids": [
+      "b0037"
+    ],
+    "statement": "Nick concludes that Jordan Baker is 'incurably dishonest' after recalling that she once left a borrowed car out in the rain and then lied about it.",
+    "question_ids": [
+      "q0031"
+    ]
+  },
+  {
+    "id": "k0032",
+    "block_ids": [
+      "b0038"
+    ],
+    "statement": "Chapter 3 ends with Nick declaring, 'I am one of the few honest people that I have ever known.'",
+    "question_ids": [
+      "q0032"
+    ]
+  },
+  {
+    "id": "k0033",
+    "block_ids": [
+      "b0039"
+    ],
+    "statement": "Young women guests speculate that Gatsby is a bootlegger who 'killed a man who had found out that he was nephew to Von Hindenburg and second cousin to the devil.'",
+    "question_ids": [
+      "q0033"
+    ]
+  },
+  {
+    "id": "k0034",
+    "block_ids": [
+      "b0040"
+    ],
+    "statement": "A guest named Klipspringer attended so many of Gatsby's parties that he became known as 'the boarder' - Nick doubts he had any other home.",
+    "question_ids": [
+      "q0034"
+    ]
+  },
+  {
+    "id": "k0035",
+    "block_ids": [
+      "b0041"
+    ],
+    "statement": "Before this car ride, Nick's initial impression that Gatsby was a person of 'some undefined consequence' had faded, and Gatsby had come to seem simply 'the proprietor of an elaborate roadhouse next door.'",
+    "question_ids": [
+      "q0035"
+    ]
+  },
+  {
+    "id": "k0036",
+    "block_ids": [
+      "b0042"
+    ],
+    "statement": "When Nick asks what part of the Middle West Gatsby comes from, Gatsby answers 'San Francisco' - a detail that doesn't actually fit, since San Francisco is not in the Middle West.",
+    "question_ids": [
+      "q0036"
+    ]
+  },
+  {
+    "id": "k0037",
+    "block_ids": [
+      "b0043"
+    ],
+    "statement": "As proof of his stories, Gatsby shows Nick a medal from Montenegro inscribed 'Major Jay Gatsby, For Valour Extraordinary,' and a photograph of himself at Oxford holding a cricket bat.",
+    "question_ids": [
+      "q0037"
+    ]
+  },
+  {
+    "id": "k0038",
+    "block_ids": [
+      "b0044"
+    ],
+    "statement": "A motorcycle policeman stops Gatsby's car for speeding, but waves them on after Gatsby shows him a white card, explaining he once did the police commissioner 'a favour.'",
+    "question_ids": [
+      "q0038"
+    ]
+  },
+  {
+    "id": "k0039",
+    "block_ids": [
+      "b0045"
+    ],
+    "statement": "At lunch, Gatsby's associate Meyer Wolfshiem tells a story about the night 'Rosy' Rosenthal was shot outside the old Metropole restaurant after being called outside despite a warning to stay in the room.",
+    "question_ids": [
+      "q0039"
+    ]
+  },
+  {
+    "id": "k0040",
+    "block_ids": [
+      "b0046"
+    ],
+    "statement": "Wolfshiem repeatedly mispronounces Oxford as 'Oggsford,' calling Gatsby 'an Oggsford man' and insisting it's 'one of the most famous colleges in the world.'",
+    "question_ids": [
+      "q0040"
+    ]
+  },
+  {
+    "id": "k0041",
+    "block_ids": [
+      "b0047"
+    ],
+    "statement": "Gatsby reveals that Meyer Wolfshiem is 'the man who fixed the World's Series back in 1919' - a gambler, not an actor or a dentist as Nick had guessed.",
+    "question_ids": [
+      "q0041"
+    ]
+  },
+  {
+    "id": "k0042",
+    "block_ids": [
+      "b0048"
+    ],
+    "statement": "Jordan recalls that in October 1917, eighteen-year-old Daisy Fay - the most popular girl in Louisville - was sitting in her white roadster with a young lieutenant Jordan later realized was Jay Gatsby.",
+    "question_ids": [
+      "q0042"
+    ]
+  },
+  {
+    "id": "k0043",
+    "block_ids": [
+      "b0049"
+    ],
+    "statement": "The night before her wedding, Daisy got extremely drunk holding a letter she wouldn't let go of, and tried to give back the pearl necklace Tom had given her, saying 'Daisy's change' her mine.'",
+    "question_ids": [
+      "q0043"
+    ]
+  },
+  {
+    "id": "k0044",
+    "block_ids": [
+      "b0050"
+    ],
+    "statement": "About six weeks before this conversation, Daisy heard the name Gatsby for the first time in years when Jordan mentioned knowing a Gatsby in West Egg, and Daisy reacted in 'the strangest voice.'",
+    "question_ids": [
+      "q0044"
+    ]
+  },
+  {
+    "id": "k0045",
+    "block_ids": [
+      "b0051"
+    ],
+    "statement": "Jordan reveals that it was not a coincidence Gatsby's mansion is in West Egg: 'Gatsby bought that house so that Daisy would be just across the bay.'",
+    "question_ids": [
+      "q0045"
+    ]
+  },
+  {
+    "id": "k0046",
+    "block_ids": [
+      "b0051"
+    ],
+    "statement": "Jordan explains Gatsby's actual request: he wants Nick to invite Daisy to his house for tea some afternoon, without her knowing Gatsby will be there, so that he can 'come over.'",
+    "question_ids": [
+      "q0046"
+    ]
+  },
+  {
+    "id": "k0047",
+    "block_ids": [
+      "b0052"
+    ],
+    "statement": "Gatsby awkwardly offers Nick a vague, lucrative 'confidential' side business - clarifying it has nothing to do with his associate Wolfshiem - but Nick declines, unwilling to accept a favor in exchange for arranging Daisy's visit.",
+    "question_ids": [
+      "q0047"
+    ]
+  },
+  {
+    "id": "k0048",
+    "block_ids": [
+      "b0052"
+    ],
+    "statement": "When Nick comes home that night, he is afraid for a moment that his own house is on fire, because Gatsby's mansion next door is 'lit from tower to cellar.'",
+    "question_ids": [
+      "q0048"
+    ]
+  },
+  {
+    "id": "k0049",
+    "block_ids": [
+      "b0053"
+    ],
+    "statement": "When Nick warns Daisy over the phone not to bring Tom to the tea, she responds only with 'Who is Tom?' as if the name means nothing to her.",
+    "question_ids": [
+      "q0049"
+    ]
+  },
+  {
+    "id": "k0050",
+    "block_ids": [
+      "b0054"
+    ],
+    "statement": "When Daisy first steps into Nick's house, the living room is deserted, and moments later Gatsby appears at the door, 'pale as death,' standing in a puddle of rainwater.",
+    "question_ids": [
+      "q0050"
+    ]
+  },
+  {
+    "id": "k0051",
+    "block_ids": [
+      "b0054"
+    ],
+    "statement": "Just before Daisy's car arrives, an anxious Gatsby nearly gives up waiting, declaring 'Nobody's coming to tea. It's too late!' and that he 'can't wait all day.'",
+    "question_ids": [
+      "q0051"
+    ]
+  },
+  {
+    "id": "k0052",
+    "block_ids": [
+      "b0055"
+    ],
+    "statement": "During the tense reunion in Nick's living room, Gatsby leans back against the mantelpiece so far that he nearly knocks an old clock to the floor, catching it just in time.",
+    "question_ids": [
+      "q0052"
+    ]
+  },
+  {
+    "id": "k0053",
+    "block_ids": [
+      "b0055"
+    ],
+    "statement": "When Nick tries to slip away and give Gatsby and Daisy privacy, a distressed Gatsby follows him into the kitchen and insists that the whole visit is 'a terrible, terrible mistake.'",
+    "question_ids": [
+      "q0053"
+    ]
+  },
+  {
+    "id": "k0054",
+    "block_ids": [
+      "b0056"
+    ],
+    "statement": "Nick recalls that the brewer who built Gatsby's mansion offered to pay five years of his neighbors' taxes if they thatched their roofs, hoping to 'Found a Family' - when they refused, he went into decline, and his children eventually sold the house.",
+    "question_ids": [
+      "q0054"
+    ]
+  },
+  {
+    "id": "k0055",
+    "block_ids": [
+      "b0056"
+    ],
+    "statement": "When Nick returns inside after the rain stops, he finds Daisy's face streaked with tears but Gatsby transformed - he 'literally glowed,' radiating a new sense of well-being.",
+    "question_ids": [
+      "q0055"
+    ]
+  },
+  {
+    "id": "k0056",
+    "block_ids": [
+      "b0057"
+    ],
+    "statement": "Gatsby gives Nick a vague and contradictory account of his fortune, at one point saying he inherited it but 'lost most of it in the big panic - the panic of the war,' and claiming he has been in the drug business and the oil business.",
+    "question_ids": [
+      "q0056"
+    ]
+  },
+  {
+    "id": "k0057",
+    "block_ids": [
+      "b0058"
+    ],
+    "statement": "While showing off his wardrobe, Gatsby throws down pile after pile of his beautiful imported shirts, and Daisy suddenly bursts into tears, sobbing that she has never seen such beautiful shirts before.",
+    "question_ids": [
+      "q0057"
+    ]
+  },
+  {
+    "id": "k0058",
+    "block_ids": [
+      "b0058"
+    ],
+    "statement": "During the house tour, the group finds Mr. Klipspringer, the 'boarder,' doing exercises on the floor of one of Gatsby's rooms, still in his pajamas.",
+    "question_ids": [
+      "q0058"
+    ]
+  },
+  {
+    "id": "k0059",
+    "block_ids": [
+      "b0059"
+    ],
+    "statement": "Looking across the bay at the green light on Daisy's dock, Gatsby senses that its 'colossal significance' has now vanished, since it is 'again a green light on a dock' rather than a distant symbol of Daisy.",
+    "question_ids": [
+      "q0059"
+    ]
+  },
+  {
+    "id": "k0060",
+    "block_ids": [
+      "b0060"
+    ],
+    "statement": "As the visit draws to a close, Nick senses a faint doubt creeping into Gatsby's happiness, reflecting that 'no amount of fire or freshness can challenge what a man can store up in his ghostly heart.'",
+    "question_ids": [
+      "q0060"
+    ]
+  },
+  {
+    "id": "k0061",
+    "block_ids": [
+      "b0061"
+    ],
+    "statement": "James Gatz changed his name to Jay Gatsby at the age of seventeen, at the exact moment he saw Dan Cody's yacht drop anchor on the most insidious flat on Lake Superior.",
+    "question_ids": [
+      "q0061"
+    ]
+  },
+  {
+    "id": "k0062",
+    "block_ids": [
+      "b0061"
+    ],
+    "statement": "Gatsby's parents were 'shiftless and unsuccessful farm people' whom he never really accepted as his parents; Nick explains that Jay Gatsby 'sprang from his Platonic conception of himself.'",
+    "question_ids": [
+      "q0062"
+    ]
+  },
+  {
+    "id": "k0063",
+    "block_ids": [
+      "b0062"
+    ],
+    "statement": "Before meeting Dan Cody, Gatz spent over a year drifting along the south shore of Lake Superior as a clam-digger and salmon-fisher, his nights filled with grotesque, fantastic reveries.",
+    "question_ids": [
+      "q0063"
+    ]
+  },
+  {
+    "id": "k0064",
+    "block_ids": [
+      "b0062"
+    ],
+    "statement": "Gatz briefly attended the small Lutheran College of St. Olaf's in Minnesota but left after only two weeks, 'dismayed at its ferocious indifference to the drums of his destiny.'",
+    "question_ids": [
+      "q0064"
+    ]
+  },
+  {
+    "id": "k0065",
+    "block_ids": [
+      "b0062"
+    ],
+    "statement": "Dan Cody, a fifty-year-old mining millionaire, took young Gatz aboard after Gatz rowed out to warn him his yacht might be caught by a squall; Cody then outfitted him with new clothes and a new life at sea.",
+    "question_ids": [
+      "q0065"
+    ]
+  },
+  {
+    "id": "k0066",
+    "block_ids": [
+      "b0063"
+    ],
+    "statement": "Gatsby served Dan Cody for five years in various shipboard roles, but after Cody died, Ella Kaye maneuvered the legal system so Gatsby never received the twenty-five-thousand-dollar legacy Cody had left him.",
+    "question_ids": [
+      "q0066"
+    ]
+  },
+  {
+    "id": "k0067",
+    "block_ids": [
+      "b0064"
+    ],
+    "statement": "Nick explains that Gatsby told him this entire backstory much later, at a time when Nick had reached the point of 'believing everything and nothing about him,' and that Nick relates it now to dispel the wild early rumors.",
+    "question_ids": [
+      "q0067"
+    ]
+  },
+  {
+    "id": "k0068",
+    "block_ids": [
+      "b0064"
+    ],
+    "statement": "Tom Buchanan unexpectedly arrived at Gatsby's house as part of a horseback-riding party with a man named Sloane and a woman; Gatsby, visibly affected, claimed he had met Tom before and pointedly said 'I know your wife.'",
+    "question_ids": [
+      "q0068"
+    ]
+  },
+  {
+    "id": "k0069",
+    "block_ids": [
+      "b0065"
+    ],
+    "statement": "After the woman impulsively invited Gatsby to supper, Mr. Sloane maneuvered the riding party into leaving without waiting for Gatsby, who had gone inside to fetch his coat because he had no horse of his own.",
+    "question_ids": [
+      "q0069"
+    ]
+  },
+  {
+    "id": "k0070",
+    "block_ids": [
+      "b0066"
+    ],
+    "statement": "When Tom brought Daisy to one of Gatsby's parties, Nick sensed 'an unpleasantness in the air, a pervading harshness that hadn't been there before,' and Gatsby introduced Tom to guests as 'the polo player.'",
+    "question_ids": [
+      "q0070"
+    ]
+  },
+  {
+    "id": "k0071",
+    "block_ids": [
+      "b0067"
+    ],
+    "statement": "Despite saying she liked individual guests such as the movie star, Daisy tells Nick she was 'appalled by West Egg,' finding something awful in its raw vigour and simplicity.",
+    "question_ids": [
+      "q0071"
+    ]
+  },
+  {
+    "id": "k0072",
+    "block_ids": [
+      "b0068"
+    ],
+    "statement": "Waiting for their car, Tom speculates that Gatsby is 'some big bootlegger,' while Daisy defends the party by repeating Gatsby's own cover story that he made his money owning a chain of drugstores.",
+    "question_ids": [
+      "q0072"
+    ]
+  },
+  {
+    "id": "k0073",
+    "block_ids": [
+      "b0069"
+    ],
+    "statement": "After the party, Gatsby tells Nick that Daisy didn't enjoy herself and insists she must go to Tom and say 'I never loved you,' erasing their four years of marriage before he and Daisy could remarry.",
+    "question_ids": [
+      "q0073"
+    ]
+  },
+  {
+    "id": "k0074",
+    "block_ids": [
+      "b0069"
+    ],
+    "statement": "When Nick cautions that 'you can't repeat the past,' Gatsby cries incredulously, 'Why of course you can!' - revealing his belief that he can restore everything with Daisy exactly as it was five years before.",
+    "question_ids": [
+      "q0074"
+    ]
+  },
+  {
+    "id": "k0075",
+    "block_ids": [
+      "b0070"
+    ],
+    "statement": "Nick recounts that five years earlier, on an autumn night in Louisville, Gatsby kissed Daisy for the first time, an act after which, the narration says, his mind would 'never romp again like the mind of God.'",
+    "question_ids": [
+      "q0075"
+    ]
+  },
+  {
+    "id": "k0076",
+    "block_ids": [
+      "b0071"
+    ],
+    "statement": "Gatsby dismissed every one of his old servants and replaced them with a new staff who would not gossip, because Daisy had been coming over often in the afternoons.",
+    "question_ids": [
+      "q0076"
+    ]
+  },
+  {
+    "id": "k0077",
+    "block_ids": [
+      "b0072"
+    ],
+    "statement": "When Nick and Gatsby arrive at the Buchanans', Daisy and Jordan are found lying motionless on a couch in the cooled, shadowed room, complaining that the heat makes them unable to move.",
+    "question_ids": [
+      "q0077"
+    ]
+  },
+  {
+    "id": "k0078",
+    "block_ids": [
+      "b0073"
+    ],
+    "statement": "While Tom is out of the room getting drinks, Daisy kisses Gatsby and tells him, 'You know I love you,' in front of Nick and Jordan.",
+    "question_ids": [
+      "q0078"
+    ]
+  },
+  {
+    "id": "k0079",
+    "block_ids": [
+      "b0074"
+    ],
+    "statement": "When Daisy's young daughter Pammy is brought in and shown off, Gatsby keeps looking at her with surprise, as Nick notes he had probably never really believed in the child's existence before.",
+    "question_ids": [
+      "q0079"
+    ]
+  },
+  {
+    "id": "k0080",
+    "block_ids": [
+      "b0075"
+    ],
+    "statement": "At lunch, Daisy stares at Gatsby and repeats that he 'always looks so cool'; Tom sees this and, astounded, realizes for the first time that Daisy loves Gatsby.",
+    "question_ids": [
+      "q0080"
+    ]
+  },
+  {
+    "id": "k0081",
+    "block_ids": [
+      "b0076"
+    ],
+    "statement": "As they wait to leave for town, Gatsby tells Nick that 'Her voice is full of money' - the realization that finally explains, for Nick, the irresistible charm of Daisy's voice.",
+    "question_ids": [
+      "q0081"
+    ]
+  },
+  {
+    "id": "k0082",
+    "block_ids": [
+      "b0077"
+    ],
+    "statement": "In the car, Tom - having just realized Daisy loves Gatsby - reveals he has made 'a small investigation' into Gatsby's past and mocks the idea, raised by Jordan, that Gatsby is 'an Oxford man.'",
+    "question_ids": [
+      "q0082"
+    ]
+  },
+  {
+    "id": "k0083",
+    "block_ids": [
+      "b0078"
+    ],
+    "statement": "At the garage, a visibly sick George Wilson tells Tom he needs money because he and Myrtle are planning to move out West, news that startles Tom since it threatens to take his mistress away.",
+    "question_ids": [
+      "q0083"
+    ]
+  },
+  {
+    "id": "k0084",
+    "block_ids": [
+      "b0079"
+    ],
+    "statement": "As they leave the garage, Myrtle watches from an upstairs window, but Nick realizes her jealous, frightened stare is fixed not on Tom but on Jordan Baker, whom she mistakes for Tom's wife.",
+    "question_ids": [
+      "q0084"
+    ]
+  },
+  {
+    "id": "k0085",
+    "block_ids": [
+      "b0081"
+    ],
+    "statement": "At the Plaza Hotel suite, Gatsby tells Tom, 'Why not let her alone, old sport?' and Tom retaliates by mocking Gatsby's habitual catchphrase, demanding, 'Where'd you pick that up?'",
+    "question_ids": [
+      "q0085"
+    ]
+  },
+  {
+    "id": "k0086",
+    "block_ids": [
+      "b0083"
+    ],
+    "statement": "Pressed by Tom about Oxford, Gatsby finally explains that he really did attend Oxford for five months in 1919, as part of a postwar program that let some army officers study at English or French universities.",
+    "question_ids": [
+      "q0086"
+    ]
+  },
+  {
+    "id": "k0087",
+    "block_ids": [
+      "b0084"
+    ],
+    "statement": "When Tom demands to know 'what kind of a row' Gatsby is causing, Gatsby finally declares outright that Daisy 'never loved' Tom and 'loves' only him.",
+    "question_ids": [
+      "q0087"
+    ]
+  },
+  {
+    "id": "k0088",
+    "block_ids": [
+      "b0085"
+    ],
+    "statement": "Gatsby says that he and Daisy have secretly loved each other for five years without Tom knowing; under pressure from both men, Daisy tells Tom, 'I never loved him,' though only with visible reluctance.",
+    "question_ids": [
+      "q0088"
+    ]
+  },
+  {
+    "id": "k0089",
+    "block_ids": [
+      "b0086"
+    ],
+    "statement": "Pressed further by Tom about specific shared memories, Daisy finally admits the truth is more complicated than a flat denial: 'I did love him once - but I loved you too.'",
+    "question_ids": [
+      "q0089"
+    ]
+  },
+  {
+    "id": "k0090",
+    "block_ids": [
+      "b0087"
+    ],
+    "statement": "Tom reveals he has investigated Gatsby's business with Meyer Wolfshiem, exposing that Gatsby's 'drugstores' were a front for illegally selling grain alcohol, and that Gatsby let his associate Walter Chase go to jail while he himself stayed clear.",
+    "question_ids": [
+      "q0090"
+    ]
+  },
+  {
+    "id": "k0091",
+    "block_ids": [
+      "b0088"
+    ],
+    "statement": "As they drive back from the city after the confrontation, Nick realizes it is his thirtieth birthday and reflects gloomily on 'the promise of a decade of loneliness' ahead of him.",
+    "question_ids": [
+      "q0091"
+    ]
+  },
+  {
+    "id": "k0092",
+    "block_ids": [
+      "b0089"
+    ],
+    "statement": "At the inquest, Michaelis testifies that Wilson had locked Myrtle in a room upstairs, planning to move away with her in two days, and that Myrtle later broke free, ran into the road, and was struck and instantly killed by a car that did not stop.",
+    "question_ids": [
+      "q0092"
+    ]
+  },
+  {
+    "id": "k0093",
+    "block_ids": [
+      "b0090"
+    ],
+    "statement": "At the scene of Myrtle's death, witnesses describe the hit-and-run vehicle as a big, new, yellow car, matching the description of the car Gatsby had been driving that afternoon.",
+    "question_ids": [
+      "q0093"
+    ]
+  },
+  {
+    "id": "k0094",
+    "block_ids": [
+      "b0091"
+    ],
+    "statement": "Tom quietly tells the grief-stricken Wilson that the yellow car he was driving that afternoon 'wasn't mine' and that he 'hasn't seen it all afternoon' - a lie, since it was Gatsby's car - though once clear of the crowd, Tom breaks down sobbing over Myrtle's death.",
+    "question_ids": [
+      "q0094"
+    ]
+  },
+  {
+    "id": "k0095",
+    "block_ids": [
+      "b0093"
+    ],
+    "statement": "Waiting outside the Buchanans' house, Gatsby tells Nick he already suspected Myrtle was killed and had already told Daisy, believing 'it's better that the shock should all come at once.'",
+    "question_ids": [
+      "q0095"
+    ]
+  },
+  {
+    "id": "k0096",
+    "block_ids": [
+      "b0094"
+    ],
+    "statement": "Gatsby reveals to Nick that it was actually Daisy driving at the moment of the accident, and that he intends to claim he was the one driving in order to protect her.",
+    "question_ids": [
+      "q0096"
+    ]
+  },
+  {
+    "id": "k0097",
+    "block_ids": [
+      "b0095"
+    ],
+    "statement": "Peering through a pantry window, Nick sees Tom and Daisy sitting together over an untouched plate of cold chicken, talking intently in a way that gives 'an unmistakable air of natural intimacy,' as if they were conspiring together.",
+    "question_ids": [
+      "q0097"
+    ]
+  },
+  {
+    "id": "k0098",
+    "block_ids": [
+      "b0096"
+    ],
+    "statement": "Gatsby tells Nick that 'nothing happened' the night before - he waited outside and Daisy only appeared at her window once, around four o'clock, before turning out the light.",
+    "question_ids": [
+      "q0098"
+    ]
+  },
+  {
+    "id": "k0099",
+    "block_ids": [
+      "b0097"
+    ],
+    "statement": "Gatsby deliberately let Daisy believe he was from the same social class as her and could take care of her, concealing that he actually had no family fortune behind him.",
+    "question_ids": [
+      "q0099"
+    ]
+  },
+  {
+    "id": "k0100",
+    "block_ids": [
+      "b0099"
+    ],
+    "statement": "It was Tom Buchanan's arrival in the middle of spring, while Gatsby was still stuck at Oxford, that finally decided Daisy's choice.",
+    "question_ids": [
+      "q0100"
+    ]
+  },
+  {
+    "id": "k0101",
+    "block_ids": [
+      "b0100"
+    ],
+    "statement": "At dawn, Gatsby insists to Nick that whatever happened between Daisy and Tom was 'just personal,' refusing to believe Daisy ever really loved Tom.",
+    "question_ids": [
+      "q0101"
+    ]
+  },
+  {
+    "id": "k0102",
+    "block_ids": [
+      "b0100"
+    ],
+    "statement": "After the war, penniless, Gatsby made a mournful pilgrimage back to Louisville on the last of his army pay, searching the city for traces of Daisy even though she was already gone.",
+    "question_ids": [
+      "q0102"
+    ]
+  },
+  {
+    "id": "k0103",
+    "block_ids": [
+      "b0101"
+    ],
+    "statement": "As Nick leaves for the last time, he impulsively shouts across the lawn that Gatsby is worth more than the whole 'rotten crowd' of Tom, Daisy, and their circle - the only compliment Nick says he ever gave him.",
+    "question_ids": [
+      "q0103"
+    ]
+  },
+  {
+    "id": "k0104",
+    "block_ids": [
+      "b0102"
+    ],
+    "statement": "Jordan calls Nick at noon to say she has left Daisy's house and is heading to Southampton, but their conversation turns cold and they part without arranging to meet.",
+    "question_ids": [
+      "q0104"
+    ]
+  },
+  {
+    "id": "k0105",
+    "block_ids": [
+      "b0103"
+    ],
+    "statement": "Around three o'clock in the morning, Wilson's muttering turns to the mysterious yellow car, and he blurts out that Myrtle had once come home from the city with her face bruised and her nose swollen.",
+    "question_ids": [
+      "q0105"
+    ]
+  },
+  {
+    "id": "k0106",
+    "block_ids": [
+      "b0104"
+    ],
+    "statement": "Michaelis finds an expensive dog leash of leather and braided silver in a drawer, which Wilson says Myrtle had hidden wrapped in tissue paper - proof to Wilson that she had a secret lover, whom he says 'killed her.'",
+    "question_ids": [
+      "q0106"
+    ]
+  },
+  {
+    "id": "k0107",
+    "block_ids": [
+      "b0105"
+    ],
+    "statement": "As dawn breaks, Michaelis realizes with a shock that Wilson has been staring at the giant faded eyes of the Doctor T. J. Eckleburg billboard, mistaking them for the eyes of God.",
+    "question_ids": [
+      "q0107"
+    ]
+  },
+  {
+    "id": "k0108",
+    "block_ids": [
+      "b0106"
+    ],
+    "statement": "Wilson's movements after leaving the garage are traced on foot through Port Roosevelt and Gad's Hill, and by half-past two he reaches West Egg, where he asks for directions to Gatsby's house - so he already knows Gatsby's name.",
+    "question_ids": [
+      "q0108"
+    ]
+  },
+  {
+    "id": "k0109",
+    "block_ids": [
+      "b0107"
+    ],
+    "statement": "While waiting in vain for a phone call, Gatsby is shot dead by Wilson while floating on a mattress in his own swimming pool; Wilson's own body is then found nearby in the grass.",
+    "question_ids": [
+      "q0109"
+    ]
+  },
+  {
+    "id": "k0110",
+    "block_ids": [
+      "b0108"
+    ],
+    "statement": "When Nick calls Daisy soon after Gatsby's death, he learns that she and Tom left that afternoon and took their baggage with them, leaving no address.",
+    "question_ids": [
+      "q0110"
+    ]
+  },
+  {
+    "id": "k0111",
+    "block_ids": [
+      "b0109"
+    ],
+    "statement": "Searching Gatsby's desk for information about his family, Nick finds nothing except an old photograph of Dan Cody staring down from the wall.",
+    "question_ids": [
+      "q0111"
+    ]
+  },
+  {
+    "id": "k0112",
+    "block_ids": [
+      "b0109"
+    ],
+    "statement": "A caller named Slagle, believing he has reached Gatsby, mentions that 'Young Parke' was just arrested for passing stolen bonds over the counter; he goes silent and hangs up when Nick tells him Gatsby is dead.",
+    "question_ids": [
+      "q0112"
+    ]
+  },
+  {
+    "id": "k0113",
+    "block_ids": [
+      "b0110"
+    ],
+    "statement": "Gatsby's father, Henry Gatz, arrives from a town in Minnesota after reading about the death in a Chicago newspaper, and insists his son be buried in the East because 'he rose up to his position' there.",
+    "question_ids": [
+      "q0113"
+    ]
+  },
+  {
+    "id": "k0114",
+    "block_ids": [
+      "b0111"
+    ],
+    "statement": "Klipspringer, who had stayed at Gatsby's house so often he seemed almost a fixture there, calls not to help with the funeral but to ask Nick to send him a pair of tennis shoes he left behind.",
+    "question_ids": [
+      "q0114"
+    ]
+  },
+  {
+    "id": "k0115",
+    "block_ids": [
+      "b0112"
+    ],
+    "statement": "Wolfshiem tells Nick that when he first met Gatsby, the young man was so poor he was still wearing his army uniform because he couldn't afford regular clothes, and says of himself, 'I raised him up out of nothing, right out of the gutter.'",
+    "question_ids": [
+      "q0115"
+    ]
+  },
+  {
+    "id": "k0116",
+    "block_ids": [
+      "b0112"
+    ],
+    "statement": "Wolfshiem refuses to attend Gatsby's funeral, explaining that his rule when a man is killed is to 'keep out' and not get mixed up in it.",
+    "question_ids": [
+      "q0116"
+    ]
+  },
+  {
+    "id": "k0117",
+    "block_ids": [
+      "b0113"
+    ],
+    "statement": "Among Gatsby's boyhood possessions, Mr. Gatz shows Nick an old copy of 'Hopalong Cassidy' with a handwritten self-improvement schedule and a list of 'General Resolves' inside, including 'Be better to parents.'",
+    "question_ids": [
+      "q0117"
+    ]
+  },
+  {
+    "id": "k0118",
+    "block_ids": [
+      "b0113"
+    ],
+    "statement": "Despite Mr. Gatz's and Nick's efforts, almost no one comes to Gatsby's funeral; even the Lutheran minister waits in vain.",
+    "question_ids": [
+      "q0118"
+    ]
+  },
+  {
+    "id": "k0119",
+    "block_ids": [
+      "b0114"
+    ],
+    "statement": "At Gatsby's sparsely attended burial, the only unexpected mourner is the owl-eyed man Nick had once found marveling at Gatsby's library, who calls Gatsby 'the poor son-of-a-bitch.'",
+    "question_ids": [
+      "q0119"
+    ]
+  },
+  {
+    "id": "k0120",
+    "block_ids": [
+      "b0114"
+    ],
+    "statement": "Daisy never sends any message or flower for Gatsby's funeral.",
+    "question_ids": [
+      "q0120"
+    ]
+  },
+  {
+    "id": "k0121",
+    "block_ids": [
+      "b0115"
+    ],
+    "statement": "Reflecting on his own Christmas homecomings from college, Nick concludes that Tom, Gatsby, Daisy, Jordan, and he himself were all Westerners who shared 'some deficiency in common' making them subtly unadaptable to Eastern life.",
+    "question_ids": [
+      "q0121"
+    ]
+  },
+  {
+    "id": "k0122",
+    "block_ids": [
+      "b0116"
+    ],
+    "statement": "In their final meeting, Jordan Baker tells Nick she is engaged to another man, and accuses him of having 'thrown her over' on the telephone.",
+    "question_ids": [
+      "q0122"
+    ]
+  },
+  {
+    "id": "k0123",
+    "block_ids": [
+      "b0117"
+    ],
+    "statement": "When Nick confronts Tom about what he told Wilson, Tom admits he told him the truth - that Gatsby owned the car - and shows no remorse, saying Gatsby 'had it coming to him.'",
+    "question_ids": [
+      "q0123"
+    ]
+  },
+  {
+    "id": "k0124",
+    "block_ids": [
+      "b0117"
+    ],
+    "statement": "Nick concludes that Tom and Daisy were 'careless people' who smashed up things and creatures and then retreated back into their money, letting other people clean up the mess they made.",
+    "question_ids": [
+      "q0124"
+    ]
+  },
+  {
+    "id": "k0125",
+    "block_ids": [
+      "b0118"
+    ],
+    "statement": "The novel ends with Nick imagining Gatsby's wonder at the green light, closing with the line, 'So we beat on, boats against the current, borne back ceaselessly into the past.'",
+    "question_ids": [
+      "q0125"
+    ]
   }
 ]

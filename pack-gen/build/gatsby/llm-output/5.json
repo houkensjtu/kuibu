@@ -1,0 +1,287 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 26,
+      "est_seconds": 175,
+      "recap_md": "Nick comes home to find Gatsby's mansion blazing with light, and while the two arrange Daisy's tea visit, Gatsby awkwardly offers Nick a vague, lucrative 'confidential' business connection, which Nick declines."
+    },
+    {
+      "start_paragraph_index": 27,
+      "end_paragraph_index": 41,
+      "est_seconds": 124,
+      "recap_md": "Nick calls Daisy the next morning to invite her to tea and warns her not to bring Tom, and on the rainy day itself Gatsby has Nick's lawn mowed and the house filled with flowers before arriving himself, pale and anxious, to wait for her."
+    },
+    {
+      "start_paragraph_index": 42,
+      "end_paragraph_index": 61,
+      "est_seconds": 130,
+      "recap_md": "Impatient and fretting that Daisy will not come, Gatsby nearly gives up just before her car arrives, and after bantering with Nick in the rain she steps into an empty living room moments before Gatsby appears at the door, pale as death."
+    },
+    {
+      "start_paragraph_index": 62,
+      "end_paragraph_index": 83,
+      "est_seconds": 136,
+      "recap_md": "During the strained reunion Gatsby nearly knocks the mantelpiece clock to the floor, and once tea eases the tension Nick tries to slip away, only to be pulled into the kitchen by a panicked Gatsby insisting the whole visit is a terrible mistake."
+    },
+    {
+      "start_paragraph_index": 84,
+      "end_paragraph_index": 86,
+      "est_seconds": 118,
+      "recap_md": "Waiting alone outside, Nick recalls the failed ambitions of the brewer who built Gatsby's mansion, and when he goes back in after the rain stops he finds Daisy in tears but Gatsby transformed, glowing with sudden happiness."
+    },
+    {
+      "start_paragraph_index": 87,
+      "end_paragraph_index": 108,
+      "est_seconds": 154,
+      "recap_md": "Relieved that the rain has stopped, Gatsby invites Nick and Daisy to tour his house, offering a vague and contradictory account of his fortune, and leads them past unseen guests through the mansion's opulent rooms."
+    },
+    {
+      "start_paragraph_index": 109,
+      "end_paragraph_index": 118,
+      "est_seconds": 139,
+      "recap_md": "Upstairs they find the boarder Klipspringer exercising in his pajamas before reaching Gatsby's own apartment, where his joy curdles into restlessness and, after he throws down piles of his imported shirts, Daisy bursts into tears at their beauty."
+    },
+    {
+      "start_paragraph_index": 119,
+      "end_paragraph_index": 136,
+      "est_seconds": 128,
+      "recap_md": "As rain returns, Gatsby tells Daisy about the green light on her dock and senses its old symbolic power has vanished now that she is near, while Nick examines photographs of Gatsby's late friend Dan Cody and a young Gatsby before a business phone call briefly interrupts the visit."
+    },
+    {
+      "start_paragraph_index": 137,
+      "end_paragraph_index": 153,
+      "est_seconds": 165,
+      "recap_md": "Gatsby has Klipspringer play piano downstairs as evening falls over West Egg, and Nick, sensing a doubt creeping into Gatsby's happiness that no reality could match his years of dreaming, quietly leaves Gatsby and Daisy alone together."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Gatsby awkwardly offers Nick a vague, lucrative 'confidential' side business - clarifying it has nothing to do with his associate Wolfshiem - but Nick declines, unwilling to accept a favor in exchange for arranging Daisy's visit.",
+      "block_indices": [0]
+    },
+    {
+      "statement": "When Nick comes home that night, he is afraid for a moment that his own house is on fire, because Gatsby's mansion next door is 'lit from tower to cellar.'",
+      "block_indices": [0]
+    },
+    {
+      "statement": "When Nick warns Daisy over the phone not to bring Tom to the tea, she responds only with 'Who is Tom?' as if the name means nothing to her.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "When Daisy first steps into Nick's house, the living room is deserted, and moments later Gatsby appears at the door, 'pale as death,' standing in a puddle of rainwater.",
+      "block_indices": [2]
+    },
+    {
+      "statement": "Just before Daisy's car arrives, an anxious Gatsby nearly gives up waiting, declaring 'Nobody's coming to tea. It's too late!' and that he 'can't wait all day.'",
+      "block_indices": [2]
+    },
+    {
+      "statement": "During the tense reunion in Nick's living room, Gatsby leans back against the mantelpiece so far that he nearly knocks an old clock to the floor, catching it just in time.",
+      "block_indices": [3]
+    },
+    {
+      "statement": "When Nick tries to slip away and give Gatsby and Daisy privacy, a distressed Gatsby follows him into the kitchen and insists that the whole visit is 'a terrible, terrible mistake.'",
+      "block_indices": [3]
+    },
+    {
+      "statement": "Nick recalls that the brewer who built Gatsby's mansion offered to pay five years of his neighbors' taxes if they thatched their roofs, hoping to 'Found a Family' - when they refused, he went into decline, and his children eventually sold the house.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "When Nick returns inside after the rain stops, he finds Daisy's face streaked with tears but Gatsby transformed - he 'literally glowed,' radiating a new sense of well-being.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "Gatsby gives Nick a vague and contradictory account of his fortune, at one point saying he inherited it but 'lost most of it in the big panic - the panic of the war,' and claiming he has been in the drug business and the oil business.",
+      "block_indices": [5]
+    },
+    {
+      "statement": "While showing off his wardrobe, Gatsby throws down pile after pile of his beautiful imported shirts, and Daisy suddenly bursts into tears, sobbing that she has never seen such beautiful shirts before.",
+      "block_indices": [6]
+    },
+    {
+      "statement": "During the house tour, the group finds Mr. Klipspringer, the 'boarder,' doing exercises on the floor of one of Gatsby's rooms, still in his pajamas.",
+      "block_indices": [6]
+    },
+    {
+      "statement": "Looking across the bay at the green light on Daisy's dock, Gatsby senses that its 'colossal significance' has now vanished, since it is 'again a green light on a dock' rather than a distant symbol of Daisy.",
+      "block_indices": [7]
+    },
+    {
+      "statement": "As the visit draws to a close, Nick senses a faint doubt creeping into Gatsby's happiness, reflecting that 'no amount of fire or freshness can challenge what a man can store up in his ghostly heart.'",
+      "block_indices": [8]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "What does Gatsby awkwardly propose to Nick on the lawn that night, after arranging the tea with Daisy?",
+      "options": [
+        "That Nick introduce him to Meyer Wolfshiem's business associates",
+        "That Nick help him buy a house closer to Daisy",
+        "A vague, lucrative 'confidential' side business, which Nick declines",
+        "That Nick lend him money to finish landscaping the grounds"
+      ],
+      "answer_index": 2,
+      "explanation": "Gatsby says he carries on 'a little business on the side' that 'happens to be a rather confidential sort of thing,' but Nick cuts him off, unwilling to take a favor in exchange for arranging Daisy's visit. Gatsby then adds Nick 'wouldn't have to do any business with Wolfshiem' - Wolfshiem is a separate name Gatsby worries Nick is wary of, not the actual proposal."
+    },
+    {
+      "item_index": 1,
+      "prompt": "Why is Nick 'afraid for a moment that his house was on fire' when he comes home that night?",
+      "options": [
+        "Gatsby's mansion next door is lit from tower to cellar, blazing with light",
+        "He sees smoke coming from his own chimney",
+        "Fireworks are being set off at a neighboring estate",
+        "Tom Buchanan's car has crashed into the hedge, sparking a small fire"
+      ],
+      "answer_index": 0,
+      "explanation": "Turning a corner, Nick sees that the blaze is coming from 'Gatsby's house, lit from tower to cellar' - though oddly there is no party sound, only wind making the lights flicker on and off."
+    },
+    {
+      "item_index": 2,
+      "prompt": "When Nick calls Daisy to invite her to tea, what odd exchange follows his warning not to bring Tom?",
+      "options": [
+        "Daisy laughs and says Tom would never come anyway",
+        "Daisy asks innocently, 'Who is Tom?'",
+        "Daisy insists on bringing Jordan Baker instead",
+        "Daisy says Tom has already left on a business trip"
+      ],
+      "answer_index": 1,
+      "explanation": "After Nick repeats 'Don't bring Tom,' Daisy asks 'Who is Tom?' - an oddly innocent response given Tom is her husband."
+    },
+    {
+      "item_index": 3,
+      "prompt": "What does Nick find when he and Daisy first step inside his house together?",
+      "options": [
+        "The living room is deserted, and moments later Gatsby appears at the door pale as death, standing in a puddle of rainwater",
+        "Gatsby is already waiting for them, seated calmly by the fire",
+        "Jordan Baker is waiting for them in the living room",
+        "The Finn has laid out tea, but no one else is present"
+      ],
+      "answer_index": 0,
+      "explanation": "To Nick's 'overwhelming surprise the living-room was deserted'; moments later there is a knock, and Gatsby, 'pale as death, with his hands plunged like weights in his coat pockets,' is standing in a puddle of water outside."
+    },
+    {
+      "item_index": 4,
+      "prompt": "Just before Daisy's car arrives, what does an anxious Gatsby say about waiting for her?",
+      "options": [
+        "\"I can't wait all day\" - and he nearly leaves, thinking she isn't coming",
+        "He calmly says he doesn't mind waiting as long as it takes",
+        "He asks Nick to call Daisy and cancel the tea",
+        "He decides to go inspect his own house instead of waiting"
+      ],
+      "answer_index": 0,
+      "explanation": "Gatsby frets, 'Nobody's coming to tea. It's too late!' and 'I can't wait all day,' sitting down miserably - just as the sound of a motor turning into the lane announces Daisy's arrival."
+    },
+    {
+      "item_index": 5,
+      "prompt": "What nearly happens while Gatsby is leaning against Nick's mantelpiece during the awkward reunion?",
+      "options": [
+        "He knocks over a vase of the flowers he sent earlier",
+        "He nearly topples an old clock, catching it with trembling fingers at the last moment",
+        "He accidentally spills tea on Daisy's dress",
+        "He breaks a family photograph while gesturing"
+      ],
+      "answer_index": 1,
+      "explanation": "Gatsby's head leans back so far it rests against the clock, which 'tilt[s] dangerously at the pressure of his head'; he catches it 'with trembling fingers' and apologizes, 'I'm sorry about the clock.'"
+    },
+    {
+      "item_index": 6,
+      "prompt": "When Nick makes an excuse to leave the room, what does a distressed Gatsby say to him privately in the kitchen?",
+      "options": [
+        "That he wants to call the whole visit off and ask Daisy to leave",
+        "That Daisy seems angry with him and he wants to apologize",
+        "That this is \"a terrible, terrible mistake\"",
+        "That he suspects Nick invited Tom after all"
+      ],
+      "answer_index": 2,
+      "explanation": "Gatsby follows Nick into the kitchen and whispers 'Oh, God!' before saying, shaking his head, 'This is a terrible mistake... a terrible, terrible mistake.'"
+    },
+    {
+      "item_index": 7,
+      "prompt": "According to the story Nick recalls while waiting outside, why did the brewer who built Gatsby's mansion go into decline?",
+      "options": [
+        "His neighbors refused his offer to pay their taxes if they thatched their roofs, ruining his plan to \"Found a Family\"",
+        "He lost the house in a card game shortly after building it",
+        "His bank foreclosed on the property during a stock market crash",
+        "His children refused to live in such an extravagant house"
+      ],
+      "answer_index": 0,
+      "explanation": "The brewer had offered to pay five years' taxes on neighboring cottages if the owners thatched their roofs, hoping to 'Found a Family' - their refusal seems to have taken the heart out of his plan, and he went into an immediate decline; his children later sold the house 'with the black wreath still on the door.'"
+    },
+    {
+      "item_index": 8,
+      "prompt": "What change does Nick notice in Gatsby when he finally goes back inside after waiting under the tree?",
+      "options": [
+        "Gatsby seems embarrassed and refuses to make eye contact",
+        "Gatsby has fallen asleep in a chair, exhausted from the tension",
+        "Gatsby \"literally glowed,\" radiating a new well-being, while Daisy's face is streaked with tears",
+        "Gatsby has changed into a different suit of clothes"
+      ],
+      "answer_index": 2,
+      "explanation": "Daisy's face is smeared with tears, but 'there was a change in Gatsby that was simply confounding. He literally glowed; without a word or a gesture of exultation a new well-being radiated from him.'"
+    },
+    {
+      "item_index": 9,
+      "prompt": "When Nick asks about Gatsby's money, what does Gatsby claim about how he got it?",
+      "options": [
+        "That he inherited it but lost most of it in \"the panic of the war,\" and has since been in the drug and oil businesses",
+        "That he earned all of it honestly over three years selling bonds, just like Nick",
+        "That Daisy's family gave it to him as a wedding gift years ago",
+        "That he won it gambling with Meyer Wolfshiem in his youth"
+      ],
+      "answer_index": 0,
+      "explanation": "Gatsby says, 'I did, old sport... but I lost most of it in the big panic - the panic of the war,' then vaguely adds he's 'been in several things,' naming the drug business and the oil business - though moments earlier he'd claimed it took him 'just three years to earn the money' that bought the house, a contradiction Nick doesn't press."
+    },
+    {
+      "item_index": 10,
+      "prompt": "What makes Daisy suddenly burst into tears while touring Gatsby's bedroom?",
+      "options": [
+        "She finds an old photo of Gatsby with another woman",
+        "Gatsby throwing down pile after pile of his beautiful imported shirts overwhelms her",
+        "She overhears Gatsby's phone call about \"a small town\"",
+        "She sees the green light from his window and realizes what it meant"
+      ],
+      "answer_index": 1,
+      "explanation": "As Gatsby throws shirt after shirt onto the table, Daisy 'bent her head into the shirts and began to cry stormily,' sobbing, 'They're such beautiful shirts... It makes me sad because I've never seen such - such beautiful shirts before.'"
+    },
+    {
+      "item_index": 11,
+      "prompt": "Who do Nick, Gatsby, and Daisy discover doing exercises on the floor in his pajamas during the house tour?",
+      "options": [
+        "Meyer Wolfshiem",
+        "Mr. Klipspringer, the 'boarder'",
+        "Gatsby's butler",
+        "Nick himself, having dozed off earlier"
+      ],
+      "answer_index": 1,
+      "explanation": "They intrude into 'one chamber where a dishevelled man in pyjamas was doing liver exercises on the floor. It was Mr. Klipspringer, the \"boarder.\"'"
+    },
+    {
+      "item_index": 12,
+      "prompt": "What does Gatsby realize about the green light on Daisy's dock now that she is close to him?",
+      "options": [
+        "That its \"colossal significance\" has now vanished, since it is \"again a green light on a dock\"",
+        "That it was never actually visible from his house at all",
+        "That Daisy has been signaling to him with it for years without his knowledge",
+        "That he wants to have it removed now that she is his"
+      ],
+      "answer_index": 0,
+      "explanation": "Nick reflects that for Gatsby, 'the colossal significance of that light had now vanished forever'; what once seemed 'as close as a star to the moon' was 'now... again a green light on a dock. His count of enchanted objects had diminished by one.'"
+    },
+    {
+      "item_index": 13,
+      "prompt": "As the visit ends, what does Nick sense is happening to Gatsby's feelings about Daisy?",
+      "options": [
+        "A faint doubt is creeping in, since no reality could match five years of dreaming about her",
+        "Gatsby has completely lost interest in Daisy now that he has her attention",
+        "Gatsby has decided to end things with Daisy to protect Tom's feelings",
+        "Gatsby is planning to propose to Daisy that same afternoon"
+      ],
+      "answer_index": 0,
+      "explanation": "Nick notices 'the expression of bewilderment' return to Gatsby's face, sensing that Daisy inevitably 'tumbled short of his dreams' - as Nick puts it, 'no amount of fire or freshness can challenge what a man can store up in his ghostly heart.'"
+    }
+  ],
+  "exercises": []
+}

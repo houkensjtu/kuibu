@@ -1,0 +1,309 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 6,
+      "est_seconds": 121,
+      "recap_md": "A young reporter's visit reveals that Gatsby's notoriety has grown into legend, and Nick discloses that Gatsby was really born James Gatz, a farm boy who invented Jay Gatsby as his ideal self."
+    },
+    {
+      "start_paragraph_index": 7,
+      "end_paragraph_index": 11,
+      "est_seconds": 154,
+      "recap_md": "As a young drifter working the shores of Lake Superior, Gatz filled his nights with grandiose fantasies until Dan Cody's yacht anchored nearby and changed his fate."
+    },
+    {
+      "start_paragraph_index": 12,
+      "end_paragraph_index": 15,
+      "est_seconds": 72,
+      "recap_md": "Gatsby spent five years in Dan Cody's service, but after Cody's death Ella Kaye seized the fortune he had been promised, leaving him only his hard-won polish."
+    },
+    {
+      "start_paragraph_index": 16,
+      "end_paragraph_index": 37,
+      "est_seconds": 114,
+      "recap_md": "Nick explains Gatsby told him this backstory much later, then recalls the awkward afternoon when Tom Buchanan unexpectedly rode over with Sloane and a woman for drinks."
+    },
+    {
+      "start_paragraph_index": 38,
+      "end_paragraph_index": 59,
+      "est_seconds": 122,
+      "recap_md": "The woman impulsively invites Gatsby and Nick to supper, but Sloane maneuvers the riding party into leaving before Gatsby can join them."
+    },
+    {
+      "start_paragraph_index": 60,
+      "end_paragraph_index": 79,
+      "est_seconds": 148,
+      "recap_md": "Tom accompanies Daisy to one of Gatsby's parties, and Nick senses an unfamiliar oppressiveness as Gatsby shows off celebrity guests and dances with Daisy."
+    },
+    {
+      "start_paragraph_index": 80,
+      "end_paragraph_index": 96,
+      "est_seconds": 141,
+      "recap_md": "While Tom slips off to flirt with another woman, Nick and Daisy watch a drunken scene at a nearby table and a movie director kissing his star, and Daisy admits the raw vitality of West Egg appalls her."
+    },
+    {
+      "start_paragraph_index": 97,
+      "end_paragraph_index": 116,
+      "est_seconds": 136,
+      "recap_md": "Waiting for their car, Tom speculates that Gatsby is a bootlegger while Daisy defends the party and repeats Gatsby's own cover story about owning drugstores."
+    },
+    {
+      "start_paragraph_index": 117,
+      "end_paragraph_index": 131,
+      "est_seconds": 95,
+      "recap_md": "After the guests leave, Gatsby confides to Nick that Daisy didn't enjoy the party and insists that she must renounce Tom entirely, since he believes the past can be repeated."
+    },
+    {
+      "start_paragraph_index": 132,
+      "end_paragraph_index": 135,
+      "est_seconds": 108,
+      "recap_md": "Nick recalls Gatsby's memory of the autumn night five years earlier in Louisville when he first kissed Daisy and irrevocably bound his vast dreams to her."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "James Gatz changed his name to Jay Gatsby at the age of seventeen, at the exact moment he saw Dan Cody's yacht drop anchor on the most insidious flat on Lake Superior.",
+      "block_indices": [0]
+    },
+    {
+      "statement": "Gatsby's parents were 'shiftless and unsuccessful farm people' whom he never really accepted as his parents; Nick explains that Jay Gatsby 'sprang from his Platonic conception of himself.'",
+      "block_indices": [0]
+    },
+    {
+      "statement": "Before meeting Dan Cody, Gatz spent over a year drifting along the south shore of Lake Superior as a clam-digger and salmon-fisher, his nights filled with grotesque, fantastic reveries.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "Gatz briefly attended the small Lutheran College of St. Olaf's in Minnesota but left after only two weeks, 'dismayed at its ferocious indifference to the drums of his destiny.'",
+      "block_indices": [1]
+    },
+    {
+      "statement": "Dan Cody, a fifty-year-old mining millionaire, took young Gatz aboard after Gatz rowed out to warn him his yacht might be caught by a squall; Cody then outfitted him with new clothes and a new life at sea.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "Gatsby served Dan Cody for five years in various shipboard roles, but after Cody died, Ella Kaye maneuvered the legal system so Gatsby never received the twenty-five-thousand-dollar legacy Cody had left him.",
+      "block_indices": [2]
+    },
+    {
+      "statement": "Nick explains that Gatsby told him this entire backstory much later, at a time when Nick had reached the point of 'believing everything and nothing about him,' and that Nick relates it now to dispel the wild early rumors.",
+      "block_indices": [3]
+    },
+    {
+      "statement": "Tom Buchanan unexpectedly arrived at Gatsby's house as part of a horseback-riding party with a man named Sloane and a woman; Gatsby, visibly affected, claimed he had met Tom before and pointedly said 'I know your wife.'",
+      "block_indices": [3]
+    },
+    {
+      "statement": "After the woman impulsively invited Gatsby to supper, Mr. Sloane maneuvered the riding party into leaving without waiting for Gatsby, who had gone inside to fetch his coat because he had no horse of his own.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "When Tom brought Daisy to one of Gatsby's parties, Nick sensed 'an unpleasantness in the air, a pervading harshness that hadn't been there before,' and Gatsby introduced Tom to guests as 'the polo player.'",
+      "block_indices": [5]
+    },
+    {
+      "statement": "Despite saying she liked individual guests such as the movie star, Daisy tells Nick she was 'appalled by West Egg,' finding something awful in its raw vigour and simplicity.",
+      "block_indices": [6]
+    },
+    {
+      "statement": "Waiting for their car, Tom speculates that Gatsby is 'some big bootlegger,' while Daisy defends the party by repeating Gatsby's own cover story that he made his money owning a chain of drugstores.",
+      "block_indices": [7]
+    },
+    {
+      "statement": "After the party, Gatsby tells Nick that Daisy didn't enjoy herself and insists she must go to Tom and say 'I never loved you,' erasing their four years of marriage before he and Daisy could remarry.",
+      "block_indices": [8]
+    },
+    {
+      "statement": "When Nick cautions that 'you can't repeat the past,' Gatsby cries incredulously, 'Why of course you can!' - revealing his belief that he can restore everything with Daisy exactly as it was five years before.",
+      "block_indices": [8]
+    },
+    {
+      "statement": "Nick recounts that five years earlier, on an autumn night in Louisville, Gatsby kissed Daisy for the first time, an act after which, the narration says, his mind would 'never romp again like the mind of God.'",
+      "block_indices": [9]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "According to Nick, at what moment did James Gatz change his name to Jay Gatsby?",
+      "options": [
+        "When he graduated from St. Olaf's College",
+        "The moment he saw Dan Cody's yacht drop anchor on Lake Superior",
+        "When he first met Daisy in Louisville",
+        "After he returned from serving in the war"
+      ],
+      "answer_index": 1,
+      "explanation": "The text says he changed his name 'at the specific moment that witnessed the beginning of his career - when he saw Dan Cody's yacht drop anchor over the most insidious flat on Lake Superior.'"
+    },
+    {
+      "item_index": 1,
+      "prompt": "What does Nick say about the origin of the 'Jay Gatsby' persona?",
+      "options": [
+        "He was born into wealth but hid it out of modesty",
+        "He sprang from his own 'Platonic conception of himself,' invented to replace the shiftless farm parents he never accepted",
+        "He adopted the name after inheriting it from a wealthy uncle",
+        "He created the persona only after meeting Daisy, to impress her family"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick writes that 'the truth was that Jay Gatsby of West Egg, Long Island, sprang from his Platonic conception of himself' - his parents were 'shiftless and unsuccessful farm people' he never accepted as his own. This invention predates Daisy entirely."
+    },
+    {
+      "item_index": 2,
+      "prompt": "How did young Gatz support himself in the year before he met Dan Cody, and how did he spend his nights?",
+      "options": [
+        "He worked as a clam-digger and salmon-fisher, and at night indulged in grotesque, fantastic reveries",
+        "He worked as a deckhand on fishing trawlers, and at night studied navigation",
+        "He worked odd jobs in Duluth, and at night wrote letters to Daisy",
+        "He worked as a janitor at St. Olaf's College, and at night read philosophy"
+      ],
+      "answer_index": 0,
+      "explanation": "'For over a year he had been beating his way along the south shore of Lake Superior as a clam-digger and a salmon-fisher,' and 'the most grotesque and fantastic conceits haunted him in his bed at night.'"
+    },
+    {
+      "item_index": 3,
+      "prompt": "What happened when Gatz enrolled at St. Olaf's College?",
+      "options": [
+        "He excelled academically but left to care for his ill father",
+        "He stayed only two weeks, dismayed by the college's indifference to his sense of destiny, and despising the janitor's work he did to pay his way",
+        "He was expelled for fighting",
+        "He graduated but found no job prospects afterward"
+      ],
+      "answer_index": 1,
+      "explanation": "He 'stayed there two weeks, dismayed at its ferocious indifference to the drums of his destiny, to destiny itself, and despising the janitor's work with which he was to pay his way.'"
+    },
+    {
+      "item_index": 4,
+      "prompt": "How did young Gatz first come to Dan Cody's attention?",
+      "options": [
+        "He applied for a job posted at the Duluth docks",
+        "He rowed out to Cody's yacht to warn him that a wind might break it up on the shoals",
+        "Cody's crew rescued him after his own boat capsized",
+        "He was introduced by Ella Kaye, a mutual acquaintance"
+      ],
+      "answer_index": 1,
+      "explanation": "'It was already Jay Gatsby who borrowed a rowboat, pulled out to the Tuolomee, and informed Cody that a wind might catch him and break him up in half an hour.' (Duluth is only where Cody later took him to buy clothes.)"
+    },
+    {
+      "item_index": 5,
+      "prompt": "What happened to the twenty-five thousand dollars Dan Cody left to Gatsby in his will?",
+      "options": [
+        "Gatsby received it in full and used it to buy his mansion",
+        "Ella Kaye used a legal device Gatsby never understood to keep the money for herself",
+        "Gatsby donated it to St. Olaf's College",
+        "Cody's family contested the will and split the money with Gatsby"
+      ],
+      "answer_index": 1,
+      "explanation": "'He didn't get it. He never understood the legal device that was used against him, but what remained of the millions went intact to Ella Kaye.'"
+    },
+    {
+      "item_index": 6,
+      "prompt": "Why does Nick say he is telling the reader Gatsby's true backstory at this point?",
+      "options": [
+        "To prove that the wild rumors about Gatsby were actually true",
+        "Because Gatsby told him all of it much later, and Nick wants to dispel the false early rumors about Gatsby's origins",
+        "Because Daisy asked him to set the record straight",
+        "Because a newspaper had just published a false exposé about Gatsby"
+      ],
+      "answer_index": 1,
+      "explanation": "'He told me all this very much later, but I've put it down here with the idea of exploding those first wild rumours about his antecedents, which weren't even faintly true.'"
+    },
+    {
+      "item_index": 7,
+      "prompt": "What does Gatsby say to Tom during Tom's unexpected visit with the riding party?",
+      "options": [
+        "He pretends not to recognize Tom at all",
+        "He claims they've met before and tells Tom, almost aggressively, 'I know your wife'",
+        "He immediately asks Tom for a business favor",
+        "He apologizes for the noise of his parties"
+      ],
+      "answer_index": 1,
+      "explanation": "Gatsby says, 'I believe we've met somewhere before, Mr. Buchanan,' and then, 'almost aggressively,' \"I know your wife.\""
+    },
+    {
+      "item_index": 8,
+      "prompt": "What happens after Gatsby goes inside to get ready to follow the riding party to supper?",
+      "options": [
+        "Sloane and the others wait patiently for him on the porch",
+        "The group rides off without him just as he comes out the front door",
+        "Tom insists they all stay at Gatsby's house instead",
+        "The woman changes her mind and cancels the supper invitation"
+      ],
+      "answer_index": 1,
+      "explanation": "Having no horse, Gatsby says he'll follow by car and goes to get ready; meanwhile 'they trotted quickly down the drive, disappearing under the August foliage just as Gatsby... came out the front door.'"
+    },
+    {
+      "item_index": 9,
+      "prompt": "What does Nick notice about the atmosphere of Gatsby's party once Tom and Daisy attend together?",
+      "options": [
+        "It feels exactly the same as every other party that summer",
+        "He senses an unfamiliar 'unpleasantness in the air, a pervading harshness that hadn't been there before'",
+        "It feels unusually quiet and subdued compared to earlier parties",
+        "He notices the guests are far more sober than usual"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick says he 'felt an unpleasantness in the air, a pervading harshness that hadn't been there before' - the same party now seen, he suspects, through Daisy's judgmental eyes."
+    },
+    {
+      "item_index": 10,
+      "prompt": "How does Daisy ultimately feel about Gatsby's party, despite liking a few individual guests?",
+      "options": [
+        "She feels perfectly at home and wants to move to West Egg",
+        "She is appalled by West Egg's raw vigour and finds something awful in its simplicity",
+        "She is bored and falls asleep during the party",
+        "She insists on leaving the moment she arrives"
+      ],
+      "answer_index": 1,
+      "explanation": "'She was appalled by West Egg... appalled by its raw vigour that chafed under the old euphemisms... She saw something awful in the very simplicity she failed to understand.'"
+    },
+    {
+      "item_index": 11,
+      "prompt": "What does Tom suspect about the source of Gatsby's wealth, and how does Daisy respond?",
+      "options": [
+        "Tom suspects Gatsby inherited it; Daisy says he won it gambling",
+        "Tom suspects Gatsby is a big bootlegger; Daisy claims Gatsby built up a chain of drugstores himself",
+        "Tom suspects Gatsby is a con man; Daisy says he's actually broke",
+        "Tom suspects Gatsby stole it from Dan Cody; Daisy denies knowing anything"
+      ],
+      "answer_index": 1,
+      "explanation": "'\"Who is this Gatsby anyhow?\" demanded Tom suddenly. \"Some big bootlegger?\"' Daisy answers, '\"He owned some drugstores, a lot of drugstores. He built them up himself.\"'"
+    },
+    {
+      "item_index": 12,
+      "prompt": "What does Gatsby want Daisy to do, according to Nick?",
+      "options": [
+        "Simply divorce Tom quietly without any confrontation",
+        "Go to Tom and say 'I never loved you,' erasing their four years of marriage",
+        "Move to Europe with him immediately",
+        "Publicly announce their relationship at the next party"
+      ],
+      "answer_index": 1,
+      "explanation": "'He wanted nothing less of Daisy than that she should go to Tom and say: \"I never loved you.\" After she had obliterated four years with that sentence they could decide upon the more practical measures to be taken.'"
+    },
+    {
+      "item_index": 13,
+      "prompt": "How does Gatsby respond when Nick suggests 'you can't repeat the past'?",
+      "options": [
+        "He agrees sadly and admits he must move on",
+        "He cries incredulously, 'Why of course you can!'",
+        "He changes the subject and refuses to answer",
+        "He laughs it off as a joke"
+      ],
+      "answer_index": 1,
+      "explanation": "\"'Can't repeat the past?' he cried incredulously. 'Why of course you can!'\" - a direct statement of his central delusion."
+    },
+    {
+      "item_index": 14,
+      "prompt": "What does the narration say happened the moment Gatsby first kissed Daisy, five years before in Louisville?",
+      "options": [
+        "He realized immediately that their romance was a mistake",
+        "He knew his mind would never 'romp again like the mind of God,' and Daisy 'blossomed for him like a flower'",
+        "He proposed marriage to her on the spot",
+        "He decided then to change his name and reinvent himself"
+      ],
+      "answer_index": 1,
+      "explanation": "'He knew that when he kissed this girl... his mind would never romp again like the mind of God.' Then, 'At his lips' touch she blossomed for him like a flower and the incarnation was complete.'"
+    }
+  ],
+  "exercises": []
+}

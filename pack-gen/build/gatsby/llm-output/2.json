@@ -1,0 +1,213 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 3,
+      "est_seconds": 123,
+      "recap_md": "Nick describes the desolate valley of ashes and the huge, fading eyes of Doctor T. J. Eckleburg on an old billboard, then explains this is where he first met Tom Buchanan's mistress."
+    },
+    {
+      "start_paragraph_index": 4,
+      "end_paragraph_index": 20,
+      "est_seconds": 163,
+      "recap_md": "Tom forces Nick off the train at the valley of ashes to visit George Wilson's garage, and after bantering with Wilson about buying his car, quietly arranges to meet Wilson's wife, Myrtle, on the next train."
+    },
+    {
+      "start_paragraph_index": 21,
+      "end_paragraph_index": 42,
+      "est_seconds": 148,
+      "recap_md": "Myrtle joins Nick and Tom's trip into New York in a separate train car for propriety, buys magazines and perfume, and impulsively buys a puppy from a street peddler despite Tom pointing out it isn't really a police dog."
+    },
+    {
+      "start_paragraph_index": 43,
+      "end_paragraph_index": 51,
+      "est_seconds": 138,
+      "recap_md": "At Myrtle's small, overcrowded apartment, Tom and Myrtle disappear together for a while, and Nick gets drunk for only the second time in his life."
+    },
+    {
+      "start_paragraph_index": 52,
+      "end_paragraph_index": 58,
+      "est_seconds": 131,
+      "recap_md": "Myrtle's sister Catherine and the McKees from downstairs arrive, and after Myrtle changes into an elaborate dress her manner shifts into an affected hauteur as she complains about being overcharged by a woman who examined her feet."
+    },
+    {
+      "start_paragraph_index": 59,
+      "end_paragraph_index": 74,
+      "est_seconds": 97,
+      "recap_md": "Amid compliments on Myrtle's dress, the photographer Mr. McKee talks about his work, including framed studies of Montauk Point, while Tom grows visibly bored."
+    },
+    {
+      "start_paragraph_index": 75,
+      "end_paragraph_index": 104,
+      "est_seconds": 142,
+      "recap_md": "Catherine tells Nick that Gatsby is rumored to be a relative of Kaiser Wilhelm, falsely claims Tom can't divorce because his wife is Catholic, and Mrs. McKee recalls a disastrous trip to Monte Carlo."
+    },
+    {
+      "start_paragraph_index": 105,
+      "end_paragraph_index": 117,
+      "est_seconds": 98,
+      "recap_md": "Myrtle explains that she married George Wilson because she mistakenly believed he was a gentleman, and Catherine reveals the couple has lived above the garage for eleven years, with Tom as Myrtle's first affair."
+    },
+    {
+      "start_paragraph_index": 118,
+      "end_paragraph_index": 123,
+      "est_seconds": 142,
+      "recap_md": "As the party wears on, Myrtle tells Nick the story of how she first met Tom on a train, and rambles through a list of things she needs to buy before McKee falls asleep in his chair."
+    },
+    {
+      "start_paragraph_index": 124,
+      "end_paragraph_index": 136,
+      "est_seconds": 98,
+      "recap_md": "When Myrtle keeps shouting Daisy's name, Tom breaks her nose with a single blow, and the chapter closes with Nick, dazed and half-drunk, waiting for his train home at Pennsylvania Station."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "The eyes of Doctor T. J. Eckleburg, brooding over the valley of ashes, are actually a giant faded advertising billboard for an oculist who set them up to fatten his practice and then moved away or went blind himself.",
+      "block_indices": [0]
+    },
+    {
+      "statement": "At Wilson's garage, Tom quietly tells Myrtle to get on the next train and meet him by the newsstand on the lower level, arranging their rendezvous right in front of her oblivious husband.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "On the way into New York, Myrtle buys a puppy from a street peddler who claims it is an Airedale, even after Tom flatly tells her 'that's no police dog.'",
+      "block_indices": [2]
+    },
+    {
+      "statement": "Nick tells us that the afternoon at Myrtle's apartment was only the second time in his life he had been drunk.",
+      "block_indices": [3]
+    },
+    {
+      "statement": "Once Myrtle changes into an elaborate cream-coloured chiffon dress, the intense vitality she had at the garage converts into an affected, impressive hauteur.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "Catherine tells Nick that Gatsby is rumored to be a nephew or cousin of Kaiser Wilhelm's, and that this is supposedly where his money comes from.",
+      "block_indices": [6]
+    },
+    {
+      "statement": "Catherine claims Tom can't marry Myrtle because his wife is Catholic and won't allow divorce, but Nick privately notes that Daisy is not actually Catholic - it is a lie.",
+      "block_indices": [6]
+    },
+    {
+      "statement": "Myrtle says she married George Wilson because she thought he was a gentleman who 'knew something about breeding'; Catherine adds that the couple has lived over the garage for eleven years and that Tom is Myrtle's first affair.",
+      "block_indices": [7]
+    },
+    {
+      "statement": "When Myrtle keeps shouting Daisy's name in the apartment, Tom breaks her nose with a short, deft movement of his open hand.",
+      "block_indices": [9]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "What are the eyes of Doctor T. J. Eckleburg, which brood over the valley of ashes?",
+      "options": [
+        "A giant faded advertising billboard for an eye doctor, left behind after the oculist who put it up moved away",
+        "A pair of binoculars a hunter left behind on the ash heaps",
+        "The real eyes of Doctor Eckleburg, an elderly physician who still lives in the valley",
+        "A mural painted by local children on the side of Wilson's garage"
+      ],
+      "answer_index": 0,
+      "explanation": "Nick explains that 'some wild wag of an oculist set them there to fatten his practice in the borough of Queens, and then sank down himself into eternal blindness, or forgot them and moved away' - the eyes are just an abandoned billboard, not a real person."
+    },
+    {
+      "item_index": 1,
+      "prompt": "How does Tom arrange to meet Wilson's wife after visiting the garage?",
+      "options": [
+        "He tells her openly, in front of Wilson, to meet him at the garage that evening",
+        "He quietly tells her to get on the next train and meet him by the newsstand on the lower level",
+        "He sends Wilson to fetch her from her sister's house in New York",
+        "He has Nick arrange to pick her up later that week"
+      ],
+      "answer_index": 1,
+      "explanation": "While Wilson is out of earshot, Tom says intently, 'I want to see you... Get on the next train,' then adds, 'I'll meet you by the newsstand on the lower level' - arranging the rendezvous right under her husband's nose."
+    },
+    {
+      "item_index": 2,
+      "prompt": "What happens when Myrtle buys a dog from the street peddler on the way into New York?",
+      "options": [
+        "The peddler has no dogs left and promises to bring one the following week",
+        "She buys what the peddler calls an Airedale, though Tom immediately says it's not a police dog",
+        "Tom refuses to let her buy any dog at all",
+        "The peddler admits he only sells cats, not dogs"
+      ],
+      "answer_index": 1,
+      "explanation": "Tom flatly says, 'That's no police dog,' and the peddler backpedals: 'it's more of an Airedale' - the dog Myrtle buys for ten dollars and fondles in her lap the rest of the ride."
+    },
+    {
+      "item_index": 3,
+      "prompt": "What does Nick say about his own state at Myrtle's apartment party?",
+      "options": [
+        "He stayed completely sober so he could observe everyone clearly",
+        "It was only the second time in his life he had been drunk",
+        "He had been drunk many times before, so it felt routine",
+        "He got drunk for the very first time in his life"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick tells us, 'I have been drunk just twice in my life, and the second time was that afternoon,' which is why his account of the party has 'a dim, hazy cast over it.'"
+    },
+    {
+      "item_index": 4,
+      "prompt": "How does Myrtle's manner change once she puts on her elaborate afternoon dress?",
+      "options": [
+        "She becomes quieter and more self-conscious than she was at the garage",
+        "Her vitality from the garage converts into an affected, impressive hauteur",
+        "She grows anxious and asks Tom to take her home",
+        "She becomes more polite and deferential toward her guests"
+      ],
+      "answer_index": 1,
+      "explanation": "Once dressed, 'the intense vitality that had been so remarkable in the garage was converted into impressive hauteur,' and her laughter and gestures grow 'more violently affected moment by moment.'"
+    },
+    {
+      "item_index": 5,
+      "prompt": "What rumor does Catherine share with Nick about his neighbor Gatsby?",
+      "options": [
+        "That he is a nephew or cousin of Kaiser Wilhelm's, and that's where his money comes from",
+        "That he made his fortune bootlegging with a business partner named Wolfsheim",
+        "That he was once engaged to Daisy before the war",
+        "That he inherited his mansion from a distant uncle"
+      ],
+      "answer_index": 0,
+      "explanation": "Catherine tells Nick, 'Well, they say he's a nephew or a cousin of Kaiser Wilhelm's. That's where all his money comes from' - one of the wild early rumors about Gatsby's origins."
+    },
+    {
+      "item_index": 6,
+      "prompt": "According to Catherine, why can't Tom marry Myrtle - and what does Nick think of this explanation?",
+      "options": [
+        "Catherine says Tom's wife is Catholic and won't allow divorce - a claim Nick knows is a lie, since Daisy isn't Catholic",
+        "Catherine says Tom's wife controls all his money, and Nick agrees this is likely true",
+        "Catherine says Myrtle herself doesn't actually want to marry Tom, which Nick finds believable",
+        "Catherine says Wilson would never grant Myrtle a divorce, which Nick confirms is accurate"
+      ],
+      "answer_index": 0,
+      "explanation": "Catherine claims, 'It's really his wife that's keeping them apart. She's a Catholic, and they don't believe in divorce,' but Nick notes privately, 'Daisy was not a Catholic, and I was a little shocked at the elaborateness of the lie.'"
+    },
+    {
+      "item_index": 7,
+      "prompt": "Why does Myrtle say she married George Wilson, and what does Catherine add about their marriage?",
+      "options": [
+        "Myrtle says she thought he was a gentleman who knew about breeding; Catherine adds they've lived over the garage eleven years and Tom is Myrtle's first affair",
+        "Myrtle says she married him for his money; Catherine adds they plan to divorce within the year",
+        "Myrtle says her family arranged the marriage; Catherine adds Wilson used to be wealthy",
+        "Myrtle says she loved him deeply at the time; Catherine adds this is Myrtle's third affair"
+      ],
+      "answer_index": 0,
+      "explanation": "Myrtle says, 'I married him because I thought he was a gentleman... but he wasn't fit to lick my shoe,' and Catherine adds the couple have been 'living over that garage for eleven years,' with 'Tom's the first sweetie she ever had.'"
+    },
+    {
+      "item_index": 8,
+      "prompt": "What does Tom do when Myrtle keeps shouting Daisy's name in the apartment?",
+      "options": [
+        "He storms out of the apartment without a word",
+        "He breaks her nose with a short, deft blow of his open hand",
+        "He calls a taxi and sends her home immediately",
+        "He threatens to tell Wilson about the affair"
+      ],
+      "answer_index": 1,
+      "explanation": "After Myrtle shrieks, 'Daisy! Daisy! Daisy! I'll say it whenever I want to!', 'making a short deft movement, Tom Buchanan broke her nose with his open hand.'"
+    }
+  ],
+  "exercises": []
+}

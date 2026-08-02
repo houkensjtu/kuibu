@@ -1,0 +1,311 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 4,
+      "est_seconds": 110,
+      "recap_md": "Guests speculate that Gatsby is a bootlegger who once killed a man, and Nick recalls writing down the names of East Egg guests who came to Gatsby's parties that summer on an old train timetable."
+    },
+    {
+      "start_paragraph_index": 5,
+      "end_paragraph_index": 10,
+      "est_seconds": 119,
+      "recap_md": "Nick continues listing the West Egg guests - including movie people, gamblers, and a permanent fixture named Klipspringer known as 'the boarder' - who came to Gatsby's house that summer."
+    },
+    {
+      "start_paragraph_index": 11,
+      "end_paragraph_index": 19,
+      "est_seconds": 100,
+      "recap_md": "One July morning Gatsby drives over in his conspicuous cream-colored car to invite Nick to lunch in the city, and Nick admits his early impression of Gatsby as someone important has faded."
+    },
+    {
+      "start_paragraph_index": 20,
+      "end_paragraph_index": 32,
+      "est_seconds": 100,
+      "recap_md": "During the drive, Gatsby asks Nick's opinion of him and volunteers his life story: a wealthy Middle Western family (all now dead), an Oxford education, and a period living like a 'young rajah' collecting jewels across Europe."
+    },
+    {
+      "start_paragraph_index": 33,
+      "end_paragraph_index": 42,
+      "est_seconds": 105,
+      "recap_md": "Gatsby continues his story with an account of wartime heroism in the Argonne Forest, then produces a medal from Montenegro inscribed 'Major Jay Gatsby, For Valour Extraordinary' and a photograph of himself at Oxford as proof."
+    },
+    {
+      "start_paragraph_index": 43,
+      "end_paragraph_index": 59,
+      "est_seconds": 164,
+      "recap_md": "Gatsby says he'll make a big request of Nick that Jordan Baker will explain over tea, and on the drive into the city a motorcycle policeman stops them for speeding but waves them on once Gatsby shows him a card, after which they cross the bridge into Manhattan."
+    },
+    {
+      "start_paragraph_index": 60,
+      "end_paragraph_index": 85,
+      "est_seconds": 152,
+      "recap_md": "At lunch Gatsby introduces Nick to his business associate Meyer Wolfshiem, who tells a gruesome story about the murder of 'Rosy' Rosenthal outside the old Metropole restaurant."
+    },
+    {
+      "start_paragraph_index": 86,
+      "end_paragraph_index": 105,
+      "est_seconds": 118,
+      "recap_md": "Gatsby apologizes for being mysterious and insists Jordan will vouch for him, then leaves to make a phone call while Wolfshiem, watching the room warily, praises Gatsby's character and repeatedly calls him an 'Oggsford man.'"
+    },
+    {
+      "start_paragraph_index": 106,
+      "end_paragraph_index": 130,
+      "est_seconds": 122,
+      "recap_md": "Wolfshiem shows off cufflinks made from human molars, then reveals himself as the man who fixed the 1919 World Series before leaving; Nick then runs into Tom Buchanan, introduces him to Gatsby, and Gatsby promptly disappears."
+    },
+    {
+      "start_paragraph_index": 131,
+      "end_paragraph_index": 137,
+      "est_seconds": 107,
+      "recap_md": "That afternoon, Jordan tells Nick a story from October 1917, when eighteen-year-old Daisy Fay was the most popular girl in Louisville and Jordan saw her sitting with a young lieutenant named Jay Gatsby."
+    },
+    {
+      "start_paragraph_index": 138,
+      "end_paragraph_index": 146,
+      "est_seconds": 147,
+      "recap_md": "Jordan recounts how Daisy's family stopped her from seeing off a soldier headed overseas, and how, on the night before her wedding to Tom, Daisy got drunk, clutched a letter she wouldn't let go of, and tried to give back the pearls Tom had given her."
+    },
+    {
+      "start_paragraph_index": 147,
+      "end_paragraph_index": 150,
+      "est_seconds": 112,
+      "recap_md": "Jordan describes Daisy's early infatuation with Tom, a car accident of Tom's that exposed his affair with a hotel chambermaid, and the couple's years abroad and in Chicago, ending with Daisy's strange reaction six weeks earlier upon hearing the name Gatsby again."
+    },
+    {
+      "start_paragraph_index": 151,
+      "end_paragraph_index": 173,
+      "est_seconds": 183,
+      "recap_md": "Riding through Central Park, Jordan tells Nick that Gatsby bought his mansion specifically to be near Daisy across the bay, and that his real request is for Nick to invite Daisy to tea so Gatsby can casually stop by, after which Nick draws Jordan close to him."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Young women guests speculate that Gatsby is a bootlegger who 'killed a man who had found out that he was nephew to Von Hindenburg and second cousin to the devil.'",
+      "block_indices": [0]
+    },
+    {
+      "statement": "A guest named Klipspringer attended so many of Gatsby's parties that he became known as 'the boarder' - Nick doubts he had any other home.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "Before this car ride, Nick's initial impression that Gatsby was a person of 'some undefined consequence' had faded, and Gatsby had come to seem simply 'the proprietor of an elaborate roadhouse next door.'",
+      "block_indices": [2]
+    },
+    {
+      "statement": "When Nick asks what part of the Middle West Gatsby comes from, Gatsby answers 'San Francisco' - a detail that doesn't actually fit, since San Francisco is not in the Middle West.",
+      "block_indices": [3]
+    },
+    {
+      "statement": "As proof of his stories, Gatsby shows Nick a medal from Montenegro inscribed 'Major Jay Gatsby, For Valour Extraordinary,' and a photograph of himself at Oxford holding a cricket bat.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "A motorcycle policeman stops Gatsby's car for speeding, but waves them on after Gatsby shows him a white card, explaining he once did the police commissioner 'a favour.'",
+      "block_indices": [5]
+    },
+    {
+      "statement": "At lunch, Gatsby's associate Meyer Wolfshiem tells a story about the night 'Rosy' Rosenthal was shot outside the old Metropole restaurant after being called outside despite a warning to stay in the room.",
+      "block_indices": [6]
+    },
+    {
+      "statement": "Wolfshiem repeatedly mispronounces Oxford as 'Oggsford,' calling Gatsby 'an Oggsford man' and insisting it's 'one of the most famous colleges in the world.'",
+      "block_indices": [7]
+    },
+    {
+      "statement": "Gatsby reveals that Meyer Wolfshiem is 'the man who fixed the World's Series back in 1919' - a gambler, not an actor or a dentist as Nick had guessed.",
+      "block_indices": [8]
+    },
+    {
+      "statement": "Jordan recalls that in October 1917, eighteen-year-old Daisy Fay - the most popular girl in Louisville - was sitting in her white roadster with a young lieutenant Jordan later realized was Jay Gatsby.",
+      "block_indices": [9]
+    },
+    {
+      "statement": "The night before her wedding, Daisy got extremely drunk holding a letter she wouldn't let go of, and tried to give back the pearl necklace Tom had given her, saying 'Daisy's change' her mine.'",
+      "block_indices": [10]
+    },
+    {
+      "statement": "About six weeks before this conversation, Daisy heard the name Gatsby for the first time in years when Jordan mentioned knowing a Gatsby in West Egg, and Daisy reacted in 'the strangest voice.'",
+      "block_indices": [11]
+    },
+    {
+      "statement": "Jordan reveals that it was not a coincidence Gatsby's mansion is in West Egg: 'Gatsby bought that house so that Daisy would be just across the bay.'",
+      "block_indices": [12]
+    },
+    {
+      "statement": "Jordan explains Gatsby's actual request: he wants Nick to invite Daisy to his house for tea some afternoon, without her knowing Gatsby will be there, so that he can 'come over.'",
+      "block_indices": [12]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "According to a rumor among the young women at Gatsby's party, why did Gatsby supposedly kill a man?",
+      "options": [
+        "Because the man had cheated him in a business deal",
+        "Because the man had discovered Gatsby was nephew to Von Hindenburg and second cousin to the devil",
+        "Because the man insulted Daisy Buchanan at a party",
+        "Because the man tried to blackmail him about his bootlegging"
+      ],
+      "answer_index": 1,
+      "explanation": "One of the wild rumors circulating among guests who know nothing real about Gatsby: \"One time he killed a man who had found out that he was nephew to Von Hindenburg and second cousin to the devil.\""
+    },
+    {
+      "item_index": 1,
+      "prompt": "What nickname did the guest named Klipspringer earn from attending Gatsby's parties so often?",
+      "options": [
+        "\"the boarder\"",
+        "\"the lodger\"",
+        "\"the regular\"",
+        "\"the shadow\""
+      ],
+      "answer_index": 0,
+      "explanation": "Nick writes: \"A man named Klipspringer was there so often that he became known as 'the boarder'—I doubt if he had any other home.\""
+    },
+    {
+      "item_index": 2,
+      "prompt": "How had Nick's impression of Gatsby changed in the weeks before this chapter's car ride?",
+      "options": [
+        "He had grown convinced Gatsby was a dangerous criminal",
+        "His sense that Gatsby was a person of 'undefined consequence' had faded into seeing him as just 'the proprietor of an elaborate roadhouse next door'",
+        "He had become certain Gatsby was secretly in love with Daisy",
+        "He had decided Gatsby was shy and preferred to be left alone"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick admits: \"my first impression, that he was a person of some undefined consequence, had gradually faded and he had become simply the proprietor of an elaborate roadhouse next door.\""
+    },
+    {
+      "item_index": 3,
+      "prompt": "When Nick asks Gatsby, \"What part of the Middle West?\" what does Gatsby answer?",
+      "options": [
+        "\"Chicago\"",
+        "\"San Francisco\"",
+        "\"Minneapolis\"",
+        "\"St. Louis\""
+      ],
+      "answer_index": 1,
+      "explanation": "Gatsby answers \"San Francisco\" - a small inconsistency, since San Francisco is not actually part of the Middle West, one of several cracks in his rehearsed-sounding story."
+    },
+    {
+      "item_index": 4,
+      "prompt": "What two physical items does Gatsby produce to back up his tall tale about his past?",
+      "options": [
+        "A university diploma and a family photograph",
+        "A war medal from Montenegro and a photograph of himself at Oxford",
+        "A letter from a general and an opera ticket stub",
+        "A ring from a countess and a passport full of stamps"
+      ],
+      "answer_index": 1,
+      "explanation": "Gatsby shows a medal reading \"Major Jay Gatsby ... For Valour Extraordinary\" and a photograph of young men \"loafing in an archway\" at Oxford, Gatsby among them holding a cricket bat."
+    },
+    {
+      "item_index": 5,
+      "prompt": "How does Gatsby avoid a ticket when a motorcycle policeman pulls him over for speeding?",
+      "options": [
+        "He bribes the officer with cash on the spot",
+        "He shows a white card and is recognized because he once did the commissioner a favour",
+        "He claims diplomatic immunity as a foreign dignitary",
+        "He argues that his speedometer was broken"
+      ],
+      "answer_index": 1,
+      "explanation": "\"Taking a white card from his wallet, he waved it before the man's eyes,\" and the policeman apologizes; Gatsby explains, \"I was able to do the commissioner a favour once, and he sends me a Christmas card every year.\""
+    },
+    {
+      "item_index": 6,
+      "prompt": "What story does Meyer Wolfshiem tell about the old Metropole restaurant?",
+      "options": [
+        "How he first met Gatsby there after the war",
+        "How Rosy Rosenthal was shot outside after being called out despite a warning to stay inside",
+        "How he won a fortune there gambling on the World Series",
+        "How a fire once destroyed the restaurant's dining room"
+      ],
+      "answer_index": 1,
+      "explanation": "Wolfshiem recalls: \"I can't forget so long as I live the night they shot Rosy Rosenthal there\" - Rosy was warned not to go outside, went anyway, and \"they shot him three times in his full belly and drove away.\""
+    },
+    {
+      "item_index": 7,
+      "prompt": "How does Wolfshiem refer to Oxford when praising Gatsby's education to Nick?",
+      "options": [
+        "He correctly calls it \"Oxford\" and lists its famous alumni",
+        "He mispronounces it as \"Oggsford\"",
+        "He calls it only \"that English school\" without naming it",
+        "He confuses it with Cambridge"
+      ],
+      "answer_index": 1,
+      "explanation": "Wolfshiem says, \"He's an Oggsford man,\" and asks, \"You know Oggsford College? It's one of the most famous colleges in the world.\""
+    },
+    {
+      "item_index": 8,
+      "prompt": "What does Gatsby reveal about who Meyer Wolfshiem is?",
+      "options": [
+        "He is a retired Broadway actor",
+        "He is the man who fixed the 1919 World Series",
+        "He is a decorated war veteran turned dentist",
+        "He is a disbarred lawyer who defends gamblers"
+      ],
+      "answer_index": 1,
+      "explanation": "Gatsby says coolly: \"He's the man who fixed the World's Series back in 1919,\" staggering Nick, who had never pictured one man doing such a thing."
+    },
+    {
+      "item_index": 9,
+      "prompt": "In the story Jordan tells Nick, who was the young lieutenant she saw sitting with eighteen-year-old Daisy Fay in Louisville in 1917?",
+      "options": [
+        "Tom Buchanan, before he and Daisy were married",
+        "Jay Gatsby, though Jordan didn't realize it was him until years later",
+        "Nick Carraway himself",
+        "A soldier who was later killed in the war"
+      ],
+      "answer_index": 1,
+      "explanation": "Jordan recalls: \"His name was Jay Gatsby, and I didn't lay eyes on him again for over four years—even after I'd met him on Long Island I didn't realize it was the same man.\""
+    },
+    {
+      "item_index": 10,
+      "prompt": "What happens the night before Daisy's wedding to Tom, according to Jordan?",
+      "options": [
+        "Daisy calmly writes Tom a letter expressing her doubts",
+        "Daisy gets extremely drunk clutching a letter and tries to give back Tom's pearl necklace",
+        "Daisy runs away from the hotel and has to be found by her mother",
+        "Daisy and Tom have a public argument at the rehearsal dinner"
+      ],
+      "answer_index": 1,
+      "explanation": "Jordan finds Daisy \"lying on her bed ... as drunk as a monkey,\" holding a letter, saying of the pearls: \"Take 'em downstairs and give 'em back to whoever they belong to ... Daisy's change' her mine!\""
+    },
+    {
+      "item_index": 11,
+      "prompt": "How does the reader learn that Daisy first reconnected, even indirectly, with the idea of Gatsby?",
+      "options": [
+        "She spotted his mansion from a passing car",
+        "About six weeks earlier, Jordan mentioned knowing a Gatsby in West Egg, and Daisy reacted strangely, asking 'What Gatsby?'",
+        "She received a letter from Gatsby directly",
+        "Tom mentioned Gatsby's name after a business meeting"
+      ],
+      "answer_index": 1,
+      "explanation": "Jordan recalls that after she mentioned Gatsby, Daisy \"came into my room and woke me up, and said: 'What Gatsby?'\" in \"the strangest voice.\""
+    },
+    {
+      "item_index": 12,
+      "prompt": "According to Jordan, why did Gatsby buy his mansion in West Egg?",
+      "options": [
+        "It was the only large estate available at the time",
+        "So that Daisy would be just across the bay from him",
+        "Because it was close to Wolfshiem's business interests",
+        "Because Nick had recommended the neighborhood to him"
+      ],
+      "answer_index": 1,
+      "explanation": "Jordan reveals: \"Gatsby bought that house so that Daisy would be just across the bay,\" recasting his mansion and parties as aimed at one person."
+    },
+    {
+      "item_index": 13,
+      "prompt": "What does Jordan reveal is Gatsby's actual request of Nick?",
+      "options": [
+        "That Nick introduce him to Daisy at one of Gatsby's own parties",
+        "That Nick invite Daisy over for tea, without telling her Gatsby will come by",
+        "That Nick deliver a letter from Gatsby directly to Daisy",
+        "That Nick help Gatsby buy a house next to the Buchanans' in East Egg"
+      ],
+      "answer_index": 1,
+      "explanation": "Jordan explains: \"He wants to know ... if you'll invite Daisy to your house some afternoon and then let him come over,\" adding, \"She's not to know about it ... You're just supposed to invite her to tea.\""
+    }
+  ],
+  "exercises": []
+}

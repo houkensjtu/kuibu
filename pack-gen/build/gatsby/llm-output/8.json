@@ -1,0 +1,273 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 8,
+      "est_seconds": 104,
+      "recap_md": "Unable to sleep, Nick goes to Gatsby's house before dawn, where Gatsby says nothing happened with Daisy the night before and refuses to leave town before he learns what she will do."
+    },
+    {
+      "start_paragraph_index": 9,
+      "end_paragraph_index": 14,
+      "est_seconds": 165,
+      "recap_md": "Gatsby recalls falling for Daisy in wartime Louisville, deliberately letting her believe he could give her the life she was used to, and finally sleeping with her one October night."
+    },
+    {
+      "start_paragraph_index": 15,
+      "end_paragraph_index": 17,
+      "est_seconds": 67,
+      "recap_md": "On his last afternoon before shipping overseas, Gatsby held Daisy in silence by the fire, closer to her than they had ever been."
+    },
+    {
+      "start_paragraph_index": 18,
+      "end_paragraph_index": 22,
+      "est_seconds": 103,
+      "recap_md": "Gatsby served with distinction in the war but was delayed at Oxford after the armistice, and Daisy's restless waiting ended when Tom Buchanan arrived and won her that spring."
+    },
+    {
+      "start_paragraph_index": 23,
+      "end_paragraph_index": 32,
+      "est_seconds": 140,
+      "recap_md": "At dawn Gatsby insists Daisy never truly loved Tom and calls what happened between them 'just personal,' and Nick recalls Gatsby's mournful postwar pilgrimage back to Louisville to retrace her footsteps."
+    },
+    {
+      "start_paragraph_index": 33,
+      "end_paragraph_index": 51,
+      "est_seconds": 111,
+      "recap_md": "Over a subdued breakfast Gatsby tells the gardener not to drain the unused pool, then walks Nick out, who shouts that Gatsby is worth more than the whole 'rotten crowd' - the only compliment Nick ever gave him."
+    },
+    {
+      "start_paragraph_index": 52,
+      "end_paragraph_index": 66,
+      "est_seconds": 98,
+      "recap_md": "Back at his office, Nick takes a call from Jordan, who says she has left Daisy's house, but the conversation turns cold and they part without meeting."
+    },
+    {
+      "start_paragraph_index": 67,
+      "end_paragraph_index": 75,
+      "est_seconds": 154,
+      "recap_md": "Nick backtracks to the garage the night before, where Wilson rocks in grief for hours until, near three a.m., he starts talking about the yellow car and blurts out that Myrtle once came home with a bruised face."
+    },
+    {
+      "start_paragraph_index": 76,
+      "end_paragraph_index": 93,
+      "est_seconds": 83,
+      "recap_md": "Michaelis tries to comfort Wilson with talk of church, then finds a dog leash Myrtle had hidden away, which Wilson takes as proof of a lover and cause to say 'he killed her.'"
+    },
+    {
+      "start_paragraph_index": 94,
+      "end_paragraph_index": 110,
+      "est_seconds": 126,
+      "recap_md": "As dawn breaks Wilson keeps insisting 'he murdered her' and recalls warning Myrtle that God sees everything, and Michaelis realizes with a shock that Wilson is staring at the fading billboard eyes of Doctor T. J. Eckleburg."
+    },
+    {
+      "start_paragraph_index": 111,
+      "end_paragraph_index": 113,
+      "est_seconds": 77,
+      "recap_md": "After Michaelis leaves to rest, Wilson vanishes on foot and is traced through several towns until, by half-past two, he reaches West Egg already knowing Gatsby's name."
+    },
+    {
+      "start_paragraph_index": 114,
+      "end_paragraph_index": 119,
+      "est_seconds": 134,
+      "recap_md": "That afternoon Gatsby waits by his pool for a phone call that never comes and is shot dead by Wilson, whose own body is then found nearby in the grass."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "Gatsby tells Nick that 'nothing happened' the night before - he waited outside and Daisy only appeared at her window once, around four o'clock, before turning out the light.",
+      "block_indices": [0]
+    },
+    {
+      "statement": "Gatsby deliberately let Daisy believe he was from the same social class as her and could take care of her, concealing that he actually had no family fortune behind him.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "It was Tom Buchanan's arrival in the middle of spring, while Gatsby was still stuck at Oxford, that finally decided Daisy's choice.",
+      "block_indices": [3]
+    },
+    {
+      "statement": "At dawn, Gatsby insists to Nick that whatever happened between Daisy and Tom was 'just personal,' refusing to believe Daisy ever really loved Tom.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "After the war, penniless, Gatsby made a mournful pilgrimage back to Louisville on the last of his army pay, searching the city for traces of Daisy even though she was already gone.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "As Nick leaves for the last time, he impulsively shouts across the lawn that Gatsby is worth more than the whole 'rotten crowd' of Tom, Daisy, and their circle - the only compliment Nick says he ever gave him.",
+      "block_indices": [5]
+    },
+    {
+      "statement": "Jordan calls Nick at noon to say she has left Daisy's house and is heading to Southampton, but their conversation turns cold and they part without arranging to meet.",
+      "block_indices": [6]
+    },
+    {
+      "statement": "Around three o'clock in the morning, Wilson's muttering turns to the mysterious yellow car, and he blurts out that Myrtle had once come home from the city with her face bruised and her nose swollen.",
+      "block_indices": [7]
+    },
+    {
+      "statement": "Michaelis finds an expensive dog leash of leather and braided silver in a drawer, which Wilson says Myrtle had hidden wrapped in tissue paper - proof to Wilson that she had a secret lover, whom he says 'killed her.'",
+      "block_indices": [8]
+    },
+    {
+      "statement": "As dawn breaks, Michaelis realizes with a shock that Wilson has been staring at the giant faded eyes of the Doctor T. J. Eckleburg billboard, mistaking them for the eyes of God.",
+      "block_indices": [9]
+    },
+    {
+      "statement": "Wilson's movements after leaving the garage are traced on foot through Port Roosevelt and Gad's Hill, and by half-past two he reaches West Egg, where he asks for directions to Gatsby's house - so he already knows Gatsby's name.",
+      "block_indices": [10]
+    },
+    {
+      "statement": "While waiting in vain for a phone call, Gatsby is shot dead by Wilson while floating on a mattress in his own swimming pool; Wilson's own body is then found nearby in the grass.",
+      "block_indices": [11]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "What does Gatsby report happened when Nick visits him before dawn?",
+      "options": [
+        "Daisy came out to speak with him for nearly an hour before going back inside",
+        "Nothing happened - he waited, and around four o'clock Daisy briefly appeared at her window before turning out the light",
+        "Tom confronted him on the lawn and threatened to call the police",
+        "Daisy sent a note down by the butler agreeing to leave Tom"
+      ],
+      "answer_index": 1,
+      "explanation": "Gatsby says wanly, “Nothing happened,” “I waited, and about four o’clock she came to the window and stood there for a minute and then turned out the light.” - a small, deflating anticlimax after the tension of the previous chapter."
+    },
+    {
+      "item_index": 1,
+      "prompt": "According to Nick's account of the young Gatsby's courtship of Daisy in Louisville, how did Gatsby mislead her?",
+      "options": [
+        "He told her outright that he was already a millionaire from bootlegging",
+        "He let her believe he belonged to much the same social class as her and could take care of her, though he had no real family fortune behind him",
+        "He pretended to be an English lord visiting on holiday",
+        "He claimed to be secretly engaged to another wealthy woman to make himself seem more desirable"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick writes that Gatsby “had deliberately given Daisy a sense of security; he let her believe that he was a person from much the same strata as herself—that he was fully able to take care of her,” though “he had no comfortable family standing behind him.”"
+    },
+    {
+      "item_index": 2,
+      "prompt": "What finally settled Daisy's decision while Gatsby was still delayed at Oxford?",
+      "options": [
+        "Her parents forbade her from waiting for Gatsby any longer",
+        "The arrival of Tom Buchanan in the middle of spring",
+        "A letter from Gatsby breaking off the relationship first",
+        "Jordan Baker convinced her that Gatsby had been killed in the war"
+      ],
+      "answer_index": 1,
+      "explanation": "“That force took shape in the middle of spring with the arrival of Tom Buchanan.” Gatsby only learns of the engagement through a letter that reaches him while he is still at Oxford."
+    },
+    {
+      "item_index": 3,
+      "prompt": "How does Gatsby characterize whatever feelings Daisy may have had for Tom, when pressed by Nick at dawn?",
+      "options": [
+        "He admits Daisy genuinely loved Tom and always would",
+        "He insists it was 'just personal,' refusing to accept it meant she truly loved Tom",
+        "He says Daisy only married Tom to spite her parents",
+        "He claims Tom tricked Daisy into marrying him with a false promise"
+      ],
+      "answer_index": 1,
+      "explanation": "Gatsby says, “In any case,” “it was just personal,” after arguing “I don’t think she ever loved him” - a curious remark suggesting an intensity in his view of the affair that Nick says “couldn't be measured.”"
+    },
+    {
+      "item_index": 4,
+      "prompt": "What does Gatsby do after returning from France to find Tom and Daisy already married and on their wedding trip?",
+      "options": [
+        "He immediately begins amassing his fortune in New York to win her back",
+        "He makes a miserable but irresistible journey to Louisville on the last of his army pay, revisiting places he and Daisy had been",
+        "He writes to Daisy's parents demanding an explanation",
+        "He enlists for a second tour overseas to avoid facing the news"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick recounts that Gatsby “made a miserable but irresistible journey to Louisville on the last of his army pay,” walking streets “where their footsteps had clicked together” even though “she was gone from it.”"
+    },
+    {
+      "item_index": 5,
+      "prompt": "What does Nick shout to Gatsby just before leaving his house for the last time?",
+      "options": [
+        "\"I'll never forgive you for what you did to Daisy\"",
+        "\"They're a rotten crowd. You're worth the whole damn bunch put together\"",
+        "\"You should have told the police the truth about the accident\"",
+        "\"Good luck - I hope you and Daisy work things out\""
+      ],
+      "answer_index": 1,
+      "explanation": "Nick shouts, “They’re a rotten crowd,” “You’re worth the whole damn bunch put together,” adding, “It was the only compliment I ever gave him, because I disapproved of him from beginning to end.”"
+    },
+    {
+      "item_index": 6,
+      "prompt": "What does Jordan tell Nick when she calls him at his office around noon?",
+      "options": [
+        "That Daisy has confessed everything to Tom and is leaving him",
+        "That she has left Daisy's house and is going down to Southampton that afternoon",
+        "That she has decided to marry Nick",
+        "That Gatsby has already been arrested"
+      ],
+      "answer_index": 1,
+      "explanation": "Jordan says, “I’ve left Daisy’s house,” “I’m at Hempstead, and I’m going down to Southampton this afternoon.” The call sours quickly, and Nick says he 'couldn't have talked to her across a tea-table that day.'"
+    },
+    {
+      "item_index": 7,
+      "prompt": "What does Wilson blurt out around three in the morning, as Michaelis sits with him?",
+      "options": [
+        "That Myrtle had confessed the affair to him weeks earlier",
+        "That a couple of months earlier, Myrtle had come home from the city with her face bruised and her nose swollen",
+        "That he had seen Myrtle getting into the yellow car that very afternoon",
+        "That he planned to sell the garage and move away"
+      ],
+      "answer_index": 1,
+      "explanation": "Wilson “grew quieter and began to talk about the yellow car,” then “blurted out that a couple of months ago his wife had come from the city with her face bruised and her nose swollen” - before catching himself and crying “Oh, my God!” again."
+    },
+    {
+      "item_index": 8,
+      "prompt": "What does Michaelis find in the drawer that Wilson points him to, and what does Wilson conclude from it?",
+      "options": [
+        "A love letter signed by Tom, proving Tom killed her",
+        "A small, expensive dog leash, which Wilson takes as proof Myrtle had a secret lover, saying, 'Then he killed her'",
+        "A photograph of Myrtle with an unknown man, which Wilson recognizes as Gatsby",
+        "A bankbook showing large unexplained deposits, which Wilson assumes came from blackmail"
+      ],
+      "answer_index": 1,
+      "explanation": "Michaelis finds “a small, expensive dog-leash, made of leather and braided silver” that Myrtle had kept “wrapped in tissue paper on her bureau.” Wilson concludes, “Then he killed her,” said Wilson."
+    },
+    {
+      "item_index": 9,
+      "prompt": "What does Michaelis realize Wilson has actually been looking at when he says 'God sees everything'?",
+      "options": [
+        "A police car with its lights on, approaching the garage",
+        "The huge, pale eyes of the Doctor T. J. Eckleburg advertisement, emerging in the dawn light",
+        "His own reflection in the office window",
+        "A photograph of Myrtle he keeps on the desk"
+      ],
+      "answer_index": 1,
+      "explanation": "Michaelis “saw with a shock that he was looking at the eyes of Doctor T. J. Eckleburg, which had just emerged, pale and enormous, from the dissolving night,” and has to tell Wilson, “That’s an advertisement.”"
+    },
+    {
+      "item_index": 10,
+      "prompt": "How is it established that Wilson knew Gatsby's name and location before reaching his house?",
+      "options": [
+        "Tom had already told him where Gatsby lived and what he looked like",
+        "His movements were traced on foot to West Egg, where by half-past two he asked someone the way to Gatsby's house",
+        "He found Gatsby's business card among Myrtle's belongings",
+        "Michaelis drove him there directly after breakfast"
+      ],
+      "answer_index": 1,
+      "explanation": "Wilson's route was “traced” on foot through Port Roosevelt and Gad’s Hill; “By half-past two he was in West Egg, where he asked someone the way to Gatsby’s house. So by that time he knew Gatsby’s name.”"
+    },
+    {
+      "item_index": 11,
+      "prompt": "How does Gatsby die, and what is discovered right afterward?",
+      "options": [
+        "He is shot by Wilson while floating in his pool; Wilson's body is then found nearby in the grass",
+        "He drowns accidentally in the pool after suffering a heart attack",
+        "He is shot by Tom in a confrontation on the lawn; Tom then flees the country",
+        "He dies of his injuries days later in a hospital after Wilson attacks him with a wrench"
+      ],
+      "answer_index": 0,
+      "explanation": "The chauffeur “heard the shots”; Gatsby's body is found drifting in the pool, and “it was after we started with Gatsby toward the house that the gardener saw Wilson’s body a little way off in the grass, and the holocaust was complete.”"
+    }
+  ],
+  "exercises": []
+}

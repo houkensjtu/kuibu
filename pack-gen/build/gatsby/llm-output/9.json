@@ -1,0 +1,331 @@
+{
+  "blocks": [
+    {
+      "start_paragraph_index": 0,
+      "end_paragraph_index": 9,
+      "est_seconds": 123,
+      "recap_md": "In the aftermath of Gatsby's death, police and reporters swarm the house, and Nick's call to Daisy reveals that she and Tom left that afternoon with their baggage and no forwarding address."
+    },
+    {
+      "start_paragraph_index": 10,
+      "end_paragraph_index": 33,
+      "est_seconds": 176,
+      "recap_md": "Nick fails to reach Wolfshiem, finds nothing about Gatsby's family but an old photo of Dan Cody, gets an evasive letter from Wolfshiem, and is startled by a wrong-number caller who goes silent on learning Gatsby is dead."
+    },
+    {
+      "start_paragraph_index": 34,
+      "end_paragraph_index": 56,
+      "est_seconds": 149,
+      "recap_md": "Gatsby's father, Henry Gatz, arrives from Minnesota, proudly insists his son belonged in the East, and eventually falls asleep exhausted with grief and pride."
+    },
+    {
+      "start_paragraph_index": 57,
+      "end_paragraph_index": 84,
+      "est_seconds": 180,
+      "recap_md": "Klipspringer calls only to ask about a pair of shoes he left behind, and Nick's visit to Wolfshiem's Broadway office is stonewalled before Wolfshiem finally receives him."
+    },
+    {
+      "start_paragraph_index": 85,
+      "end_paragraph_index": 101,
+      "est_seconds": 125,
+      "recap_md": "Wolfshiem reminisces about discovering and 'making' Gatsby out of nothing, but refuses to attend the funeral, saying his rule is to stay out of things once a man is dead."
+    },
+    {
+      "start_paragraph_index": 102,
+      "end_paragraph_index": 119,
+      "est_seconds": 173,
+      "recap_md": "Mr. Gatz proudly shows Nick a photo of the house and Gatsby's boyhood copy of Hopalong Cassidy with its self-improvement schedule and resolves, but as the funeral hour arrives, no other guests come."
+    },
+    {
+      "start_paragraph_index": 120,
+      "end_paragraph_index": 129,
+      "est_seconds": 84,
+      "recap_md": "Only a small, rain-soaked procession attends Gatsby's burial, joined unexpectedly by the owl-eyed man from the library, who calls Gatsby 'the poor son-of-a-bitch.'"
+    },
+    {
+      "start_paragraph_index": 130,
+      "end_paragraph_index": 134,
+      "est_seconds": 162,
+      "recap_md": "Recalling his own Christmas homecomings, Nick concludes this has been a story of Westerners unsuited to Eastern life, and decides to move back home."
+    },
+    {
+      "start_paragraph_index": 135,
+      "end_paragraph_index": 144,
+      "est_seconds": 99,
+      "recap_md": "Nick has a final conversation with Jordan Baker, who reveals she is engaged to someone else and accuses him of having thrown her over."
+    },
+    {
+      "start_paragraph_index": 145,
+      "end_paragraph_index": 156,
+      "est_seconds": 139,
+      "recap_md": "Nick runs into Tom on Fifth Avenue, who admits he told Wilson that Gatsby owned the car and shows no remorse for the consequences."
+    },
+    {
+      "start_paragraph_index": 157,
+      "end_paragraph_index": 163,
+      "est_seconds": 158,
+      "recap_md": "On his last night at West Egg, Nick imagines the island as the Dutch sailors first saw it and reflects on Gatsby's doomed dream, closing with the novel's famous final line about boats against the current."
+    }
+  ],
+  "knowledge_items": [
+    {
+      "statement": "When Nick calls Daisy soon after Gatsby's death, he learns that she and Tom left that afternoon and took their baggage with them, leaving no address.",
+      "block_indices": [0]
+    },
+    {
+      "statement": "Searching Gatsby's desk for information about his family, Nick finds nothing except an old photograph of Dan Cody staring down from the wall.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "A caller named Slagle, believing he has reached Gatsby, mentions that 'Young Parke' was just arrested for passing stolen bonds over the counter; he goes silent and hangs up when Nick tells him Gatsby is dead.",
+      "block_indices": [1]
+    },
+    {
+      "statement": "Gatsby's father, Henry Gatz, arrives from a town in Minnesota after reading about the death in a Chicago newspaper, and insists his son be buried in the East because 'he rose up to his position' there.",
+      "block_indices": [2]
+    },
+    {
+      "statement": "Klipspringer, who had stayed at Gatsby's house so often he seemed almost a fixture there, calls not to help with the funeral but to ask Nick to send him a pair of tennis shoes he left behind.",
+      "block_indices": [3]
+    },
+    {
+      "statement": "Wolfshiem tells Nick that when he first met Gatsby, the young man was so poor he was still wearing his army uniform because he couldn't afford regular clothes, and says of himself, 'I raised him up out of nothing, right out of the gutter.'",
+      "block_indices": [4]
+    },
+    {
+      "statement": "Wolfshiem refuses to attend Gatsby's funeral, explaining that his rule when a man is killed is to 'keep out' and not get mixed up in it.",
+      "block_indices": [4]
+    },
+    {
+      "statement": "Among Gatsby's boyhood possessions, Mr. Gatz shows Nick an old copy of 'Hopalong Cassidy' with a handwritten self-improvement schedule and a list of 'General Resolves' inside, including 'Be better to parents.'",
+      "block_indices": [5]
+    },
+    {
+      "statement": "Despite Mr. Gatz's and Nick's efforts, almost no one comes to Gatsby's funeral; even the Lutheran minister waits in vain.",
+      "block_indices": [5]
+    },
+    {
+      "statement": "At Gatsby's sparsely attended burial, the only unexpected mourner is the owl-eyed man Nick had once found marveling at Gatsby's library, who calls Gatsby 'the poor son-of-a-bitch.'",
+      "block_indices": [6]
+    },
+    {
+      "statement": "Daisy never sends any message or flower for Gatsby's funeral.",
+      "block_indices": [6]
+    },
+    {
+      "statement": "Reflecting on his own Christmas homecomings from college, Nick concludes that Tom, Gatsby, Daisy, Jordan, and he himself were all Westerners who shared 'some deficiency in common' making them subtly unadaptable to Eastern life.",
+      "block_indices": [7]
+    },
+    {
+      "statement": "In their final meeting, Jordan Baker tells Nick she is engaged to another man, and accuses him of having 'thrown her over' on the telephone.",
+      "block_indices": [8]
+    },
+    {
+      "statement": "When Nick confronts Tom about what he told Wilson, Tom admits he told him the truth - that Gatsby owned the car - and shows no remorse, saying Gatsby 'had it coming to him.'",
+      "block_indices": [9]
+    },
+    {
+      "statement": "Nick concludes that Tom and Daisy were 'careless people' who smashed up things and creatures and then retreated back into their money, letting other people clean up the mess they made.",
+      "block_indices": [9]
+    },
+    {
+      "statement": "The novel ends with Nick imagining Gatsby's wonder at the green light, closing with the line, 'So we beat on, boats against the current, borne back ceaselessly into the past.'",
+      "block_indices": [10]
+    }
+  ],
+  "questions": [
+    {
+      "item_index": 0,
+      "prompt": "What does Nick learn when he calls Daisy shortly after Gatsby's death?",
+      "options": [
+        "She is already on her way to Gatsby's house",
+        "She and Tom left that afternoon with their baggage, leaving no address",
+        "She has heard the news and is too distraught to speak",
+        "She and Tom are hosting a small gathering that evening"
+      ],
+      "answer_index": 1,
+      "explanation": "'But she and Tom had gone away early that afternoon, and taken baggage with them.' When Nick presses the butler for an address or a time they'd be back, the answers are only 'No' and 'I don't know. Can't say.'"
+    },
+    {
+      "item_index": 1,
+      "prompt": "What does Nick find when he searches Gatsby's desk for information about his family?",
+      "options": [
+        "A stack of letters from his parents",
+        "Nothing but an old photograph of Dan Cody on the wall",
+        "A will naming Daisy as his sole heir",
+        "Documents proving both his parents were dead"
+      ],
+      "answer_index": 1,
+      "explanation": "'But there was nothing - only the picture of Dan Cody, a token of forgotten violence, staring down from the wall.' Gatsby had never even told Nick definitely whether his parents were dead."
+    },
+    {
+      "item_index": 2,
+      "prompt": "What does the caller 'Slagle' reveal when he mistakenly reaches Nick instead of Gatsby?",
+      "options": [
+        "That Gatsby's business partner has been arrested for murder",
+        "That 'Young Parke' was picked up for passing stolen bonds over the counter",
+        "That the police are coming to search Gatsby's house",
+        "That Wolfshiem has fled the country"
+      ],
+      "answer_index": 1,
+      "explanation": "Slagle says, '\"Young Parke's in trouble ... They picked him up when he handed the bonds over the counter.\"' He assumes he's talking to Gatsby until Nick tells him Gatsby is dead, and the line goes silent before the connection breaks."
+    },
+    {
+      "item_index": 3,
+      "prompt": "Why does Henry Gatz insist that his son be buried in the East rather than taken West?",
+      "options": [
+        "He can't afford to transport the body back to Minnesota",
+        "He says Jimmy 'always liked it better down East' and 'rose up to his position' there",
+        "Wolfshiem insists Gatsby must be buried near his business associates",
+        "Gatsby had left written instructions requesting an East Egg burial"
+      ],
+      "answer_index": 1,
+      "explanation": "When Nick asks if he wants the body taken West, Mr. Gatz shakes his head: '\"Jimmy always liked it better down East. He rose up to his position in the East.\"'"
+    },
+    {
+      "item_index": 4,
+      "prompt": "Why does Klipspringer actually call Nick after Gatsby's death?",
+      "options": [
+        "To offer to help organize the funeral",
+        "To ask Nick to send him a pair of tennis shoes he left behind",
+        "To warn Nick that reporters are asking questions about him",
+        "To ask for money he says Gatsby owed him"
+      ],
+      "answer_index": 1,
+      "explanation": "After dodging Nick's request that he attend the funeral, Klipspringer admits, '\"What I called up about was a pair of shoes I left there. I wonder if it'd be too much trouble to have the butler send them on.\"' Nick hangs up on him."
+    },
+    {
+      "item_index": 5,
+      "prompt": "How does Wolfshiem describe Gatsby when they first met?",
+      "options": [
+        "As a confident businessman already wealthy from bootlegging",
+        "So poor he was still wearing his army uniform because he couldn't afford regular clothes",
+        "As a Yale graduate looking for investment advice",
+        "As a struggling actor trying to break into New York society"
+      ],
+      "answer_index": 1,
+      "explanation": "Wolfshiem recalls that Gatsby 'was so hard up he had to keep on wearing his uniform because he couldn't buy some regular clothes,' and says of shaping his career afterward, '\"I raised him up out of nothing, right out of the gutter.\"'"
+    },
+    {
+      "item_index": 6,
+      "prompt": "Why does Wolfshiem refuse to attend Gatsby's funeral?",
+      "options": [
+        "He says he is too grief-stricken to face it",
+        "He says his rule is to 'keep out' and not get mixed up in it when a man is killed",
+        "He claims he never actually knew Gatsby well",
+        "He says Daisy has forbidden him from coming"
+      ],
+      "answer_index": 1,
+      "explanation": "Wolfshiem tells Nick, '\"When a man gets killed I never like to get mixed up in it in any way. I keep out.\"' He later adds that his rule is 'to let everything alone' after a man is dead."
+    },
+    {
+      "item_index": 7,
+      "prompt": "What does Mr. Gatz show Nick from Gatsby's boyhood, and what is written inside it?",
+      "options": [
+        "A school report card showing poor grades",
+        "A copy of 'Hopalong Cassidy' with a self-improvement schedule and a list of 'General Resolves'",
+        "A diary describing his plan to marry Daisy",
+        "A photograph of Gatsby's mother"
+      ],
+      "answer_index": 1,
+      "explanation": "Inside a ragged copy of Hopalong Cassidy, the back flyleaf carries a daily 'schedule' and a list of 'General Resolves' such as 'No more smokeing or chewing' and 'Be better to parents,' dated September 12, 1906."
+    },
+    {
+      "item_index": 8,
+      "prompt": "What happens when three o'clock arrives, the hour set for the funeral?",
+      "options": [
+        "A large crowd of Gatsby's former party guests arrives",
+        "Almost no one comes, despite Mr. Gatz's and Nick's efforts, even though the minister waits",
+        "Daisy arrives alone at the last minute",
+        "The funeral is cancelled because of the rain"
+      ],
+      "answer_index": 1,
+      "explanation": "As the minister glances repeatedly at his watch, Nick asks him to wait half an hour, 'But it wasn't any use. Nobody came.'"
+    },
+    {
+      "item_index": 9,
+      "prompt": "Who is the unexpected mourner who shows up at Gatsby's burial, and what does he call Gatsby?",
+      "options": [
+        "Meyer Wolfshiem, who calls him 'a true friend'",
+        "The owl-eyed man from Gatsby's library, who calls him 'the poor son-of-a-bitch'",
+        "Klipspringer, who calls him 'a generous host'",
+        "Jordan Baker, who calls him 'a romantic fool'"
+      ],
+      "answer_index": 1,
+      "explanation": "The man with owl-eyed glasses, whom Nick had once found marvelling over Gatsby's books, splashes after the procession into the cemetery; afterward, at the gate, '\"The poor son-of-a-bitch,\" he said.'"
+    },
+    {
+      "item_index": 10,
+      "prompt": "What does Nick note about Daisy's response to Gatsby's funeral?",
+      "options": [
+        "She sends an enormous wreath of white roses",
+        "She hadn't sent a message or a flower",
+        "She writes Nick a long apologetic letter",
+        "She asks Tom to attend on her behalf"
+      ],
+      "answer_index": 1,
+      "explanation": "At the graveside, Nick remembers, 'without resentment, that Daisy hadn't sent a message or a flower.'"
+    },
+    {
+      "item_index": 11,
+      "prompt": "What conclusion does Nick reach about himself, Tom, Gatsby, Daisy, and Jordan?",
+      "options": [
+        "That they were all secretly wealthy before moving East",
+        "That they were all Westerners who shared some deficiency making them unsuited to Eastern life",
+        "That they had all attended the same college",
+        "That they were all orphans raised by distant relatives"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick reflects: 'I see now that this has been a story of the West, after all - Tom and Gatsby, Daisy and Jordan and I, were all Westerners, and perhaps we possessed some deficiency in common which made us subtly unadaptable to Eastern life.'"
+    },
+    {
+      "item_index": 12,
+      "prompt": "What does Jordan Baker tell Nick during their final meeting?",
+      "options": [
+        "That she has decided never to marry",
+        "That she is engaged to another man, and that Nick 'threw her over' on the telephone",
+        "That she is moving to Chicago for good",
+        "That she blames Nick for Gatsby's death"
+      ],
+      "answer_index": 1,
+      "explanation": "Jordan tells Nick 'without comment that she was engaged to another man,' and later says, '\"Nevertheless you did throw me over ... You threw me over on the telephone.\"'"
+    },
+    {
+      "item_index": 13,
+      "prompt": "When Nick confronts Tom about what he told Wilson, how does Tom respond?",
+      "options": [
+        "He denies saying anything to Wilson at all",
+        "He admits he told him the truth - that Gatsby owned the car - and says Gatsby 'had it coming to him'",
+        "He blames Jordan for telling Wilson where to find Gatsby",
+        "He claims he tried to stop Wilson from going to Gatsby's house"
+      ],
+      "answer_index": 1,
+      "explanation": "Tom admits, '\"I told him the truth,\"' that Gatsby owned the car, and adds defiantly, '\"What if I did tell him? That fellow had it coming to him.\"'"
+    },
+    {
+      "item_index": 14,
+      "prompt": "How does Nick ultimately characterize Tom and Daisy?",
+      "options": [
+        "As victims of circumstances beyond their control",
+        "As 'careless people' who smash up things and retreat into their money, leaving others to clean up",
+        "As secretly devoted to each other despite appearances",
+        "As deeply remorseful over what happened to Gatsby and Myrtle"
+      ],
+      "answer_index": 1,
+      "explanation": "Nick concludes: 'They were careless people, Tom and Daisy - they smashed up things and creatures and then retreated back into their money or their vast carelessness ... and let other people clean up the mess they had made.'"
+    },
+    {
+      "item_index": 15,
+      "prompt": "What is the novel's famous final line?",
+      "options": [
+        "\"And one fine morning-\"",
+        "\"So we beat on, boats against the current, borne back ceaselessly into the past.\"",
+        "\"He had come a long way to this blue lawn.\"",
+        "\"Gatsby believed in the green light, the orgiastic future.\""
+      ],
+      "answer_index": 1,
+      "explanation": "The novel closes: 'So we beat on, boats against the current, borne back ceaselessly into the past.' The other options are genuine lines from the same closing passage, but not the book's actual final sentence."
+    }
+  ],
+  "exercises": []
+}
