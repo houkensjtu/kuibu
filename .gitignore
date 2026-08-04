@@ -31,3 +31,12 @@ pack-gen/build/xiyouji/sections/
 pack-gen/build/xiyouji/pack-parts/
 pack-gen/build/xiyouji/merged-pack-parts.json
 pack-gen/build/xiyouji/recap-boundaries.json
+
+# 私有书的 pack-gen 中间产物：跟上面公开书不同，这里整个目录树 wholesale
+# 忽略（源文件 + sections/pack-parts/llm-output/merged 全部，包括 llm-output——
+# 公开书的 llm-output 故意不忽略，因为是值得保护的手工产出；私有书恰恰相反，
+# llm-output 本身就是从受版权保护原文派生的内容，一行都不能进 git）。
+# 用两条 wholesale 规则而不是照抄公开书的逐本手动列 4 行，是为了让以后新增
+# 任何私有书都不需要再碰 .gitignore。
+pack-gen/sources/private/
+pack-gen/build/private/

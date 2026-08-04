@@ -4,10 +4,14 @@
 # 还需要在真正 commit 前再检查一次 staged 文件里有没有命中私有包路径。
 set -euo pipefail
 
-blocked=$(git diff --cached --name-only | grep -E '^(packs-private/|packs/private/)' || true)
+# -c core.quotePath=false：git 默认会把非 ASCII 文件名（比如中文书名）用双引号
+# 包住并转成八进制转义（"pack-gen/...\344\271\224...epub"），下面这条锚定在
+# 行首的正则会被这个前导引号挡住，导致私有文件名一旦带中文就漏检——用这个
+# 实测踩过的真实坑（乔布斯传.epub）驱动的修复，关掉 quotePath 让路径原样输出。
+blocked=$(git -c core.quotePath=false diff --cached --name-only | grep -E '^(packs-private/|packs/private/|pack-gen/sources/private/|pack-gen/build/private/)' || true)
 
 if [ -n "$blocked" ]; then
-  echo "拒绝提交：以下文件命中私有内容包路径（packs-private/ 或 packs/private/），不应该进 git：" >&2
+  echo "拒绝提交：以下文件命中私有内容包路径（packs-private/、packs/private/、pack-gen/sources/private/ 或 pack-gen/build/private/），不应该进 git：" >&2
   echo "$blocked" >&2
   echo "如果这些文件确实该公开，先确认路径是不是放错了地方；确定要强制提交请用 git commit --no-verify（不建议）。" >&2
   exit 1
