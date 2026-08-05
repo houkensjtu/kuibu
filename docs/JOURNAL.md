@@ -669,3 +669,68 @@ branch -D、checkout 一整棵树、restore 一整棵树）留在 `ask` 列表�
 表达过两次的诉求。这次顺带确认了一件事：同一批日志里还留着几条 `curl`/`pip
 install` 的窄规则，但那些是第一次反馈之前（朝花夕拾调研阶段）留下的历史记录，
 不是 `Bash(*)` 生效之后仍然存在的漏洞，没有继续处理。
+
+## 2026-08-04 —— 阶段二 M4：私有书基础设施 + 《史蒂夫·乔布斯传》预览批次
+
+用户拍板下一本书是私有书（版权不允许公开的《史蒂夫·乔布斯传》，沃尔特·艾萨克森
+著），要求先按类似西游记的策略搭一套跟 `packs/public/` 并行的私有书存放与生成
+结构。先给出五步计划（隔离基础设施 → 确认书目与源结构 → adapter + 机械切分 →
+前几章预览 → 铺开全书）征求用户确认，每步一个验收点，用户认可后按计划推进。
+
+**Step 1：隔离基础设施**（跟内容无关，先行验证不涉及任何具体书）。发现
+`packs/private/` 这条路径其实已经在 `.gitignore`/pre-commit hook/`discoverPacks()`
+里就绪，缺口全在 pack-gen 一侧：`pack-gen/sources/`、`pack-gen/build/` 对公开书是
+逐本手动列 gitignore 行（且故意保留 `llm-output/` 不被忽略，因为是值得保护的
+手工产出），私有书需要反过来——源文件和全部构建期中间产物（包括 `llm-output`，
+这里是从受版权保护原文派生出来的内容，一行都不能进 git）都要整体忽略。新增两条
+wholesale 规则 `pack-gen/sources/private/`、`pack-gen/build/private/`，让以后任何
+新私有书都不用再碰 `.gitignore`。测试阶段用户提供的真实文件
+（`乔布斯传.epub`，中文文件名）意外暴露一个真实漏洞：git 默认给非 ASCII 文件名
+加双引号并转义成八进制（`"pack-gen/...\344\271\224...epub"`），pre-commit hook
+锚定在行首的正则被这个前导引号挡住，导致中文文件名的私有文件完全漏检——用
+`-c core.quotePath=false` 修好，强制 `git diff` 原样输出路径。
+
+**Step 2-3：书目确认 + adapter**。解压检查真实 epub 后发现这是第三种结构（跟
+Gatsby 的 `<div id="chapter-N">` 多章一文件、西游记的单文件平铺 `<p>` 都不一样）：
+51 个 spine 文件，每个文件是独立一节，靠单一 `<h3>` 标题标签 + 平铺 `<p>`——反而
+是三者里最简单的。跟用户确认内容范围（前言 + 41 章 + 尾声收录，封面/目录/作者
+简介/致谢/摄影集/封底跳过）后新写 `PerFileEpubAdapter`，复用已有的
+`epub_zip.py`/`html_text.py`（第三个 adapter 复用，进一步验证抽取这两个模块
+不是过早抽象）。测试阶段抓到源文件自己的一个真实缺陷：`<spine>` 里
+`chapter32.html`（第二十六章 iMac）排在 `chapter31.html`（第二十五章 设计原则）
+前面，文件名和标题文字里的数字都对不上——大概率是 Sigil 重建这份 epub 的
+`content.opf`（文件里留着"Your OPF file was broken so Sigil was forced to
+create a new one from scratch"的注释）时手误调换了两条 `itemref`。这本书的
+章节数字写法本身规整（不像西游记那样需要"不信任原文数字"的防线），所以在
+`split_sjobs.py` 里写了个小型中文数字解析器，按解析出的真实章节号重排修正，
+不在 adapter 里做（那是这本书独有的数据质量问题）。
+
+**Step 4：前言 + 前两章预览批次**（用户要求的范围）。手工读完全部 121 段原文，
+切出 36 个 block、写 36 条知识点、36 道题、9 条 recap checkpoint——这次刻意
+吸取西游记 M3 的教训，每道题的 `explanation` 引用都是我读原文时逐字摘出来的，
+用脚本核实过 block 的段落边界完整覆盖每一节、无缝无重叠、所有下标交叉引用
+合法，不是事后自称"核对过"。组装阶段又抓到一个真实的私有内容泄漏风险：
+`compute-recap-boundaries.ts` 原来把输出路径硬编码成 `pack-gen/build/<bookId>/`，
+这对公开书没问题（每本单独进了 gitignore），但完全绕开了刚加的
+`pack-gen/build/private/` wholesale 规则——真跑起来会把从版权内容派生的
+`recap_md` 写到一个 `.gitignore` 完全不认识的路径。改成按 pack 路径是否含
+`private` 分支决定输出目录，修好后两侧 schema 校验通过，`kuibu today --pack
+sjobs`（临时日志，用完即删）完整走了一遍。
+
+**用户验收反馈两个真实 bug，当场修复**：① 前言被标成了"Chapter 1"——
+`section_path` 最初按解析顺序编成 `"1".."43"`（前言=1），`renderBlocks.ts` 的
+`computeHeaderLines` 无条件给顶层加"Chapter N"前缀，前言因此跟真正的第一章
+撞了号。改成前言/尾声用非数字的 `"foreword"`/`"afterword"`，数字章节用解析出的
+真实章节号；渲染器只在顶层编号是纯数字时才加"Chapter"前缀，非数字编号只打印
+标题本身。② 中英文混排的地方英文词组会被莫名从中间换行——根因是旧版
+`wordWrap` 按 `.length`（不是终端显示列数）判断宽度，且把一整段没有空格的中文
+当成*一个词*（中文本来没有空格），这个超长未测量的"词"直接塞进一行，第一次
+真正有机会换行是下一个空格处——往往就落在紧跟着的英文词组中间（比如"研究中心
+(NASA Ames Research Center)"会断在 NASA 和 Ames 之间）。改成中文逐字拆分成
+可断行的最小单元、宽度按显示列数算（复用给 `kuibu books` 表格对齐用的
+`textWidth.ts`），用真实报告的两处原文（NASA Ames Research Center、The
+Lockheed Missiles and Space Division）验证修好；补充测试覆盖两个 bug 各自的
+回归场景。全程 187 个 TS 测试 + 69 个 Python 测试 + typecheck 保持全绿。
+
+版本号/`MILESTONES.md`：跟西游记 M3 同样的先例，这是等用户验收的预览批次，
+不升版本号；`MILESTONES.md` 新增"阶段二 M4"小节记录已完成的部分，不打勾。

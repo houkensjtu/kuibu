@@ -164,8 +164,37 @@
 **验收**：西游记前 10 回能独立走完一次完整 session，用户看过内容后决定是否
 继续铺开剩余 90 回（或要求先修上面那条已知问题）。**不打勾**，等用户验收结论。
 
-## 阶段二 M4+ —— 待排期
+## 阶段二 M4 —— 用户私有 epub（《史蒂夫·乔布斯传》，进行中，等用户验收）
+
+**目标**：验证 `packs/private/` 这条路径本身能走通——私有书的源文件、构建期中间
+产物、最终内容包全程不进 git，同时复用公开书的整条 pack-gen 流水线。跟西游记
+M3 一样，先做一小批预览（前言 + 前两章）给用户验收，通过再铺开剩余章节。
+
+- [x] 私有书隔离基础设施：`pack-gen/sources/private/`、`pack-gen/build/private/`
+  两个 wholesale gitignore 根（不用像公开书那样每本手动列 gitignore 行）；
+  `.githooks/pre-commit` 同步扩展拦截这两个新路径；顺手修了一个实测发现的真实
+  漏洞——git 默认给非 ASCII 文件名加双引号转义，导致 hook 的锚定正则漏检
+  （`乔布斯传.epub` 这种中文文件名就撞上了）
+- [x] `PerFileEpubAdapter`（`pack-gen/generator/per_file_epub_adapter.py`）：这本书
+  是第三种 epub 结构——每个 spine 文件是独立一节，靠单一标题标签 + 平铺 `<p>`，
+  复用共享的 `epub_zip.py`/`html_text.py`。测试中发现源文件 `<spine>` 本身有一处
+  真实的章节顺序错误（第二十六章排在第二十五章前面），在 `split_sjobs.py` 里按
+  解析出的真实章节号重排修正，不在 adapter 里做
+- [x] 前言 + 第一、二章预览批次：36 blocks / 36 knowledge items / 36 questions /
+  9 recap checkpoints，`explanation` 全部核对过是原文逐字子串（西游记 M3 的
+  known limitation 这次没有重犯）
+- [x] 两侧 schema 校验通过，`kuibu today --pack sjobs` 完整走一遍
+- [x] 用户验收后反馈两个真实 bug 并已修复：前言被错误地打上"Chapter 1"标签
+  （`section_path` 顺序编号导致前言和第一章撞号，改成非数字的
+  `"foreword"`/`"afterword"` + 真实章节号）；中英文混排时英文词组会被从中间
+  强制换行（`wordWrap` 按 `.length` 而非终端显示列数判断宽度，中日韩宽字符
+  计算错误——复用 `textWidth.ts` 修好）
+
+**验收**：预览批次通过验收后决定是否铺开剩余 39 节；**不打勾**，等用户验收结论
+（同西游记 M3 的先例）。
+
+## 阶段二 M5+ —— 待排期
 
 - 西游记铺开到全书（如果 M3 验收通过）
-- 用户私有 epub（走 `packs/private/`，本地构建流程，不做 CLI 上传功能）
+- 乔布斯传铺开到全书（如果 M4 验收通过）
 - 复习健康度提示 · 周期性综合测验 · 网页版导入内容包 · 补签 · 日志快照压缩
