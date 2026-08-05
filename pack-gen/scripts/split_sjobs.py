@@ -68,13 +68,27 @@ def reorder_and_renumber(subsections: List[Subsection]) -> List[Subsection]:
     <spine> 本身有一处真实的作者/工具错误——chapter32.html（第二十六章）
     排在 chapter31.html（第二十五章）前面，跟文件名、标题文字里的数字都对
     不上。既然这本书的章节数字写法本身是规整的（跟西游记不一样，不需要
-    "不信任原文数字"那条防线），按解析出的数字重新排序、再顺序重新赋值
-    section_path，就是这处真实缺陷唯一需要的修正——不在 adapter 里做，
-    因为那是这本书独有的数据质量问题，不是所有用这个 adapter 的书都有。
+    "不信任原文数字"那条防线），按解析出的数字重新排序，就是这处真实缺陷
+    唯一需要的修正——不在 adapter 里做，因为那是这本书独有的数据质量问题，
+    不是所有用这个 adapter 的书都有。
+
+    section_path 不能顺序编成 "1".."43"：前言排在最前面会占走"1"这个编号，
+    跟真正的第一章撞在一起，阅读器的 `Chapter ${path[0]}` 前缀逻辑会把
+    前言也打上"Chapter 1"的标签（用户实测反馈"前言就是前言，第一章才是
+    Chapter 1"）。前言/尾声用非数字的 "foreword"/"afterword"，数字章节用
+    从原文标题解析出的真实章节号（"1".."41"）——`cli/renderBlocks.ts` 的
+    `computeHeaderLines` 只对纯数字的顶层编号加"Chapter N"前缀，非数字编号
+    就只打印标题本身，不会再误标。
     """
     reordered = sorted(subsections, key=_sort_key)
-    for i, subsection in enumerate(reordered, start=1):
-        subsection.section_path = [str(i)]
+    for subsection in reordered:
+        title = subsection.section_title
+        if title == FOREWORD_TITLE:
+            subsection.section_path = ["foreword"]
+        elif title == AFTERWORD_TITLE:
+            subsection.section_path = ["afterword"]
+        else:
+            subsection.section_path = [str(_chapter_number(title))]
     return reordered
 
 

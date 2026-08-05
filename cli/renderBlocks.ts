@@ -1,12 +1,19 @@
 import type { Block, SectionHeading } from "../schema/types/pack.js";
+import { displayWidth } from "./textWidth.js";
 
 /**
  * 跟真书排版一样，只在章/节/小节号相对上一个 block 发生变化的那一级开始，
  * 才打印从那一级往下的标题行——同一小节里的连续 block 之间完全不重复标题。
- * 章一级永远带 "Chapter N" 前缀，其余层级只写编号本身（如 "1.1"），靠缩进
- * 而不是重复的 "Chapter 1 › ..." 前缀表达层级关系。中间层级（章、节）的标题
- * 文字来自 sectionHeadings；查不到（比如章节引言的合成路径 "1.0"）就跳过
- * 那一行，但仍然照常更新 previousPath，不影响后续 block 的层级比较。
+ * 章一级*只有在编号是纯数字时*才带 "Chapter N" 前缀（如 "1" → "Chapter 1"）；
+ * 非数字的顶层编号（比如乔布斯传的前言/尾声，section_path 是 "foreword"/
+ * "afterword" 而不是数字）不属于"第几章"，不该被贴上 "Chapter" 标签——最初
+ * 曾把前言按顺序编成 section_path "1"，跟第一章的 "1" 撞在一起变成"Chapter
+ * 1"，用户反馈"前言就是前言，第一章才是 Chapter 1"，改成非数字编号 +
+ * 跳过前缀来修（`pack-gen/scripts/split_sjobs.py` 的 `reorder_and_renumber`）。
+ * 其余层级只写编号本身（如 "1.1"），靠缩进而不是重复的 "Chapter 1 › ..."
+ * 前缀表达层级关系。中间层级（章、节）的标题文字来自 sectionHeadings；
+ * 查不到（比如章节引言的合成路径 "1.0"）就跳过那一行，但仍然照常更新
+ * previousPath，不影响后续 block 的层级比较。
  */
 export function computeHeaderLines(
   previousPath: readonly string[],
@@ -26,29 +33,84 @@ export function computeHeaderLines(
     const isLeaf = d === path.length - 1;
     const title = isLeaf ? block.section_title : headingTitleByPath.get(path.slice(0, d + 1).join("/"));
     if (title === undefined) continue;
-    const label = d === 0 ? `Chapter ${path[0]}` : path[d];
-    lines.push(`${"  ".repeat(d)}${label}  ${title}`);
+    const isNumberedChapter = d === 0 && /^\d+$/.test(path[0]);
+    const label = d === 0 ? (isNumberedChapter ? `Chapter ${path[0]}` : undefined) : path[d];
+    const prefix = label === undefined ? "" : `${label}  `;
+    lines.push(`${"  ".repeat(d)}${prefix}${title}`);
   }
   return lines;
 }
 
+interface WrapToken {
+  text: string;
+  /** 这个 token 前面原文有没有一个空格——决定重新拼行时要不要补回那个空格。 */
+  spaceBefore: boolean;
+}
+
 /**
- * 贪心断行：把一段（不含换行符的）文本按空格切词，尽量塞满每行，超过
- * maxWidth 才换到下一行。单个词本身比 maxWidth 还长时不强行截断（不影响
- * 阅读，简单起见不处理这种边界情况）。
+ * 把文本切成断行用的最小单元：每个 CJK 宽字符自成一个 token（中文本来就没有
+ * 空格分词，字与字之间随处都能断行）；西文按空格切成一个个词，词内部不切
+ * （比如英文人名/机构名的两个词之间可以断，但一个单词内部不断）。
+ *
+ * 用来修一个真实踩过的坑：乔布斯传里中英文混排很常见，比如"美国国家航空
+ * 航天局埃姆斯研究中心(NASA Ames Research Center)"——旧版 wordWrap 只按空格
+ * 切词，一大段没有空格的中文会被当成*一个词*（因为中间一个空格都没有），
+ * 这个超长词硬塞进一行（不受 maxWidth 约束，见下面 wrapTokens 的处理），
+ * 直到遇到第一个空格（往往就在括号里的英文词组中间）才第一次有机会断行，
+ * 表现出来就是"中文一大段不换行，英文词组却莫名其妙从中间断开"。改成
+ * 逐字拆中文之后，中文本身随时能在合适的宽度断行，不会再把一大段中文和
+ * 紧跟着的英文词组粘成一个断不开的超长 token。
+ */
+function tokenize(text: string): WrapToken[] {
+  const tokens: WrapToken[] = [];
+  let buffer = "";
+  let spaceBefore = false;
+
+  const flush = () => {
+    if (buffer.length > 0) {
+      tokens.push({ text: buffer, spaceBefore });
+      buffer = "";
+      spaceBefore = false;
+    }
+  };
+
+  for (const ch of text) {
+    if (ch === " ") {
+      flush();
+      spaceBefore = true;
+    } else if (displayWidth(ch) === 2) {
+      flush();
+      tokens.push({ text: ch, spaceBefore });
+      spaceBefore = false;
+    } else {
+      buffer += ch;
+    }
+  }
+  flush();
+  return tokens;
+}
+
+/**
+ * 贪心断行：尽量塞满每行，超过 maxWidth（终端显示列数，不是字符数——中日韩
+ * 宽字符占两列，见 `textWidth.ts`）才换到下一行。单个 token 本身比 maxWidth
+ * 还长时不强行截断（不影响阅读，简单起见不处理这种边界情况）。
  */
 function wordWrap(text: string, maxWidth: number): string[] {
-  const words = text.split(" ");
+  const tokens = tokenize(text);
   const lines: string[] = [];
   let current = "";
+  let currentWidth = 0;
 
-  for (const word of words) {
-    const candidate = current.length === 0 ? word : `${current} ${word}`;
-    if (candidate.length > maxWidth && current.length > 0) {
+  for (const token of tokens) {
+    const sep = token.spaceBefore && current.length > 0 ? " " : "";
+    const candidateWidth = currentWidth + displayWidth(sep) + displayWidth(token.text);
+    if (candidateWidth > maxWidth && current.length > 0) {
       lines.push(current);
-      current = word;
+      current = token.text;
+      currentWidth = displayWidth(token.text);
     } else {
-      current = candidate;
+      current = current + sep + token.text;
+      currentWidth = candidateWidth;
     }
   }
   if (current.length > 0) lines.push(current);

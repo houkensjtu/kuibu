@@ -75,10 +75,12 @@ def test_reorder_fixes_the_known_spine_swap():
     ]
 
 
-def test_reorder_renumbers_section_path_sequentially_after_sort():
+def test_reorder_assigns_foreword_afterword_and_real_chapter_numbers():
+    # 前言/尾声不是编号章节，不能顺序编成 "1"/"4" 跟真正的第一章撞号——
+    # 否则阅读器会把前言也打上"Chapter 1"标签（用户反馈过的真实问题）。
     raw = [_sub("前言 本书是如何诞生的"), _sub("第二章 奇特的一对"), _sub("第一章 童年"), _sub("尾声")]
     corrected = reorder_and_renumber(raw)
-    assert [s.section_path for s in corrected] == [["1"], ["2"], ["3"], ["4"]]
+    assert [s.section_path for s in corrected] == [["foreword"], ["1"], ["2"], ["afterword"]]
 
 
 def test_reorder_is_a_no_op_when_already_in_order():

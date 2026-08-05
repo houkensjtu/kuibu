@@ -1,10 +1,11 @@
 """
 把《史蒂夫·乔布斯传》已经手工产出 llm-output 的节组装成 pack-parts，支持
 增量重跑。跟 build_all_xiyouji_sections.py 是同一套逻辑，换成这本书的
-私有路径（build/private/sjobs/）和 43 节的顺序（前言 + 41 章 + 尾声，见
-split_sjobs.py 的 reorder_and_renumber）——这一轮只有前 3 节（前言、第一章、
-第二章）有 llm-output（首批预览，等用户验收后再铺开剩余 40 节），其余节
-自动落入"待生成"，不算失败。
+私有路径（build/private/sjobs/）和 43 节的顺序：前言（"foreword"）+ 第一至
+四十一章（"1".."41"，真实章节号，不是顺序编号——见 split_sjobs.py 的
+reorder_and_renumber 为什么不能把前言编成"1"）+ 尾声（"afterword"）。这
+一轮只有前 3 节（前言、第一章、第二章）有 llm-output（首批预览，等用户
+验收后再铺开剩余 40 节），其余节自动落入"待生成"，不算失败。
 """
 
 import hashlib
@@ -25,7 +26,7 @@ SECTIONS_DIR = Path("build/private/sjobs/sections")
 LLM_OUTPUT_DIR = Path("build/private/sjobs/llm-output")
 PACK_PARTS_DIR = Path("build/private/sjobs/pack-parts")
 
-SECTION_ORDER = [str(n) for n in range(1, 44)]  # 1=前言, 2-42=第一至四十一章, 43=尾声
+SECTION_ORDER = ["foreword"] + [str(n) for n in range(1, 42)] + ["afterword"]
 
 
 def _sha256(path: Path) -> str:
