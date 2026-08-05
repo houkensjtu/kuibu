@@ -8,6 +8,15 @@ import type { Block } from "../schema/types/pack.js";
 const packDir = process.argv[2] ?? "packs/public/sicp";
 const targetSeconds = Number(process.argv[3] ?? 720);
 const bookId = packDir.split(/[\\/]/).filter(Boolean).at(-1)!;
+// 私有书的输出必须落在 pack-gen/build/private/ 这个 wholesale gitignore 的
+// 根下面，不能跟公开书一样直接落在 pack-gen/build/<bookId>/——那个路径没有
+// 被 .gitignore 覆盖（私有书是逐本 gitignore 公开书的 build 产物，不是靠
+// 目录名模式），recap-boundaries.json 里的 recap_md 是从受版权保护原文派生
+// 的内容，写错目录就是一次真实的私有内容泄漏（compute-recap-boundaries.ts
+// 曾经对 packs/private/sjobs 硬编码算出 pack-gen/build/sjobs/，不在任何
+// gitignore 规则覆盖范围内，跑的时候才发现）。
+const isPrivate = packDir.split(/[\\/]/).includes("private");
+const buildDir = isPrivate ? `pack-gen/build/private/${bookId}` : `pack-gen/build/${bookId}`;
 
 const blocks: Block[] = JSON.parse(readFileSync(`${packDir}/blocks.json`, "utf-8"));
 const boundaries = computeCheckpointBoundaries(blocks, targetSeconds);
@@ -26,7 +35,7 @@ const checkpoints = boundaries.map((throughCount, index) => {
   return info;
 });
 
-const outPath = `pack-gen/build/${bookId}/recap-boundaries.json`;
+const outPath = `${buildDir}/recap-boundaries.json`;
 writeFileSync(outPath, JSON.stringify(checkpoints, null, 2) + "\n", "utf-8");
 
 console.log(
