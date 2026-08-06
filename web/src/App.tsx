@@ -1,4 +1,5 @@
 import { HashRouter, Routes, Route } from "react-router";
+import { ThemeProvider } from "@/lib/ThemeProvider";
 import { AppShell } from "@/components/AppShell";
 import { CalendarPage } from "@/pages/CalendarPage";
 import { TodayPage } from "@/pages/TodayPage";
@@ -9,16 +10,18 @@ import { SettingsPage } from "@/pages/SettingsPage";
 // (web brief pitfall #11) rather than pathname-based routes.
 function App() {
   return (
-    <HashRouter>
-      <Routes>
-        <Route element={<AppShell />}>
-          <Route index element={<CalendarPage />} />
-          <Route path="today" element={<TodayPage />} />
-          <Route path="shelf" element={<ShelfPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-        </Route>
-      </Routes>
-    </HashRouter>
+    <ThemeProvider>
+      <HashRouter>
+        <Routes>
+          <Route element={<AppShell />}>
+            <Route index element={<CalendarPage />} />
+            <Route path="today" element={<TodayPage />} />
+            <Route path="shelf" element={<ShelfPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
+        </Routes>
+      </HashRouter>
+    </ThemeProvider>
   );
 }
 

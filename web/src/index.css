@@ -156,6 +156,39 @@
 }
 
 /*
+ * highlight.js's github.css theme (imported in main.tsx) is light-only.
+ * Rather than also importing github-dark.css wholesale -- which would need
+ * every one of its flat `.hljs-*` selectors re-scoped under `.dark`, not
+ * straightforward for a prebuilt vendor stylesheet -- this reuses our own
+ * dark stone surface tokens for the code-block background/base text (for
+ * consistency with the rest of the dark theme) and copies just the token
+ * colors Scheme actually emits (literal/number/string/symbol/built_in/
+ * comment/name) verbatim from node_modules/highlight.js/styles/github-dark.css,
+ * which is real, tested syntax-highlighting contrast, not guessed.
+ */
+.dark .prose pre code.hljs {
+  background: var(--card);
+  color: var(--foreground);
+}
+.dark .hljs-literal,
+.dark .hljs-number {
+  color: #79c0ff;
+}
+.dark .hljs-string {
+  color: #a5d6ff;
+}
+.dark .hljs-built_in,
+.dark .hljs-symbol {
+  color: #ffa657;
+}
+.dark .hljs-comment {
+  color: #8b949e;
+}
+.dark .hljs-name {
+  color: #7ee787;
+}
+
+/*
  * The checkin "achievement moment" (web brief §"收尾"): today's calendar
  * cell and the streak count pop once on arrival from a completed checkin.
  * Only defined under no-preference so prefers-reduced-motion users just

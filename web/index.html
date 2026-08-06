@@ -3,8 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <meta name="theme-color" content="#1c1917" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>kuibu</title>
+    <script>
+      // Applies the .dark class before first paint, so there's no flash of
+      // the wrong theme while main.tsx/React are still loading. Deliberately
+      // plain inline JS (not a module) -- this must run synchronously,
+      // before the stylesheet paints anything.
+      (function () {
+        try {
+          var pref = localStorage.getItem("kuibu:theme");
+          var dark =
+            pref === "dark" ||
+            (pref !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          if (dark) document.documentElement.classList.add("dark");
+        } catch (e) {
+          // localStorage can throw in some privacy modes -- fall back to light, not a crash.
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
