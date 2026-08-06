@@ -1,18 +1,24 @@
-import { checkinDate } from "../../core/checkinDate";
-import { Button } from "@/components/ui/button";
+import { HashRouter, Routes, Route } from "react-router";
+import { AppShell } from "@/components/AppShell";
+import { CalendarPage } from "@/pages/CalendarPage";
+import { TodayPage } from "@/pages/TodayPage";
+import { ShelfPage } from "@/pages/ShelfPage";
+import { SettingsPage } from "@/pages/SettingsPage";
 
+// GitHub Pages serves no server-side routing, so this is a hash router
+// (web brief pitfall #11) rather than pathname-based routes.
 function App() {
-  const today = checkinDate(new Date());
-
   return (
-    <main className="flex min-h-svh flex-col items-center justify-center gap-4 p-6 text-center">
-      <p className="text-lg text-foreground">
-        kuibu web is deploying correctly — today&apos;s check-in date is {today}.
-      </p>
-      <Button variant="secondary" size="sm">
-        stone
-      </Button>
-    </main>
+    <HashRouter>
+      <Routes>
+        <Route element={<AppShell />}>
+          <Route index element={<CalendarPage />} />
+          <Route path="today" element={<TodayPage />} />
+          <Route path="shelf" element={<ShelfPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+        </Route>
+      </Routes>
+    </HashRouter>
   );
 }
 
