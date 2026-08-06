@@ -1,17 +1,25 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import schemeLanguage from "highlight.js/lib/languages/scheme";
 import { reduceEvents } from "../../../core/reducer";
+import type { ReducedState } from "../../../core/reducer";
 import { packSession } from "../../../core/sessionPacker";
-import type { Block, ContentPack } from "../../../schema/types/pack";
+import { buildQuestionQueue, shuffleOptions } from "../../../core/questionQueue";
+import type { QueueEntry, ShuffledOptions } from "../../../core/questionQueue";
+import { leitnerScheduler } from "../../../core/scheduler";
+import { checkinDate } from "../../../core/checkinDate";
+import { isCheckinComplete } from "../../../core/checkinJudgment";
+import type { Block, ContentPack, Question } from "../../../schema/types/pack";
 import { loadPack, PackLoadError } from "@/lib/loadPack";
 import { getAllEvents, addEvent } from "@/lib/eventsDb";
 import { computeSectionHeaders, isResumingMidSection } from "@/lib/sectionHeaders";
 import type { SectionHeaderLine } from "@/lib/sectionHeaders";
 import { BOOK_ID } from "@/lib/config";
 import { Button } from "@/components/ui/button";
+import { AnswerCard } from "@/components/AnswerCard";
 
 const DEFAULT_TARGET_SECONDS = 720; // 12 minutes, same default as the CLI (DESIGN.md §1.3)
 const HIGHLIGHT_LANGUAGES = { scheme: schemeLanguage };
@@ -20,8 +28,19 @@ type Status =
   | { kind: "loading" }
   | { kind: "error"; message: string }
   | { kind: "finished" }
-  | { kind: "ready"; pack: ContentPack; blocks: Block[]; resumingMidSection: boolean }
-  | { kind: "done"; blockCount: number; totalSeconds: number };
+  | { kind: "reading"; pack: ContentPack; blocks: Block[]; resumingMidSection: boolean; reducedState: ReducedState }
+  | {
+      kind: "answering";
+      pack: ContentPack;
+      assignedBlockIds: string[];
+      queue: QueueEntry[];
+      questionsById: Map<string, Question>;
+      currentIndex: number;
+      shuffled: ShuffledOptions;
+      selectedIndex: number | null;
+      submitted: boolean;
+      answeredQuestionIds: Set<string>;
+    };
 
 function SectionHeader({ line }: { line: SectionHeaderLine }) {
   const text = line.label ? `${line.label}  ${line.title}` : line.title;
@@ -34,7 +53,43 @@ function SectionHeader({ line }: { line: SectionHeaderLine }) {
   return <h4 className="mt-6 text-base font-semibold text-foreground">{text}</h4>;
 }
 
+type AnsweringStatus = Extract<Status, { kind: "answering" }>;
+
+/** Builds today's question queue and enters the first question. Returns null if there's nothing to answer (empty due/new-content queue is a legitimate pass, same as the CLI) -- caller goes straight to checkin in that case. */
+function enterAnswering(
+  pack: ContentPack,
+  assignedBlockIds: string[],
+  reducedState: ReducedState,
+): AnsweringStatus | null {
+  const today = checkinDate(new Date());
+  const dueItemIds = leitnerScheduler.due([...reducedState.itemStates.values()], today);
+  const queue = buildQuestionQueue({
+    todayReadBlockIds: new Set(assignedBlockIds),
+    items: pack.items,
+    wrongQuestionIdByItemId: reducedState.wrongQuestionIdByItemId,
+    dueItemIds,
+  });
+  const questionsById = new Map(pack.questions.map((q) => [q.id, q]));
+
+  if (queue.length === 0) return null;
+
+  const firstQuestion = questionsById.get(queue[0].questionId)!;
+  return {
+    kind: "answering",
+    pack,
+    assignedBlockIds,
+    queue,
+    questionsById,
+    currentIndex: 0,
+    shuffled: shuffleOptions(firstQuestion),
+    selectedIndex: null,
+    submitted: false,
+    answeredQuestionIds: new Set(),
+  };
+}
+
 export function TodayPage() {
+  const navigate = useNavigate();
   const [status, setStatus] = useState<Status>({ kind: "loading" });
 
   // Timing anchor (web brief §"阅读视图"): one wall-clock total for the whole
@@ -57,11 +112,11 @@ export function TodayPage() {
           for (const questionId of item.question_ids) questionItemMap.set(questionId, item.id);
         }
 
-        const state = reduceEvents(events, questionItemMap);
-        const targetSeconds = state.dailyTargetSeconds ?? DEFAULT_TARGET_SECONDS;
+        const reducedState = reduceEvents(events, questionItemMap);
+        const targetSeconds = reducedState.dailyTargetSeconds ?? DEFAULT_TARGET_SECONDS;
         const todaysBlocks = packSession({
           blocks: pack.blocks,
-          readBlockIds: state.readBlockIds,
+          readBlockIds: reducedState.readBlockIds,
           targetSeconds,
         });
 
@@ -70,8 +125,8 @@ export function TodayPage() {
           return;
         }
 
-        const resumingMidSection = isResumingMidSection(pack.blocks, todaysBlocks[0], state.readBlockIds);
-        setStatus({ kind: "ready", pack, blocks: todaysBlocks, resumingMidSection });
+        const resumingMidSection = isResumingMidSection(pack.blocks, todaysBlocks[0], reducedState.readBlockIds);
+        setStatus({ kind: "reading", pack, blocks: todaysBlocks, resumingMidSection, reducedState });
       } catch (err) {
         if (cancelled) return;
         const message = err instanceof PackLoadError ? err.message : "Failed to load today's reading.";
@@ -85,12 +140,12 @@ export function TodayPage() {
     };
   }, []);
 
-  // Timer only runs while status is "ready" -- starts counting once today's
-  // blocks are on screen, pauses whenever the tab isn't visible (web brief
-  // pitfall #2: a backgrounded tab must not count as reading time, or the
-  // est_seconds apportionment silently inflates every block).
+  // Timer only runs while status is "reading" -- starts counting once
+  // today's blocks are on screen, pauses whenever the tab isn't visible
+  // (web brief pitfall #2: a backgrounded tab must not count as reading
+  // time, or the est_seconds apportionment silently inflates every block).
   useEffect(() => {
-    if (status.kind !== "ready") return;
+    if (status.kind !== "reading") return;
 
     startedAtRef.current = Date.now();
     accumulatedMsRef.current = 0;
@@ -115,9 +170,29 @@ export function TodayPage() {
     [],
   );
 
+  async function finishCheckin(pack: ContentPack, assignedBlockIds: string[], answeredQuestionIds: Set<string>, queue: QueueEntry[]) {
+    const passed = isCheckinComplete({
+      assignedBlockIds,
+      readBlockIdsToday: new Set(assignedBlockIds), // this session marks every assigned block read atomically, see handleDoneReading
+      queue,
+      answeredQuestionIds,
+    });
+
+    if (passed) {
+      await addEvent(pack.manifest.book_id, {
+        id: crypto.randomUUID(),
+        ts: new Date().toISOString(),
+        type: "checkin",
+        date: checkinDate(new Date()),
+      });
+    }
+
+    navigate("/", { state: { justCheckedIn: passed } });
+  }
+
   async function handleDoneReading() {
-    if (status.kind !== "ready") return;
-    const { pack, blocks } = status;
+    if (status.kind !== "reading") return;
+    const { pack, blocks, reducedState } = status;
 
     if (startedAtRef.current !== null) {
       accumulatedMsRef.current += Date.now() - startedAtRef.current;
@@ -145,7 +220,59 @@ export function TodayPage() {
       }),
     );
 
-    setStatus({ kind: "done", blockCount: blocks.length, totalSeconds });
+    const assignedBlockIds = blocks.map((b) => b.id);
+    const next = enterAnswering(pack, assignedBlockIds, reducedState);
+    if (next === null) {
+      // Nothing due/new to answer today -- an empty queue is a legitimate pass (DESIGN.md §3.3's "若只有到期复习题, 到期数为0" case).
+      await finishCheckin(pack, assignedBlockIds, new Set(), []);
+      return;
+    }
+    setStatus(next);
+  }
+
+  function handleSelect(index: number) {
+    if (status.kind !== "answering" || status.submitted) return;
+    setStatus({ ...status, selectedIndex: index });
+  }
+
+  async function handleConfirm() {
+    if (status.kind !== "answering" || status.selectedIndex === null) return;
+    const question = status.questionsById.get(status.queue[status.currentIndex].questionId)!;
+    const correct = status.selectedIndex === status.shuffled.answerIndex;
+
+    await addEvent(status.pack.manifest.book_id, {
+      id: crypto.randomUUID(),
+      ts: new Date().toISOString(),
+      type: "answer",
+      question_id: question.id,
+      correct,
+    });
+
+    setStatus({
+      ...status,
+      submitted: true,
+      answeredQuestionIds: new Set(status.answeredQuestionIds).add(question.id),
+    });
+  }
+
+  async function handleNext() {
+    if (status.kind !== "answering") return;
+    const isLast = status.currentIndex === status.queue.length - 1;
+
+    if (isLast) {
+      await finishCheckin(status.pack, status.assignedBlockIds, status.answeredQuestionIds, status.queue);
+      return;
+    }
+
+    const nextIndex = status.currentIndex + 1;
+    const nextQuestion = status.questionsById.get(status.queue[nextIndex].questionId)!;
+    setStatus({
+      ...status,
+      currentIndex: nextIndex,
+      shuffled: shuffleOptions(nextQuestion),
+      selectedIndex: null,
+      submitted: false,
+    });
   }
 
   if (status.kind === "loading") {
@@ -160,17 +287,21 @@ export function TodayPage() {
     return <p className="text-sm text-muted-foreground">You've finished this book — just review questions today.</p>;
   }
 
-  if (status.kind === "done") {
-    const minutes = Math.floor(status.totalSeconds / 60);
-    const seconds = status.totalSeconds % 60;
+  if (status.kind === "answering") {
+    const question = status.questionsById.get(status.queue[status.currentIndex].questionId)!;
     return (
-      <div className="flex flex-col gap-2">
-        <h1 className="text-xl font-semibold text-foreground">Nice work</h1>
-        <p className="text-sm text-muted-foreground">
-          Logged {minutes}m {seconds}s across {status.blockCount} block{status.blockCount === 1 ? "" : "s"}.
-        </p>
-        <p className="text-sm text-muted-foreground">Review questions and check-in land in W3.</p>
-      </div>
+      <AnswerCard
+        question={question}
+        shuffled={status.shuffled}
+        questionNumber={status.currentIndex + 1}
+        totalQuestions={status.queue.length}
+        selectedIndex={status.selectedIndex}
+        submitted={status.submitted}
+        onSelect={handleSelect}
+        onConfirm={handleConfirm}
+        onNext={handleNext}
+        isLast={status.currentIndex === status.queue.length - 1}
+      />
     );
   }
 

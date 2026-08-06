@@ -1,6 +1,9 @@
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLocation } from "react-router";
 import { buildYearCalendar } from "../../../core/yearCalendar";
 import type { YearCalendar } from "../../../core/yearCalendar";
+import { computeCurrentStreak } from "../../../core/streak";
+import { checkinDate } from "../../../core/checkinDate";
 import { getAllEvents } from "@/lib/eventsDb";
 import { checkinDatesFromEvents } from "@/lib/checkinDates";
 import { BOOK_ID } from "@/lib/config";
@@ -26,9 +29,19 @@ function fitCellSize(containerWidth: number, weekCount: number): number {
 }
 
 export function CalendarPage() {
+  const location = useLocation();
   const [calendar, setCalendar] = useState<YearCalendar | null>(null);
+  const [streak, setStreak] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
+
+  // TodayPage navigates here with { justCheckedIn: true } right after
+  // writing the checkin event (web brief §"收尾": "年历上今日格点亮 + 连续
+  // 天数 +1 给一个约 200ms 的过渡 -- 这是整个流程唯一的成就时刻"). Captured
+  // once via useState's lazy initializer so it survives this component's
+  // own re-renders but doesn't reappear on a later revisit/reload.
+  const [justCheckedIn] = useState(() => Boolean((location.state as { justCheckedIn?: boolean } | null)?.justCheckedIn));
+  const today = useState(() => checkinDate(new Date()))[0];
 
   useEffect(() => {
     let cancelled = false;
@@ -36,11 +49,12 @@ export function CalendarPage() {
       if (cancelled) return;
       const checkinDates = checkinDatesFromEvents(events);
       setCalendar(buildYearCalendar(checkinDates, YEAR));
+      setStreak(computeCurrentStreak(checkinDates, today));
     });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [today]);
 
   useLayoutEffect(() => {
     const el = containerRef.current;
@@ -63,8 +77,14 @@ export function CalendarPage() {
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-xl font-semibold text-foreground">{YEAR}</h1>
+
+      {streak !== null && (
+        <p className={cn("text-2xl font-semibold text-foreground", justCheckedIn && "animate-checkin-pop")}>
+          {streak} day{streak === 1 ? "" : "s"} streak
+        </p>
+      )}
       <p className="text-sm text-muted-foreground">
-        {calendar ? `${checkedInCount} day${checkedInCount === 1 ? "" : "s"} checked in` : "Loading…"}
+        {calendar ? `${checkedInCount} day${checkedInCount === 1 ? "" : "s"} checked in this year` : "Loading…"}
       </p>
 
       <div ref={containerRef} className="w-full">
@@ -93,6 +113,7 @@ export function CalendarPage() {
                         !day.inYear && "bg-transparent",
                         day.inYear && day.checkedIn && "bg-foreground",
                         day.inYear && !day.checkedIn && "bg-muted",
+                        justCheckedIn && day.date === today && "animate-checkin-pop",
                       )}
                     />
                   ))}

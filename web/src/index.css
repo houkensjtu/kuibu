@@ -154,3 +154,27 @@
   border-radius: var(--radius);
   border: 1px solid var(--border);
 }
+
+/*
+ * The checkin "achievement moment" (web brief §"收尾"): today's calendar
+ * cell and the streak count pop once on arrival from a completed checkin.
+ * Only defined under no-preference so prefers-reduced-motion users just
+ * see the final state with zero animation, per the brief's global motion
+ * rule -- not a reduced/shorter version, no rule at all.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes checkin-pop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  .animate-checkin-pop {
+    animation: checkin-pop 220ms ease-out;
+  }
+}
