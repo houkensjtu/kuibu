@@ -2,9 +2,9 @@
 
 > 名出「不积跬步，无以至千里」。CLI 命令名同为 `kuibu`。
 
-一个个人用的读书打卡工具。项目由我负责构思设计，Claude Code 负责技术实现。
-唯一目标：连续打卡 21 天不断签。详细设计见 `docs/DESIGN.md`，里程碑见
-`docs/MILESTONES.md`。
+一个个人用的读书打卡工具。项目由我负责构思设计，Claude Code 负责技术实现。详细设计见 `docs/DESIGN.md`，里程碑见`docs/MILESTONES.md`。
+
+在线试读：[houkensjtu.github.io/kuibu](houkensjtu.github.io/kuibu)
 
 ---
 
