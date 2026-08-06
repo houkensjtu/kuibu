@@ -145,6 +145,32 @@ rm .kuibu-events.jsonl
 
 ---
 
+## 网页版（阶段二）
+
+在线地址：<https://houkensjtu.github.io/kuibu/>（手机浏览器打开，可"添加到
+主屏幕"当 PWA 用）。目前只有 SICP 一本书，事件日志存在浏览器 IndexedDB
+里，跟 CLI 的 `.kuibu-events.jsonl` 完全独立——网页版是从零开始的另一条
+打卡记录，v0.1 还没有导入导出。
+
+进度见 `docs/MILESTONES.md`「阶段二 M5」：W0（部署链路）到 W4（暗色模式 +
+PWA）已完成并部署，**W5（真机打磨）是下一步**，正等着实际用一段时间之后
+带着具体反馈回来做。完整需求见 `docs/history/2026-08-05-kuibu-web-brief.md`。
+
+本地跑起来：
+
+```
+cd web
+npm install
+npm run dev
+```
+
+`npm run dev` 前会自动跑一遍 `scripts/sync-packs.js`，把 `packs/public/`
+的内容包同步一份到 `web/public/packs/`（gitignore，每次都重新生成，不用
+手动管理）。`npm run build` 产出 `web/dist/`，`npm run test` 跑网页版自己
+的 vitest 用例。
+
+---
+
 ## 开发篇
 
 ```
@@ -164,6 +190,7 @@ cd pack-gen
 ```
 core/         纯逻辑，零 IO（打卡日换算、Leitner 调度、事件日志 reducer……）
 cli/          core + 文件 IO + 终端交互
+web/          core + IndexedDB + DOM（阶段二网页版，见上「网页版」一节）
 pack-gen/     构建期工具，产出内容包（目前手工代替 LLM，见上）
 schema/       JSON Schema 契约，Python/TS 两侧的类型都从这里生成
 packs/public/ 公开内容包，进 git；packs-private/ 是私有内容包，不进 git

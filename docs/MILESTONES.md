@@ -193,8 +193,110 @@ M3 一样，先做一小批预览（前言 + 前两章）给用户验收，通�
 **验收**：预览批次通过验收后决定是否铺开剩余 39 节；**不打勾**，等用户验收结论
 （同西游记 M3 的先例）。
 
-## 阶段二 M5+ —— 待排期
+## 阶段二 M5 —— 网页版 v0.1（GitHub Pages，进行中）
+
+**目标**：按 `docs/history/2026-08-05-kuibu-web-brief.md`（用户写的任务简报，
+非 Claude 起草）把 kuibu 部署成手机可用的 PWA，只做 SICP 一本书。简报自带
+推进节奏：一次一个 W-step，每步做完用户实机试用说"继续"才推进下一步——下面
+的勾选记录的正是这个真实节奏，不是一次性做完再回填。
+
+- [x] **W0 —— 部署链路**：Vite + React + TS + Tailwind v4 + shadcn/ui 骨架，
+  `web/` 与 `cli/`/`core/` 平级，直接相对路径 import `core/*.ts`（验证了
+  "core 零 IO、CLI 与网页版共用"这条铁律在实践中确实成立，不只是文档宣称）。
+  仓库从私有改成公开（GitHub Pages 对私有仓库要收费，用户在 stone 色阶/UI
+  语言等三个决策点之外额外拍板的第四个决策），`.github/workflows/deploy-web.yml`
+  部署到 <https://houkensjtu.github.io/kuibu/>。
+  当前 `shadcn` CLI（v4.16.1）已经没有简报写作时假设的"选 base color"
+  交互式流程了，改成了整套具名 preset——手动把中性色 token 重新映射到
+  Tailwind 真实的 `stone-*` 数值（从装好的包里核对，不是凭记忆编），并去掉
+  预设自带的 Geist 网络字体，换成简报要求的系统字体栈。
+- [x] **W1 —— 四 tab 骨架 + 年历**：`core/yearCalendar.ts` 的 `buildYearCalendar`
+  原样复用，渲染改 CSS grid。用户反馈手机上年历要横向滚动才能看全——原实现
+  是固定 11px 格子，改成 `ResizeObserver` 量容器宽度反推格子边长，年历始终
+  一屏放下，不再滚动。
+- [x] **W2 —— 阅读视图**：新增 `web/scripts/sync-packs.js`，每次 dev/build 从
+  `packs/public/` 同步一份到 `web/public/packs/`（gitignore，永远重新生成，
+  不手动复制，避免内容包更新后网页版读到旧数据）。`react-markdown` +
+  `remark-gfm` + `rehype-highlight`（只注册 scheme 一种语言）渲染正文，
+  `web/src/lib/sectionHeaders.ts` 重新实现了一版"增量式标题"算法（跟
+  `cli/renderBlocks.ts` 的 `computeHeaderLines` 思路一样，但返回结构化数据
+  给 JSX 用，不是照搬 CLI 渲染层——简报 pitfall #1 明确要求不要把终端专用的
+  渲染细节搬到网页上）。"读完了"按钮量一个总时长、按 `est_seconds` 占比分摊，
+  `visibilitychange` 暂停计时。
+  **live-browser 测试中揪出一个只有真机验证才能发现的 bug**：Tailwind
+  Typography 的 `prose pre` 默认背景跟 highlight.js 的 `github.css` 主题打架，
+  代码块变成"浅色 `.hljs` 内层" + "深色 `pre` 外层"的双层色块、文字对比度
+  很差——这个 bug 光看 `npm run build` 成功和截图完全看不出来，是靠
+  claude-in-chrome 直接查 DOM 的 computed style 才抓到的，之后立了条规矩：
+  这个项目里 UI 改动一律起 dev server 用浏览器实测，不能只看 build 通过。
+  顺手发现（**未修，已记录**）SICP 内容包 3 个 block 有 markdown 转义 bug，
+  见下"已知遗留问题"。
+- [x] **W3 —— 答题 + 打卡闭环**：`core/questionQueue.ts`/`scheduler.ts`/
+  `checkinJudgment.ts`/`checkinDate.ts` 全部原样复用。新增 `AnswerCard` 组件：
+  选项点击只高亮、点"确认"才判分（不是点了就判），shuffle 在进入每道题时算
+  一次、存进 state（不是每次渲染都重算——简报 pitfall #4 点名的最容易犯的
+  bug）。打卡成功后跳回年历，今日格子和连续天数有一个约 220ms 的 pop 过渡
+  （`prefers-reduced-motion: no-preference` 才生效，不是"减弱版"动效，是
+  直接不放）。全程在浏览器里连续走完"读→答对一题→答错一题看解析→打卡"，
+  IndexedDB 里的 `answer`/`checkin` 事件字段逐一核对过，不是只看 UI 表现。
+- [x] **W4 —— 暗色三态 + PWA**：`localStorage`（`kuibu:` 前缀）存
+  system/light/dark 偏好，`index.html` 里一段同步内联脚本在首屏绘制前就
+  应用 `.dark`，避免主题闪烁；`ThemeProvider` 之后接管，"system"模式下监听
+  `matchMedia` 变化实时跟随。highlight.js 只有浅色主题，深色下的代码块背景/
+  基础文字色复用自己的 stone token，token 颜色（keyword/string/number……）
+  照抄装好的 `github-dark.css` 真实数值，不是编的。PWA 用 `vite-plugin-pwa`，
+  `registerType: 'prompt'`（不是 `autoUpdate`——简报 pitfall #5 明确要求新部署
+  不能在阅读/答题进行到一半时把人强制刷新掉），`AppShell` 里只在用户回到
+  年历页（空闲态）才应用等待中的更新。图标是纯色方块占位——这台环境没有任何
+  图像工具，`web/scripts/generate-icons.js` 用 Node 内置 `zlib` + 手写 CRC32
+  从零编码出合法 PNG（`file` 命令和浏览器里实际解码都验证过是真实可用的
+  PNG，不是占位符文件名）。安装提示卡区分 Chrome/Android（真正的
+  `beforeinstallprompt` 安装弹窗）和 iOS Safari（不支持该事件，只显示"点
+  分享→添加到主屏幕"的文字说明），只显示一次（localStorage 记已展示/已关闭）。
+  部署时踩了两次 CI 坑，见下"CI 踩过的坑"，第二次才是真正修对。
+- [ ] **W5 —— 真机打磨**（间距、触控目标、过渡动效、安全区）——**下一步**，
+  故意留到用户实机用过一段时间、有具体摩擦点之后再回来做针对性调整，不是
+  不知道要做什么。
+
+**CI 踩过的坑（两次提交才修对，教训记下来）**：`web/` 里 `core/schemaValidators.ts`
+需要 `ajv`/`ajv-formats`，但这两个包只在仓库根 `package.json` 里声明。第一次
+"修复"（把 `ajv` 加进 `web/package.json`）在本地看起来通过了，但那只是因为
+本机根目录 `node_modules` 早就装过（这次 session 前面跑 CLI 用过），Node 从
+`core/` 往上找依赖时先摸到了根 `node_modules`，`web/` 自己新装的那份根本没被
+用到——纯属误打误撞的绿。真正的原因是 `core/` 不是独立 npm 包，它的依赖挂在
+根 `package.json` 下，任何直接 import `core/*.ts` 的地方（不只是 `cli/`）都
+需要根 `node_modules` 存在。第二次改成 GitHub Actions 里先 `npm ci` 根目录
+再 `npm ci` `web/`，这次先手动把本机两个 `node_modules` 都删掉、完全重装一遍
+再验证过，不是又一次"本地能跑就推"。**结论**：`web/` 依赖 `core/` 但两者不在
+同一个 npm 项目里，这条隐性耦合以后加新代码时还要留意。
+
+**已知遗留问题（未修，已记录，等合适的时机处理）**：
+- `packs/public/sicp/blocks.json` 里 3 个 block（`b0018`/`b0030`/`b0031`，共
+  18 处）有嵌套反引号的 markdown 转义 bug，形如 `` `⟨``predicate``⟩` ``，
+  渲染出来是裸露的反引号字符。追到 `pack-gen/build/sicp/sections/1.1.4.json`/
+  `1.1.6.json`——连机械切分产物（没有 LLM/人工介入的阶段）里就有，说明根因
+  在 `pack-gen/generator/texinfo_html_adapter.py` 的 HTML→markdown 转换逻辑
+  （大概率是源 HTML 里嵌套的 `<code>`/`<var>` 标签没处理好），不是手写内容
+  的笔误。纯视觉瑕疵——CLI 从不解析 markdown，从来没暴露过这个问题；网页版
+  第一次真正渲染 markdown 才看见。用户 2026-08-05 明确说先放着，不要在
+  W2 中途去修。
+- 生产 JS bundle 加了 react-markdown/rehype-highlight/react-router 之后到了
+  ~230KB gzip，vite 提示单 chunk 超过 500KB。还没做代码分割，等真的构成问题
+  （比如用户反馈手机上打开慢）再处理，不要提前优化。
+- 网页版事件日志（IndexedDB，`kuibu:sicp:events`）跟 CLI 的
+  `.kuibu-events.jsonl` 完全独立，v0.1 没有导入导出，网页版是从零开始的
+  独立 streak——这是简报 v0.1 范围明确排除的（"不做与 CLI 事件日志的互通"），
+  不是遗漏，未来要不要打通是阶段二后续的开放问题。
+
+**验收**：W0-W4 每一步都是用户在真实浏览器/手机上试用后明确说"继续"/"proceed"
+才推进的，不是 Claude 自己判断"应该没问题"就往下走。**不打勾 W5**——等用户
+真机用过一阵子、带着具体反馈回来。
+
+## 阶段二 M6+ —— 待排期
 
 - 西游记铺开到全书（如果 M3 验收通过）
 - 乔布斯传铺开到全书（如果 M4 验收通过）
+- 网页版 W5 真机打磨（见上，紧邻的下一步）
 - 复习健康度提示 · 周期性综合测验 · 网页版导入内容包 · 补签 · 日志快照压缩
+- 上面记录的"已知遗留问题"三项（SICP 反引号 bug、bundle 体积、CLI/网页版
+  事件日志打通与否）

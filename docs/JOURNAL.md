@@ -734,3 +734,172 @@ Lockheed Missiles and Space Division）验证修好；补充测试覆盖两个 b
 
 版本号/`MILESTONES.md`：跟西游记 M3 同样的先例，这是等用户验收的预览批次，
 不升版本号；`MILESTONES.md` 新增"阶段二 M4"小节记录已完成的部分，不打勾。
+
+## 2026-08-05 —— 阶段二网页版 W0-W4：从部署链路到暗色模式 + PWA
+
+用户带着一份自己写好的详细任务简报开场（`docs/history/2026-08-05-kuibu-web-brief.md`，
+不是 Claude 起草的——特意说明这一点是因为简报里的技术选型、UI 规格、"已知的坑"
+清单都是用户直接决定好的，Claude 的角色是照着执行并在执行中发现简报没预料到
+的地方）。简报自带节奏：一次做一个 W-step，每步做完用户实机试用、明确说"继续"
+才推进下一步——这条节奏在整个过程里被完整遵守，中间连续 5 次"push it"都是
+用户在看过部署结果之后主动说的，不是 Claude 自己判断"应该没问题"就往下推。
+
+### W0：部署链路，先把最难的一环走通
+
+简报要求先把"能不能部署"这件事跑通，再往里填内容。第一个意外：仓库当时是
+私有的，GitHub Pages 对私有仓库要收费——这是简报写作时没考虑到的现实约束，
+停下来用 `AskUserQuestion` 让用户在"仓库改公开"/"升级 GitHub Pro"/"换成
+Netlify 等平台"三个选项里选，用户选了改公开（内容本身一直是公有领域书，
+改公开的风险主要是提交历史一并可见，用户判断可以接受）。改之前先用
+`git log --diff-filter=A` 核实了 `packs/private/`/`packs-private/` 从未被
+commit 过，不是走个形式。
+
+第二个意外：当前 `shadcn` CLI（v4.16.1）已经把简报写作时假设的"init 时选
+一个 base color（stone/zinc/gray……）"这套交互流程整个换掉了，改成一整套
+具名 preset（Nova/Vega/Maia……），不再有单独的中性色选择步骤。没有硬套一个
+preset 敷衍过去，而是用装好的 `nova` preset 生成的 CSS 变量结构为骨架，手动
+把每一个中性色 token 换算成 Tailwind 真实的 `stone-*` 数值——特意从
+`node_modules/tailwindcss/theme.css` 里核对具体数字，不是凭记忆编几个近似
+色。顺手去掉了 preset 自带的 Geist 网络字体（简报明确要求"不引入任何 web
+font"），换成简报指定的系统字体栈。
+
+`web/` 与 `cli/`/`core/` 平级放置，直接用相对路径 `import` `core/*.ts` 和
+`schema/types/*.d.ts`——这是第一次真正验证"`core/` 零 IO、CLI 与网页版共用
+逻辑"这条铁律在实践中真的成立，不只是文档里的一句宣称。GitHub Actions 工作流
+第一次跑通，`https://houkensjtu.github.io/kuibu/` 能访问，页面上一句话 + 一个
+读了 `core/checkinDate.ts` 算出来的日期，证明整条链路（构建→部署→core 导入）
+都是真的在工作，不是巧合。
+
+### W1：四 tab 骨架 + 年历——上线后第一条用户反馈
+
+`core/yearCalendar.ts` 的 `buildYearCalendar` 原样复用，只重写渲染层（CSS
+grid 代替 CLI 的等宽字符画格）。第一版年历格子是写死的 11px，部署后用户在
+真实手机上试用反馈"需要横向滚动才能看全年，不太理想"——改成用
+`ResizeObserver` 量容器实际宽度、反推格子边长（3-16px 之间夹紧），年历
+永远一屏放下，不再依赖滚动。这是"部署了才发现"的典型例子：本地开发时用的
+桌面浏览器窗口够宽，格子大小从来没成为问题，真机窄屏才暴露出来。
+
+### W2：阅读视图——内容管线 + 第一个只有真机测试才能抓到的 bug
+
+新增 `web/scripts/sync-packs.js`：每次 `dev`/`build` 都从 `packs/public/`
+（唯一权威数据源）重新同步一份到 `web/public/packs/`（gitignore，从不手动
+复制）。这个决定是为了避免"内容包更新了、网页版读到的还是旧数据"这类
+CLAUDE.md 里明确记过的"构建产物比源头还旧"陷阱。
+
+正文渲染用 `react-markdown` + `remark-gfm` + `rehype-highlight`（只注册
+scheme 一种语言，跟简报要求一致）。章节标题的"增量式"算法在 `web/src/lib/
+sectionHeaders.ts` 里重新实现了一遍——跟 `cli/renderBlocks.ts` 的
+`computeHeaderLines` 思路相同（只在 section_path 相对上一个 block 变化的
+层级才出现标题），但返回结构化数据给 JSX 消费，不是照搬 CLI 那套面向终端
+字符串的实现，因为简报 pitfall #1 明确说了 CLI 渲染层不能直接搬到网页上。
+"读完了"按钮量一个总时长，按各 block 的 `est_seconds` 占比分摊，
+`visibilitychange` 暂停/恢复计时。
+
+**真正值得记下来的是这一步撞见的 bug**：`npm run build` 通过、截图看起来也
+正常，但用 claude-in-chrome 起 dev server 实际操作时，才发现代码块背景色不
+对——Tailwind Typography 给 `prose pre` 加了一层默认深色背景，跟
+highlight.js 的 `github.css`（浅色主题）在 `code.hljs` 元素自己的白色背景
+上打架，两层背景叠在一起，文字对比度很差。这个 bug 光看构建成功和普通截图
+完全发现不了（截图工具在这个环境里还经常拍到滚动动画中间的过渡帧，反而
+更容易误判"没问题"），是直接用 `javascript_tool` 查两层元素的
+computed style 才实锤的。修法：把 `.prose pre` 的背景/内边距清零，让
+`code.hljs` 自己的浅色 surface（本来就带背景和内边距）说了算。**这件事之后
+定了条规矩**：这个仓库里凡是 UI 相关的改动，一律要起 dev server 用浏览器
+实测（尤其是查 DOM computed style，比截图更可靠），不能只看 `npm run build`
+绿了就算完——这条已经在后续 W3/W4 里被反复验证是必要的，至少还抓到了"Confirm
+按钮默认应该禁用""选项高亮 class 对不对""答错时正确答案有没有高亮"这些
+同样没法从构建日志看出来的东西。
+
+顺手（不在计划内，是读原文验证代码高亮效果时偶然翻到的）发现 SICP 内容包
+`packs/public/sicp/blocks.json` 里 3 个 block（`b0018`/`b0030`/`b0031`，
+共 18 处）有嵌套反引号的 markdown 转义 bug，形如 `` `⟨``predicate``⟩` ``，
+渲染出来是裸露的反引号字符而不是预期的 `⟨predicate⟩`。往上追到
+`pack-gen/build/sicp/sections/1.1.4.json`/`1.1.6.json`——这两个文件是**机械
+切分**阶段的产物，还没经过 LLM/人工加工，说明根因在
+`pack-gen/generator/texinfo_html_adapter.py` 的 HTML→markdown 转换本身（大概率
+是源 HTML 里嵌套的 `<code>`/`<var>` 标签没处理好），不是手写内容的笔误。
+这个 bug 存在了很久却从没被发现，因为 CLI 从来不解析 markdown（直接打印
+`content_md`，反引号原样印出来但混在纯文本里不显眼）——网页版第一次真正
+用 markdown 渲染器渲染这份内容，才把它暴露出来。用 `AskUserQuestion` 问过
+用户要不要现在就修，用户选择"先放着"（纯视觉瑕疵，不影响 CLI，也不想在
+W2 中途分心去改一条已经在跑真实 21 天打卡的书的内容包）——记进了
+`MILESTONES.md` 和一条独立的 memory，不是揭过就忘。
+
+### W3：答题 + 打卡闭环——第一次在浏览器里完整打卡
+
+`core/questionQueue.ts`（`buildQuestionQueue`/`shuffleOptions`）、
+`core/scheduler.ts`（`leitnerScheduler.due`）、`core/checkinJudgment.ts`
+（`isCheckinComplete`）、`core/checkinDate.ts` 全部原样复用，逐一对照
+`cli/index.ts` 里的真实调用方式（`todayReadBlockIds` 传今天打包出的
+block、`dueItemIds` 传 `leitnerScheduler.due` 的结果……）保证行为一致，
+不是重新设计一遍。新写的 `AnswerCard` 组件严格遵守简报的交互链：点选项
+只高亮（`disabled={submitted}` 挡住二次点击）、点"确认"才判分、
+Confirm 按钮在没选中时禁用；shuffle 在**进入每道题时**算一次存进 state，
+不是每次渲染都重算——这是简报 pitfall #4 点名"这个项目里最容易出、也最
+难看的一个 bug"，写代码时就有意识地绕开了。打卡成功后 `navigate('/', 
+{state:{justCheckedIn:true}})` 跳回年历，今日格子和连续天数用一个
+~220ms 的 `scale` pop 过渡（只在 `prefers-reduced-motion: no-preference`
+时定义这条 CSS 规则，不是"减弱版"动效，是直接不存在）。
+
+live-browser 测试走了一遍完整闭环：读完一批 block → 答对第一题（验证
+Confirm 变灰到可点、选中态 class、写入的 `answer` 事件 `correct:true`）→
+答错第二题（验证正确答案高亮 `border-primary`、错选项 `border-destructive`、
+解释文字出现）→ Finish check-in → 落到年历页，`streak`/`checkedInCount`
+显示正确、`animate-checkin-pop` 的 class 确实加在了今日格子和连续天数上。
+每一步都直接读 IndexedDB 里的原始事件核对字段，不是只看 UI 文字对不对。
+
+### W4：暗色三态 + PWA——两次 CI 才修对的教训
+
+暗色模式：`localStorage`（`kuibu:theme` 前缀）存 system/light/dark 三态，
+`index.html` 里一段同步内联 `<script>` 在首屏绘制前就读偏好、应用 `.dark`
+class，避免"先浅色闪一下再变深色"；`ThemeProvider` context 之后接管，
+`preference === 'system'` 时监听 `matchMedia` 变化实时跟随系统。
+highlight.js 只装了浅色主题（`github.css`），深色下没有对应主题——没有
+再引入一份完整的 `github-dark.css`（两份主题的选择器都是扁平的
+`.hljs-*`，很难干净地拿一个 class 去 scope 其中一份），而是只挑 Scheme
+语法实际会用到的那几个 token class（`literal`/`number`/`string`/
+`symbol`/`built_in`/`comment`/`name`），颜色数值直接从装好的
+`node_modules/highlight.js/styles/github-dark.css` 里抄真实值，背景/基础
+文字色则复用自己的 stone token（跟其余深色 UI 保持一致，不是另起一套配色）。
+
+PWA 用 `vite-plugin-pwa`，`registerType: 'prompt'`（不是默认的
+`autoUpdate`）——简报 pitfall #5 明确要求新部署不能在用户阅读/答题进行到
+一半时把页面强制刷新掉，`AppShell` 里只在用户回到年历页（空闲态）时才真正
+应用等待中的更新。这台环境没有任何图像处理工具，`web/scripts/
+generate-icons.js` 用 Node 内置 `zlib`（deflate）加一段手写的 CRC32
+实现，从零字节编码出合法的 PNG（stone-900 纯色方块）——用 `file` 命令
+确认过是真实可解析的 PNG，还在浏览器里直接打开验证过能正常解码显示，
+不是随手拼了几个字节赌它能用。安装提示卡区分平台：Chrome/Android 监听
+`beforeinstallprompt` 给一个真正触发安装弹窗的按钮；iOS Safari 不支持
+这个事件，改成静态的"点分享→添加到主屏幕"文字说明；两种都只显示一次
+（`localStorage` 记已展示/已关闭状态），已经是 standalone 模式运行时
+完全不显示。
+
+**部署这一步踩了一个坑，两次提交才修对**：`web/` 里 `core/
+schemaValidators.ts` 需要 `ajv`/`ajv-formats`，但这两个包只在仓库**根**
+`package.json` 里声明（`core/` 不是独立 npm 包）。第一次以为"给
+`web/package.json` 也加一份 `ajv`"就够了，本地 `npm run build` 也确实
+通过——但这只是误打误撞的绿：本机根目录 `node_modules` 早在这次 session
+前面跑 CLI 时就装过，Node 从 `core/schemaValidators.ts` 往上找依赖时，
+第一个摸到的就是根 `node_modules`，`web/` 自己新装的那份根本没被用到过。
+真正推上 GitHub Actions 后照样报 "Cannot find module 'ajv'"——因为 CI
+只在 `web/` 目录跑 `npm ci`，根目录的 `node_modules` 压根不存在。第二次
+改成 GitHub Actions 工作流先在仓库根跑一次 `npm ci`、再进 `web/` 跑一次，
+这次先把本机两个 `node_modules` 都物理删掉、完全重装一遍再验证，不是
+又一次"能跑就推"。教训：`web/` 依赖 `core/`，但两者不在同一个 npm 项目
+边界内，这条隐性耦合以后加新代码引入新依赖时还要留意——任何被 `core/`
+用到、但只在根 `package.json` 声明的包，都需要 CI 里根目录也 `npm ci`
+过，不能假设 `web/` 自己的 `npm ci` 就够了。
+
+### 收尾
+
+`MILESTONES.md` 新增"阶段二 M5"小节，W0-W4 打勾（每一步都是用户实机确认后
+才推进的，不是自我判断），W5（真机打磨）明确不打勾、留作下一步——按简报
+自己的节奏，故意等用户真机用一段时间、带着具体反馈回来再做针对性调整，
+不是不知道要做什么。三个已知遗留问题（SICP 反引号 bug、生产 bundle 体积
+~230KB gzip 还没做代码分割、网页版 IndexedDB 与 CLI `.kuibu-events.jsonl`
+完全独立且 v0.1 没有导入导出）记进了 `MILESTONES.md` 的"已知遗留问题"和
+"阶段二 M6+ 待排期"，SICP 那条另存了一条独立 memory 方便跨 session 追踪。
+版本号：网页版还是 v0.1 阶段（阶段二"基本可用"才升到 2.0.0，由用户判断
+时机），这次改动没有触碰 `package.json` 的 `version` 字段——阶段一 CLI
+的版本号规则跟阶段二网页版是两件独立的事，见 `CLAUDE.md`「版本号规则」。
