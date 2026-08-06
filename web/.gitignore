@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Regenerated from packs/public/ by scripts/sync-packs.js on every dev/build --
+# packs/public/ is the source of truth, this is just a served copy.
+public/packs
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

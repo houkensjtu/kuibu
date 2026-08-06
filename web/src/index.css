@@ -135,3 +135,22 @@
     @apply font-sans;
     }
 }
+
+/*
+ * highlight.js's github.css theme puts its own background/padding directly
+ * on `code.hljs` (pre code.hljs { padding: 1em }), since it's meant to own
+ * the code-block surface. Tailwind Typography's `prose pre` also paints a
+ * background (var(--tw-prose-pre-bg), a dark color even outside .dark) --
+ * confirmed via computed-style inspection in a live browser that this
+ * produces a double box: a light .hljs box nested inside a dark, mismatched
+ * pre box. Strip the outer one so highlight.js's theme is the only surface.
+ */
+.prose pre {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+}
+.prose pre code.hljs {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
