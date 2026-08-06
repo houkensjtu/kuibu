@@ -4,7 +4,7 @@
 
 一个个人用的读书打卡工具。项目由我负责构思设计，Claude Code 负责技术实现。详细设计见 `docs/DESIGN.md`，里程碑见`docs/MILESTONES.md`。
 
-在线试读：[houkensjtu.github.io/kuibu](houkensjtu.github.io/kuibu)
+在线试读：[houkensjtu.github.io/kuibu](https://houkensjtu.github.io/kuibu/)
 
 ---
 
