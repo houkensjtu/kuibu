@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "tsx cli/index.ts",
+    "bundle": "tsx scripts/bundle-pack.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
