@@ -8,10 +8,10 @@ set -euo pipefail
 # 包住并转成八进制转义（"pack-gen/...\344\271\224...epub"），下面这条锚定在
 # 行首的正则会被这个前导引号挡住，导致私有文件名一旦带中文就漏检——用这个
 # 实测踩过的真实坑（乔布斯传.epub）驱动的修复，关掉 quotePath 让路径原样输出。
-blocked=$(git -c core.quotePath=false diff --cached --name-only | grep -E '^(packs-private/|packs/private/|pack-gen/sources/private/|pack-gen/build/private/)' || true)
+blocked=$(git -c core.quotePath=false diff --cached --name-only | grep -E '^(packs-private/|packs/private/|pack-gen/sources/private/|pack-gen/build/private/|bundles/)|\.kuibu\.json$' || true)
 
 if [ -n "$blocked" ]; then
-  echo "拒绝提交：以下文件命中私有内容包路径（packs-private/、packs/private/、pack-gen/sources/private/ 或 pack-gen/build/private/），不应该进 git：" >&2
+  echo "拒绝提交：以下文件命中私有内容包路径（packs-private/、packs/private/、pack-gen/sources/private/、pack-gen/build/private/、bundles/）或内容包 bundle 文件（*.kuibu.json），不应该进 git：" >&2
   echo "$blocked" >&2
   echo "如果这些文件确实该公开，先确认路径是不是放错了地方；确定要强制提交请用 git commit --no-verify（不建议）。" >&2
   exit 1

@@ -32,6 +32,13 @@ pack-gen/build/xiyouji/pack-parts/
 pack-gen/build/xiyouji/merged-pack-parts.json
 pack-gen/build/xiyouji/recap-boundaries.json
 
+# `npm run bundle` 的产物：单文件内容包，用来传到手机上导入网页版。私有书的
+# bundle 是受版权保护原文的派生物，一行都不能进 git；公开书的 bundle 也是可
+# 重跑的构建产物，没有进 git 的理由。两条规则：目录 + 后缀，后者是防"先把
+# bundle 拷到桌面、又拷回仓库某处"这条绕过目录规则的路径。
+bundles/
+*.kuibu.json
+
 # 私有书的 pack-gen 中间产物：跟上面公开书不同，这里整个目录树 wholesale
 # 忽略（源文件 + sections/pack-parts/llm-output/merged 全部，包括 llm-output——
 # 公开书的 llm-output 故意不忽略，因为是值得保护的手工产出；私有书恰恰相反，
