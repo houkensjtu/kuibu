@@ -12,6 +12,10 @@ import type { QueueEntry, ShuffledOptions } from "../../../core/questionQueue";
 import { leitnerScheduler } from "../../../core/scheduler";
 import { checkinDate } from "../../../core/checkinDate";
 import { isCheckinComplete } from "../../../core/checkinJudgment";
+import { findApplicableRecapCheckpoint } from "../../../core/recapCheckpoints";
+import { computeCurrentPosition } from "../../../core/progress";
+import { buildTableOfContents } from "../../../core/tableOfContents";
+import type { TocRow } from "../../../core/tableOfContents";
 import type { Block, ContentPack, Question } from "../../../schema/types/pack";
 import { loadPack, PackLoadError } from "@/lib/loadPack";
 import { getAllEvents, addEvent } from "@/lib/eventsDb";
@@ -20,6 +24,7 @@ import type { SectionHeaderLine } from "@/lib/sectionHeaders";
 import { BOOK_ID } from "@/lib/config";
 import { Button } from "@/components/ui/button";
 import { AnswerCard } from "@/components/AnswerCard";
+import { cn } from "@/lib/utils";
 
 const DEFAULT_TARGET_SECONDS = 720; // 12 minutes, same default as the CLI (DESIGN.md §1.3)
 const HIGHLIGHT_LANGUAGES = { scheme: schemeLanguage };
@@ -51,6 +56,38 @@ function SectionHeader({ line }: { line: SectionHeaderLine }) {
     return <h3 className="mt-8 text-lg font-semibold text-foreground">{text}</h3>;
   }
   return <h4 className="mt-6 text-base font-semibold text-foreground">{text}</h4>;
+}
+
+/** Mirrors cli/renderTableOfContents.ts as JSX: chapter/section headings plus
+ * leaf subsections, indented by depth, current leaf arrow-marked. */
+function RecapToc({ toc, currentSectionPath }: { toc: TocRow[]; currentSectionPath: readonly string[] | null }) {
+  const currentKey = currentSectionPath?.join("/");
+  return (
+    <div className="flex flex-col gap-0.5 text-sm">
+      {toc.map((row) => {
+        const key = row.sectionPath.join("/");
+        const label = row.sectionPath.at(-1);
+        const isCurrent = row.kind === "leaf" && key === currentKey;
+        const depth = row.sectionPath.length - 1;
+        return (
+          <div
+            key={key}
+            className={cn(
+              "flex items-baseline gap-2",
+              isCurrent ? "font-medium text-foreground" : "text-muted-foreground",
+            )}
+            style={{ paddingLeft: `${depth}rem` }}
+          >
+            <span className="w-3 shrink-0">{isCurrent ? "→" : ""}</span>
+            <span>
+              {label}  {row.sectionTitle}
+            </span>
+            {isCurrent && <span className="text-xs italic">you are here today</span>}
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 type AnsweringStatus = Extract<Status, { kind: "answering" }>;
@@ -305,11 +342,32 @@ export function TodayPage() {
     );
   }
 
-  const { pack, blocks, resumingMidSection } = status;
+  const { pack, blocks, resumingMidSection, reducedState } = status;
   let previousPath: readonly string[] = [];
+
+  // 前情回顾（DESIGN.md §3.1.1）：查表，不调用任何 LLM/API，按用户开始今天
+  // 这个 session 前累计读过的 block 数定位——跟 CLI 用同一份 core/recapCheckpoints
+  // 逻辑，之前 W2 只搬了正文渲染，漏了这一段。
+  const recapCheckpoint = findApplicableRecapCheckpoint(pack.recap_checkpoints, reducedState.readBlockIds.size);
+  const recapCurrentPosition = recapCheckpoint
+    ? computeCurrentPosition(pack.blocks, reducedState.readBlockIds)
+    : null;
 
   return (
     <div className="flex flex-col gap-4">
+      {recapCheckpoint && (
+        <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-5">
+          <h2 className="text-lg font-semibold text-foreground">Recap</h2>
+          <RecapToc
+            toc={buildTableOfContents(pack.blocks, pack.section_headings)}
+            currentSectionPath={recapCurrentPosition?.sectionPath ?? null}
+          />
+          <div className="prose prose-stone dark:prose-invert max-w-none text-sm">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{recapCheckpoint.recap_md}</ReactMarkdown>
+          </div>
+        </div>
+      )}
+
       {blocks.map((block, index) => {
         const headers = computeSectionHeaders(previousPath, block, pack.section_headings);
         const showResumeHint = index === 0 && resumingMidSection && headers.length > 0;

@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dev-dist
 *.local
 
 # Regenerated from packs/public/ by scripts/sync-packs.js on every dev/build --
