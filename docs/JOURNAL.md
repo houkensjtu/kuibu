@@ -903,3 +903,118 @@ schemaValidators.ts` 需要 `ajv`/`ajv-formats`，但这两个包只在仓库**�
 版本号：网页版还是 v0.1 阶段（阶段二"基本可用"才升到 2.0.0，由用户判断
 时机），这次改动没有触碰 `package.json` 的 `version` 字段——阶段一 CLI
 的版本号规则跟阶段二网页版是两件独立的事，见 `CLAUDE.md`「版本号规则」。
+
+## 2026-08-06 —— 补上网页版漏做的前情回顾（W2 遗留 gap）
+
+会话开头先做了一遍全仓库梳理（架构/开发史/规范），顺带用只读的 `kuibu status`
+查了一眼真实打卡记录（确认过这条命令不写文件，安全），发现一个此前 memory
+里记错的事实：**真实的 21 天打卡其实已经断签**——`.kuibu-events.jsonl` 里
+只有 2026-08-01 一条真实 checkin，之后几天精力全投在 Gatsby/西游记/网页版
+上，`status` 显示"当前连续 0 天"。已更新相关 memory，也当面跟用户提了一句，
+但用户当时选择先继续网页版的手头问题。
+
+用户报告"网页版 Today 页面只有当天内容，没有 recap"，先诊断是"没生成"还是
+"没显示"：`packs/public/sicp/recap_checkpoints.json` 确实存在（35 条），
+`web/src/lib/loadPack.ts` 也确实把它读进了 `pack.recap_checkpoints`——问题
+出在 `web/src/pages/TodayPage.tsx` 从头到尾没读过这个字段。对比
+`cli/index.ts:174-200`：CLI 在打印正文前会调用
+`findApplicableRecapCheckpoint` 查表，命中就先打印目录+回顾文字再进正文；
+这段逻辑在 2026-08-05 的 W2（阅读视图）里漏搬了——`MILESTONES.md` 当时对
+W2 的描述也确实只提了正文渲染，不是刻意排除的范围，是真漏了。
+
+修复：新增 `RecapToc` JSX 组件（照抄 `cli/renderTableOfContents.ts` 的
+语义，缩进+箭头标注当前位置），在 `TodayPage.tsx` 渲染正文前用
+`reducedState.readBlockIds.size`（跟 CLI 用同一个"session 开始前累计读过
+多少 block"的口径）查 `findApplicableRecapCheckpoint`，命中就渲染一张
+recap 卡片。网页版是连续滚动页面，不需要 CLI 那种"press Enter 继续"的
+显式步骤——回顾阅读时间天然落在同一个阅读计时器窗口里，不用像 CLI 那样
+单独计时再加进反馈。
+
+live-browser 验证：往 IndexedDB 手动塞 4 条假 `block_read` 事件触发第一个
+checkpoint（阈值 4），确认 recap 卡片 + 目录正确渲染，且流程能正常继续
+进入答题——光看 build 通过证明不了这种"特定进度触发"的场景真的渲染对了。
+这次 session 里 `mcp__claude-in-chrome` 的截图工具又出现多次空白截图
+（尽管 DOM/computed style 查询证明内容确实在视口内），继续用
+`javascript_tool` 的 DOM/滚动位置检查当可靠验证手段，跟 W2 当时记的
+经验一致。顺手发现并清理了一个 `web/dev-dist/`（`vite-plugin-pwa` 开发
+模式产物，未被 gitignore），补进 `web/.gitignore`。
+
+## 2026-08-06 —— 阶段二 M5.5：内容包导入 + 多书书架（回应"能否上传 epub 阅读"）
+
+用户问"现在有没有办法让用户上传 epub 并实现阅读"。运行时解析 epub 在
+`CLAUDE.md` 的否决表里明确否决过（LLM 切分/出题是构建期操作，阅读器绝不
+联网/调 LLM），所以没有直接实现，而是解释了这条边界，并指出已经存在的
+另一条路：`packs/private/` 私有书流水线（已经用过三次：Gatsby/西游记/
+乔布斯传）。用 `AskUserQuestion` 确认用户想要哪种，用户选了"网页版加一个
+导入内容包的入口"——对应 `docs/MILESTONES.md` M6+ 待排期里"网页版导入
+内容包"那一项，这次提前做。
+
+进 Plan 模式，两个 Explore agent 并行摸底（`web/` 里 `BOOK_ID` 硬编码的
+全部触点；`cli/loadPack.ts`/`discoverPacks.ts`/`schemaValidators.ts` 的
+可复用性、web brief 里跟这个功能相关的 pitfall #10/#12）。摸底发现底层
+其实早就是多书就绪的：`loadPack(bookId)`/`getAllEvents(bookId)` 全部已经
+参数化，`eventsDb.ts` 已经一书一个 IndexedDB，`sync-packs.js` 甚至已经在
+生成 `index.json` 却从没人读过。真正写死的只有 `config.ts` 一行常量 +
+两个调用点 + Shelf 页的空壳。
+
+Plan agent 设计阶段揪出一个之前没意识到的真实隐患：`schema/pack.schema.json`
+完全不校验交叉引用——`question_ids` 不保证指向真实存在的题，`answer_index`
+也没跟 `options.length` 挂钩。实测验证：越界的 `answer_index` 会让
+`shuffleOptions` 静默返回 `answerIndex: -1`，题目变成"选什么都错"，不崩溃
+不报错，光跑一遍看不出来；手写内容 + 导入未经审查的包都可能撞上。写了
+`core/checkPackReferences.ts` 之前，先跑了个脚本核对 sicp/gatsby/xiyouji
+三本现有真实内容包，确认全部干净，接入 `cli/loadPack.ts` 不会误伤现有书。
+
+用 `AskUserQuestion` 定了三个关键决策（不是我自己拍板的）：上传格式选
+"单个打包好的 .kuibu.json"（不是 7 文件多选、不是 zip）；Shelf 范围选
+"真正的选书器"（不是"导入即替换唯一一本书"）；这轮不做事件日志导出/导入。
+另外内置书要不要把 Gatsby/西游记也一起铺开问了一轮，用户选"三本全上"；
+写 plan 过程中发现西游记铺开到网页版意味着**公开发布**它那个已知未修的
+"逐字引用其实是意译"问题，专门停下来又确认了一次，用户明确选择"继续上架"。
+book_id 撞车策略问了一轮，选"导入的赢，先弹框确认"。
+
+实现按 8 个步骤顺序推进，每步验证后单独 commit（用户此前定过的自主执行
+规则：步骤之间不用逐次确认，只在真正需要决策的地方停）：
+
+0. `.gitignore` + `.githooks/pre-commit` 先堵住 `bundles/`/`*.kuibu.json`
+   泄漏口——**规则先于脚本存在**，跟 `packs/private/` 当年的教训一样。
+   实测验证过 hook 真的会拦，用的是公开书的占位文件，不是拿私有书产物试。
+1. `scripts/bundle-pack.ts`：几乎全靠复用 `cli/discoverPacks.ts` +
+   `cli/loadPack.ts`，输出前后都重新校验一遍；拒绝写进 `web/`（否则下次
+   部署就发布出去了）；私有书源会打印版权警告。对 sicp/gatsby/xiyouji/
+   sjobs 四本都跑通过。
+2. `core/checkPackReferences.ts`：交叉引用/id 唯一性/`answer_index` 越界
+   检查，接进 `cli/loadPack.ts`。
+3. `web/src/lib/loadPack.ts` 拆出 `packFromCombined.ts`（校验+版本闸门+
+   引用检查的共享尾段），fetch 路径和导入路径共用。
+4. `web/src/lib/importedPacksDb.ts`：`kuibu:imported-packs` 两个 store
+   （重的 pack、轻的 meta）单事务写入，避免书架每次挂载都要反序列化整包。
+5. `BOOK_ID` 硬编码换成 `ActiveBookProvider`（context+localStorage，照抄
+   `ThemeProvider` 的模式）——这是枢纽步骤，改完先在"还是只有 SICP"的
+   状态下 live-browser 验证无回归，再往下走。`TodayPage` 切书时重置到
+   `loading` 状态，否则异步空档里快速点"读完了"会把 `block_read` 写进
+   错误的书。
+6. `web/scripts/sync-packs.js` 的 `BOOK_IDS` 从 `["sicp"]` 扩到三本。
+7. Shelf 页从"SICP only for now"空壳换成真正的选书器：内置+导入合并
+   列表、点击切书、导入用 `<input type="file">`、删除导入的书**不删
+   事件日志**（重新导入同一个 book_id 打卡记录能接上——项目唯一成功
+   指标是连续打卡，不能让清存储这个动作连带清零打卡历史）。
+
+live-browser 全流程验证，不只是 build 通过：用 `mcp__claude-in-chrome`
+的 `file_upload` 工具（不是模拟）把真实 bundle 文件选进页面的文件输入框，
+导入乔布斯传预览包、自动激活、完整走一遍读→答题→打卡，年历格子点亮；
+删除后确认退回默认书；**重新导入同一个 book_id，确认之前那次打卡记录
+还在**（不是只声称保留策略生效，是真的验证了）；喂了三种坏文件（JSON
+损坏、`schema_version` 不兼容、题目引用悬空），确认各自有可读报错且
+IndexedDB 里什么都没存进去；连续选中同一个文件两次确认 change 事件仍会
+触发。**live-browser 测试中抓到一个 build/单测都看不出来的真实 bug**：
+书架每一行原本是"整行一个 `<button>`，删除按钮又是嵌在里面的
+`<button>`"——`<button>` 不能嵌套 `<button>`，Chrome 控制台报了个
+hydration 形状的错误。改成外层 `<div>`、选中和删除变成两个平级按钮修好。
+
+`README.md`/`docs/MILESTONES.md`（新增"阶段二 M5.5"，从 M6+ 待排期里挪走）/
+`docs/DESIGN.md` §4.5 都同步更新。版本号：新增了用户可见的能力（书籍切换 +
+内容包导入），按 `CLAUDE.md` 的规则算 MINOR，`package.json` 升到 0.6.0——
+这是 Claude 自己按规则判断的时机，大版本号（何时到 2.0.0）仍然只由用户
+判断。全部改动 push 到 `main`，触发了 GitHub Actions 部署，西游记从这次
+起正式出现在公开线上地址。
