@@ -6,7 +6,7 @@ import { computeCurrentStreak } from "../../../core/streak";
 import { checkinDate } from "../../../core/checkinDate";
 import { getAllEvents } from "@/lib/eventsDb";
 import { checkinDatesFromEvents } from "@/lib/checkinDates";
-import { BOOK_ID } from "@/lib/config";
+import { useActiveBook } from "@/lib/ActiveBookProvider";
 import { cn } from "@/lib/utils";
 
 const YEAR = new Date().getFullYear();
@@ -30,6 +30,7 @@ function fitCellSize(containerWidth: number, weekCount: number): number {
 
 export function CalendarPage() {
   const location = useLocation();
+  const { activeBookId } = useActiveBook();
   const [calendar, setCalendar] = useState<YearCalendar | null>(null);
   const [streak, setStreak] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,7 +46,11 @@ export function CalendarPage() {
 
   useEffect(() => {
     let cancelled = false;
-    getAllEvents(BOOK_ID).then((events) => {
+    // Reset on a book switch so the previous book's calendar/streak don't
+    // flash while the new book's events are still loading.
+    setCalendar(null);
+    setStreak(null);
+    getAllEvents(activeBookId).then((events) => {
       if (cancelled) return;
       const checkinDates = checkinDatesFromEvents(events);
       setCalendar(buildYearCalendar(checkinDates, YEAR));
@@ -54,7 +59,7 @@ export function CalendarPage() {
     return () => {
       cancelled = true;
     };
-  }, [today]);
+  }, [today, activeBookId]);
 
   useLayoutEffect(() => {
     const el = containerRef.current;

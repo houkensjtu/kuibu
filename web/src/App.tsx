@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route } from "react-router";
 import { ThemeProvider } from "@/lib/ThemeProvider";
+import { ActiveBookProvider } from "@/lib/ActiveBookProvider";
 import { AppShell } from "@/components/AppShell";
 import { CalendarPage } from "@/pages/CalendarPage";
 import { TodayPage } from "@/pages/TodayPage";
@@ -11,16 +12,18 @@ import { SettingsPage } from "@/pages/SettingsPage";
 function App() {
   return (
     <ThemeProvider>
-      <HashRouter>
-        <Routes>
-          <Route element={<AppShell />}>
-            <Route index element={<CalendarPage />} />
-            <Route path="today" element={<TodayPage />} />
-            <Route path="shelf" element={<ShelfPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-          </Route>
-        </Routes>
-      </HashRouter>
+      <ActiveBookProvider>
+        <HashRouter>
+          <Routes>
+            <Route element={<AppShell />}>
+              <Route index element={<CalendarPage />} />
+              <Route path="today" element={<TodayPage />} />
+              <Route path="shelf" element={<ShelfPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+            </Route>
+          </Routes>
+        </HashRouter>
+      </ActiveBookProvider>
     </ThemeProvider>
   );
 }

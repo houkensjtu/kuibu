@@ -21,7 +21,7 @@ import { loadPack, PackLoadError } from "@/lib/loadPack";
 import { getAllEvents, addEvent } from "@/lib/eventsDb";
 import { computeSectionHeaders, isResumingMidSection } from "@/lib/sectionHeaders";
 import type { SectionHeaderLine } from "@/lib/sectionHeaders";
-import { BOOK_ID } from "@/lib/config";
+import { useActiveBook } from "@/lib/ActiveBookProvider";
 import { Button } from "@/components/ui/button";
 import { AnswerCard } from "@/components/AnswerCard";
 import { cn } from "@/lib/utils";
@@ -127,6 +127,7 @@ function enterAnswering(
 
 export function TodayPage() {
   const navigate = useNavigate();
+  const { activeBookId } = useActiveBook();
   const [status, setStatus] = useState<Status>({ kind: "loading" });
 
   // Timing anchor (web brief §"阅读视图"): one wall-clock total for the whole
@@ -138,10 +139,15 @@ export function TodayPage() {
 
   useEffect(() => {
     let cancelled = false;
+    // Reset to loading immediately on a book switch -- otherwise the stale
+    // pack from the previous book sits in `status` during this async gap,
+    // and a fast "Done reading" click would write block_read events into
+    // the wrong book's DB (handleDoneReading uses pack.manifest.book_id).
+    setStatus({ kind: "loading" });
 
     async function run() {
       try {
-        const [pack, events] = await Promise.all([loadPack(BOOK_ID), getAllEvents(BOOK_ID)]);
+        const [pack, events] = await Promise.all([loadPack(activeBookId), getAllEvents(activeBookId)]);
         if (cancelled) return;
 
         const questionItemMap = new Map<string, string>();
@@ -175,7 +181,7 @@ export function TodayPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeBookId]);
 
   // Timer only runs while status is "reading" -- starts counting once
   // today's blocks are on screen, pauses whenever the tab isn't visible
