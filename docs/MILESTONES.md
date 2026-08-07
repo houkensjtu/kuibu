@@ -292,11 +292,49 @@ M3 一样，先做一小批预览（前言 + 前两章）给用户验收，通�
 才推进的，不是 Claude 自己判断"应该没问题"就往下走。**不打勾 W5**——等用户
 真机用过一阵子、带着具体反馈回来。
 
+## 阶段二 M5.5 —— 网页版内容包导入 + 多书书架（已完成，2026-08-07）
+
+**目标**：回答"能不能让用户上传 epub 阅读"——运行时解析 epub 违反阅读器
+不联网/不调 LLM 的铁律（见 CLAUDE.md 否决表），走的是 M6+ 待排期里"网页版
+导入内容包"这条路，提前到 W5 真机打磨之前做。
+
+- `npm run bundle -- <book-id>`（`scripts/bundle-pack.ts`）把内容包目录
+  打成单个 `bundles/<book_id>.kuibu.json`，几乎全靠复用
+  `cli/discoverPacks.ts` + `cli/loadPack.ts`；写入前后都重新校验一遍
+  （含引用完整性），拒绝写进 `web/`（否则下次部署就发布出去了），
+  `packs/private/` 源会打印版权警告。`bundles/` + `*.kuibu.json` 双重
+  gitignore + pre-commit 拦截，写规则先于脚本存在（同 `packs/private/`
+  当年的教训）。
+- 新增 `core/checkPackReferences.ts`：schema 只管形状不管交叉引用——
+  `question_ids` 不保证指向真实存在的题，`answer_index` 也不跟
+  `options.length` 挂钩，越界时 `shuffleOptions` 静默返回 `answerIndex: -1`
+  （题目变成"选什么都错"，不崩溃、不报错）。接进 `cli/loadPack.ts` 和
+  网页版的导入路径，sicp/gatsby/xiyouji 三本现有包全部通过。
+- 网页版 `BOOK_ID` 硬编码改成 `ActiveBookProvider`（context + localStorage，
+  照抄 `ThemeProvider` 的模式），`loadPack(bookId)` 变成解析器：导入的包
+  优先于同 book_id 的内置包（可不重新部署就"修"一本内置书，删掉导入版
+  自动退回内置版）。`web/scripts/sync-packs.js` 的 `BOOK_IDS` 从只有
+  sicp 扩到 sicp/gatsby/xiyouji 三本。
+- Shelf 页从"SICP only for now"空壳变成真正的选书器：内置书 + 导入书
+  合并列表，点哪本哪本就是 Today/Calendar 的当前书；导入用
+  `<input type="file">` 选一个 `.kuibu.json`，book_id 撞车时弹框确认
+  （显示新旧书名）；删除导入的书**不删事件日志**（重新导入同一本书
+  streak 能接上——项目唯一成功指标是连续打卡，不能因为清存储就静默清零
+  打卡历史）。
+- 真机浏览器测试中揪出一个 build/测试都看不出来的 bug：书架每一行曾经是
+  "整行一个 `<button>`，删除按钮又是嵌在里面的 `<button>`"——`<button>`
+  不能嵌套 `<button>`，Chrome 控制台报了个 hydration 形状的错误。改成外层
+  `<div>`、选中按钮和删除按钮变成两个平级 `<button>` 修好。
+
+**验收**：真机浏览器走完整条链路——导入乔布斯传预览包、完整打卡一次、
+删除、重新导入确认打卡记录还在；三种坏输入（JSON 损坏/版本不兼容/
+引用悬空）都给出可读报错且不写入任何存储。
+
 ## 阶段二 M6+ —— 待排期
 
 - 西游记铺开到全书（如果 M3 验收通过）
 - 乔布斯传铺开到全书（如果 M4 验收通过）
 - 网页版 W5 真机打磨（见上，紧邻的下一步）
-- 复习健康度提示 · 周期性综合测验 · 网页版导入内容包 · 补签 · 日志快照压缩
+- 复习健康度提示 · 周期性综合测验 · 补签 · 日志快照压缩
 - 上面记录的"已知遗留问题"三项（SICP 反引号 bug、bundle 体积、CLI/网页版
   事件日志打通与否）

@@ -215,6 +215,16 @@ packs-private/              ← 仓库树之外 或 被 gitignore
 > ⚠️ **git 陷阱**：`.gitignore` 对**已 tracked 的文件无效**。私有包一旦被 `git add` 过一次，之后加 gitignore 也拦不住。
 > 强制顺序：先写 `.gitignore`，再放内容包；禁用 `git add -A`；加 pre-commit hook 检查 staged 文件是否命中 private 路径。
 
+**网页版的第二条分发路径（2026-08 新增）**：`packs/public/` 是"构建期打进
+部署产物"，而 `npm run bundle`（`scripts/bundle-pack.ts`）是"构建期打成
+单文件、运行时由用户手动导入"——两条路径共用同一份 schema，内容包本身
+不因为走哪条路径而改变形状。bundle 产物（`bundles/<book_id>.kuibu.json`）
+遵循跟 `packs/private/` 一样的隔离逻辑（.gitignore + pre-commit 双重
+拦截，规则先于脚本存在），因为私有书的 bundle 输出同样是受版权保护原文的
+派生物。这条路径的意义是让 `packs/private/` 的书能到达用户自己的手机
+浏览器，而不必进入构建产物、不必公开分发——运行时解析 epub 仍然是否决的
+（见下方否决表/CLAUDE.md），bundle 只是把已经生成好的 JSON 换了个传输方式。
+
 ---
 
 ## 5. 复习调度（D5, D9）

@@ -148,9 +148,9 @@ rm .kuibu-events.jsonl
 ## 网页版（阶段二）
 
 在线地址：<https://houkensjtu.github.io/kuibu/>（手机浏览器打开，可"添加到
-主屏幕"当 PWA 用）。目前只有 SICP 一本书，事件日志存在浏览器 IndexedDB
-里，跟 CLI 的 `.kuibu-events.jsonl` 完全独立——网页版是从零开始的另一条
-打卡记录，v0.1 还没有导入导出。
+主屏幕"当 PWA 用）。内置 SICP / Gatsby / 西游记三本书，Shelf 页可以随时切换
+——每本书的事件日志各自存在浏览器 IndexedDB 里（一书一个 DB），跟 CLI 的
+`.kuibu-events*.jsonl` 完全独立，网页版是从零开始的另一条打卡记录。
 
 进度见 `docs/MILESTONES.md`「阶段二 M5」：W0（部署链路）到 W4（暗色模式 +
 PWA）已完成并部署，**W5（真机打磨）是下一步**，正等着实际用一段时间之后
@@ -168,6 +168,24 @@ npm run dev
 的内容包同步一份到 `web/public/packs/`（gitignore，每次都重新生成，不用
 手动管理）。`npm run build` 产出 `web/dist/`，`npm run test` 跑网页版自己
 的 vitest 用例。
+
+### 导入自己的内容包
+
+Shelf 页除了内置的三本书，还能导入任意一份内容包（比如 `packs/private/`
+下的私有书——运行时解析 epub 违反阅读器不联网/不调 LLM 的铁律，所以走的是
+"构建期已经生成好的内容包，打成单文件传到手机上导入"这条路）：
+
+```
+npm run bundle -- <book-id-或-pack-目录>   # 在仓库根目录跑
+```
+
+产出 `bundles/<book_id>.kuibu.json`（这个目录整个 gitignore，也被
+pre-commit hook 拦截——不管公开书还是私有书都不该进 git）。把这个文件传到
+手机上（AirDrop、发自己邮箱、存网盘都行），在网页版 Shelf 页点"Import a
+book…"选中它就行；同一个 book_id 已存在时会先弹框确认（打卡记录会延续，
+不会清零）。删除一本导入的书**不会**删掉它的打卡记录——重新导入同一本书
+就能接上，这是刻意的（项目唯一的成功指标是连续打卡，误删存储不该连带清零
+打卡历史）。
 
 ---
 
