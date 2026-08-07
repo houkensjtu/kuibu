@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { validatePack } from "../core/schemaValidators.js";
+import { checkPackReferences } from "../core/checkPackReferences.js";
 import type { ContentPack } from "../schema/types/pack.js";
 
 /** 这一版阅读器认识的 schema_version；内容包版本对不上就明确报错，不猜测兼容性。 */
@@ -42,6 +43,13 @@ export function loadPack(packDir: string): ContentPack {
     throw new PackLoadError(
       `Incompatible content pack schema_version: pack declares "${pack.manifest.schema_version}", ` +
         `this reader only supports "${SUPPORTED_SCHEMA_VERSION}".`,
+    );
+  }
+
+  const referenceErrors = checkPackReferences(pack);
+  if (referenceErrors.length > 0) {
+    throw new PackLoadError(
+      `Content pack reference check failed (${packDir}):\n${referenceErrors.join("\n")}`,
     );
   }
 
