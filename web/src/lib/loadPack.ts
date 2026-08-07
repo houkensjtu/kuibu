@@ -1,19 +1,18 @@
-import { validatePack } from "../../../core/schemaValidators";
 import type { ContentPack } from "../../../schema/types/pack";
+import { packFromCombined, PackLoadError, SUPPORTED_SCHEMA_VERSION } from "./packFromCombined";
+import { getImportedPack } from "./importedPacksDb";
 
-/** Mirrors cli/loadPack.ts's SUPPORTED_SCHEMA_VERSION -- keep the two in sync by hand until schema_version bumps often enough to be worth sharing. */
-export const SUPPORTED_SCHEMA_VERSION = "0.1.0";
-
-export class PackLoadError extends Error {}
+export { PackLoadError, SUPPORTED_SCHEMA_VERSION };
 
 /**
  * Browser counterpart to cli/loadPack.ts: same manifest/blocks/items/
  * questions/exercises/recap_checkpoints/section_headings assembly and the
- * same schema_version gate, but fetch() over the static files
- * scripts/sync-packs.js copied into public/packs/<bookId>/ (DESIGN.md
- * §4.3: the reader fetches the pack directly, it doesn't bundle it).
+ * same schema_version gate (now shared via packFromCombined.ts), but
+ * fetch() over the static files scripts/sync-packs.js copied into
+ * public/packs/<bookId>/ (DESIGN.md §4.3: the reader fetches the pack
+ * directly, it doesn't bundle it).
  */
-export async function loadPack(bookId: string): Promise<ContentPack> {
+export async function fetchBuiltinPack(bookId: string): Promise<ContentPack> {
   const base = `${import.meta.env.BASE_URL}packs/${bookId}/`;
 
   const fetchJson = async (fileName: string): Promise<unknown> => {
@@ -36,19 +35,18 @@ export async function loadPack(bookId: string): Promise<ContentPack> {
     ]);
 
   const combined = { manifest, blocks, items, questions, exercises, recap_checkpoints, section_headings };
+  return packFromCombined(combined, bookId);
+}
 
-  const result = validatePack(combined);
-  if (!result.valid) {
-    throw new PackLoadError(`Content pack validation failed (${bookId}):\n${result.errors.join("\n")}`);
-  }
-
-  const pack = result.data;
-  if (pack.manifest.schema_version !== SUPPORTED_SCHEMA_VERSION) {
-    throw new PackLoadError(
-      `Incompatible content pack schema_version: pack declares "${pack.manifest.schema_version}", ` +
-        `this reader only supports "${SUPPORTED_SCHEMA_VERSION}".`,
-    );
-  }
-
-  return pack;
+/**
+ * Resolves a book id to a pack: an imported pack (stored in IndexedDB,
+ * see importedPacksDb.ts) wins over a built-in one with the same id --
+ * importing is an explicit user act, and it doubles as "fix a broken
+ * built-in pack without a redeploy". Deleting the imported copy falls
+ * back to the built-in transparently.
+ */
+export async function loadPack(bookId: string): Promise<ContentPack> {
+  const imported = await getImportedPack(bookId);
+  if (imported) return imported;
+  return fetchBuiltinPack(bookId);
 }
