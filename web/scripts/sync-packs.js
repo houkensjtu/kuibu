@@ -11,9 +11,9 @@ import { existsSync, mkdirSync, readdirSync, copyFileSync, writeFileSync, readFi
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// v0.1 ships SICP only (web brief: "明确不做" section) -- add a book id
-// here when it's actually wired into the app, not preemptively.
-const BOOK_IDS = ["sicp"];
+// All public packs currently generated (packs/public/*) -- the Shelf tab
+// picker lists these as built-in books alongside anything the user imports.
+const BOOK_IDS = ["sicp", "gatsby", "xiyouji"];
 
 const webRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const sourceRoot = join(webRoot, "..", "packs", "public");
